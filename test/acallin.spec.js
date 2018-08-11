@@ -15,7 +15,7 @@ describe('CacheAdapter DataMapper integration tests', function () {
     it('should display version', function () {
         let version;
         expect(function () {
-            version = acallin.version();
+            version = acallin.versionSync();
         }).to.not.throw();
         expect(version).to.not.be.empty;
     });

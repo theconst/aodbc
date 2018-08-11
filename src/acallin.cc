@@ -5,12 +5,12 @@
 using namespace v8;
 
 
-NAN_METHOD(Version) {
+NAN_METHOD(VersionSync) {
     info.GetReturnValue().Set(Nan::New(VERSION).ToLocalChecked());
 }
 
 NAN_MODULE_INIT(init) {
-    Nan::SetMethod(target, "version", Version);
+    Nan::SetMethod(target, "versionSync", VersionSync);
 }
 
 NODE_MODULE(factorial, init)
