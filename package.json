@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "Node native addons foolaround",
   "main": "src/js/main/index.js",
-  "dependencies": {
-    "nodem" : "*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "nan": "^2.10.0",
     "chai": "^4.1.2",
