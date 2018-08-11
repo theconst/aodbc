@@ -13,4 +13,4 @@ NAN_MODULE_INIT(init) {
     Nan::SetMethod(target, "versionSync", VersionSync);
 }
 
-NODE_MODULE(factorial, init)
+NODE_MODULE(anodem, init)
