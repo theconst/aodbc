@@ -1,0 +1,21 @@
+{
+  "name": "acallin",
+  "version": "1.0.0",
+  "description": "Node native addons foolaround",
+  "main": "src/js/main/index.js",
+  "dependencies": {
+    "nan": "^2.10.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "compile" : "node-gyp rebuild",
+    "build:copy-deps": "cp build/Release/*.node node_modules",
+    "start": "node js/index.js",
+    "test": "mocha test/**spec.js --reporter spec",
+    "test:unit": "mocha test/**unit.spec.js --reporter spec",
+    "test:integration": "mocha test/**integration.spec.js --reporter spec"
+  },
+  "author": "kko",
+  "license": "ISC",
+  "gypfile": true 
+}
