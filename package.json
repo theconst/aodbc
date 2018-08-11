@@ -4,7 +4,7 @@
   "description": "Node native addons foolaround",
   "main": "src/js/main/index.js",
   "dependencies": {
-    "nodem"
+    "nodem" : "*"
   },
   "devDependencies": {
     "nan": "^2.10.0",
