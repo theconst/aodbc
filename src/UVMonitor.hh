@@ -29,7 +29,7 @@ class Synchronized;
 template<typename T>
 class UVMonitor {
 public:
-    friend class Synchronized;
+    
     
     template<typename ...Args>
     UVMonitor(Args&&... args) : object(std::forward<Args>(args)...) {
@@ -52,6 +52,8 @@ public:
     }
 
 private:
+    friend class Synchronized;
+    
     T object;
     uv_mutex_t* mutex_handle;
 };
