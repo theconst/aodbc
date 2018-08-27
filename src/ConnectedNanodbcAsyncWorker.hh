@@ -37,10 +37,7 @@ public:
 protected:
     
     virtual void DoExecute() override;
-private:
-    std::string connection_string;
-    long timeout;
-    
+private:    
     bool connected;
 };
 
