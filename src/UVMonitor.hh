@@ -16,32 +16,20 @@
 #include <iostream>
 
 namespace AODBC {
+    
+    
+using namespace AODBC;
 
     
 //TODO: implement more descent synchronization
 
+
+class Synchronized;
+
 template<typename T>
 class UVMonitor {
 public:
-    class Synchronized {
-    public:
-            
-        Synchronized(UVMonitor* monitor):
-            mutex_handle(monitor->mutex_handle)  {
-            uv_mutex_lock(mutex_handle);
-        }
-
-        Synchronized(const Synchronized&) = delete;
-
-        Synchronized(Synchronized&&) = delete;
-
-        virtual ~Synchronized() {
-            uv_mutex_unlock(mutex_handle);
-        }
-    private:
-        uv_mutex_t* mutex_handle;
-    };
-    
+    friend class Synchronized;
     
     template<typename ...Args>
     UVMonitor(Args&&... args) : object(std::forward<Args>(args)...) {
@@ -58,17 +46,34 @@ public:
     }
     
     virtual ~UVMonitor() {
-        std::cout << "UVMonitor destroy enter";
-        
         uv_mutex_destroy(mutex_handle);
 
         delete mutex_handle;
-        
-        std::cout << "UVMonitor destroy exit";
     }
 
 private:
     T object;
+    uv_mutex_t* mutex_handle;
+};
+
+
+class Synchronized {
+public:
+
+    template<typename T> 
+    Synchronized(UVMonitor<T>* monitor) :
+        mutex_handle(monitor->mutex_handle) {
+        uv_mutex_lock(mutex_handle);
+    }
+
+    Synchronized(const Synchronized&) = delete;
+
+    Synchronized(Synchronized&&) = delete;
+
+    virtual ~Synchronized() {
+        uv_mutex_unlock(mutex_handle);
+    }
+private:
     uv_mutex_t* mutex_handle;
 };
 

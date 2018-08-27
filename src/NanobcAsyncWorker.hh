@@ -33,7 +33,7 @@ protected:
     explicit NanodbcAsyncWorker(
         std::shared_ptr< UVMonitor<nanodbc::connection> >, Nan::Callback*);
     
-    virtual void DoExecute() = 0;
+    virtual void DoExecute(nanodbc::connection* connection) = 0;
     
     std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor;
 private:

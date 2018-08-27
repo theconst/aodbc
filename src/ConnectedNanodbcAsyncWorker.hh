@@ -36,7 +36,7 @@ public:
     
 protected:
     
-    virtual void DoExecute() override;
+    virtual void DoExecute(nanodbc::connection* connection) override;
 private:    
     bool connected;
 };

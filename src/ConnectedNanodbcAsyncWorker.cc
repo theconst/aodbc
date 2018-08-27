@@ -25,14 +25,8 @@ namespace AODBC {
         connected(false)
     { }
     
-    void ConnectedNanodbcAsyncWorker::DoExecute() {
-        UVMonitor<nanodbc::connection>* connection = connection_monitor.get();
-        
-        UVMonitor<nanodbc::connection>::Synchronized lock(connection);
-        
-        
-        //TODO: do something with copy construction??
-        connected = connection->get()->connected();
+    void ConnectedNanodbcAsyncWorker::DoExecute(nanodbc::connection* connection) {
+        connected = connection->connected();
     }
     
     void ConnectedNanodbcAsyncWorker::HandleOKCallback() {
@@ -47,7 +41,8 @@ namespace AODBC {
             callback->GetFunction(), 
             Nan::GetCurrentContext()->Global(), 
             NUMBER_OF_ARGS, 
-            args);
+            args
+        );
     }
 
     ConnectedNanodbcAsyncWorker::~ConnectedNanodbcAsyncWorker() {

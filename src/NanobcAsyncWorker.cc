@@ -10,9 +10,8 @@
 
 #include <memory>
 
-#include <mutex>
+#include "UVMonitor.hh"
 
-#include <iostream>
 #include <exception>
 
 namespace AODBC {
@@ -28,7 +27,11 @@ NanodbcAsyncWorker::NanodbcAsyncWorker(
 
 void NanodbcAsyncWorker::Execute() {
     try {
-        DoExecute();
+        UVMonitor<nanodbc::connection>* connection = connection_monitor.get();
+        
+        Synchronized lock(connection);
+        
+        DoExecute(connection->get());
     } catch (const nanodbc::database_error& db_err) {
         SetErrorMessage(db_err.what());
     } catch (const std::exception& e) {
