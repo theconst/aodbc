@@ -14,17 +14,6 @@ describe('CacheAdapter DataMapper integration tests', function () {
     beforeEach(function () {
         aodbc = require('aodbc');
     });
-
-    it('should display version', function (done) {
-        expect(function () {
-           aodbc.version((err, version) => {
-                expect(err).to.be.null;
-                expect(version).to.not.be.empty;
-                
-                done();
-           });
-        }).to.not.throw();
-    });
     
     it('should return connected for new instance', function (done) {
         const connection = new aodbc.ODBCConnection(CACHE_DSN);
@@ -35,7 +24,7 @@ describe('CacheAdapter DataMapper integration tests', function () {
                 
             done();
         });
-    }) 
+    });
 
     afterEach(function () {
      
