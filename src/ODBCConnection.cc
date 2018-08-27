@@ -9,6 +9,7 @@
 #include "UVMonitor.hh"
 #include "DBMSNameNanodbcAsyncWorker.hh"
 #include "ConnectedNanodbcAsyncWorker.hh"
+#include "DisconnectNanodbcAsyncWorker.hh"
 
 namespace AODBC {
     
@@ -31,7 +32,7 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
     tpl->InstanceTemplate()->SetInternalFieldCount(1);
     
     Nan::SetPrototypeMethod(tpl, "isConnected", JsConnected);
-//    Nan::SetPrototypeMethod(tpl, "disconnect", JsDisconnect);
+    Nan::SetPrototypeMethod(tpl, "disconnect", JsDisconnect);
     
     Nan::SetPrototypeMethod(tpl, "dbmsName", JsDBMSName);
     
@@ -64,6 +65,10 @@ NAN_METHOD(ODBCConnection::JsNew) {
 
 NAN_METHOD(ODBCConnection::JsConnected) {
     DelegateWork<ConnectedNanodbcAsyncWorker>(info);
+}
+
+NAN_METHOD(ODBCConnection::JsDisconnect) {
+    DelegateWork<DisconnectNanodbcAsyncWorker>(info);
 }
 
 NAN_METHOD(ODBCConnection::JsDBMSName) {

@@ -39,6 +39,32 @@ describe('CacheAdapter DataMapper integration tests', function () {
             done();
         });
     });
+    
+    it('should return disconnected after disconnect', function(done) {
+       const connection = new aodbc.ODBCConnection(CACHE_DSN);
+       
+       connection.isConnected((err, connected) => {
+          expect(err).to.be.null;
+          expect(connected).to.be.true;
+          
+          connection.disconnect((err, value) => {
+              expect(err).to.be.null;
+              expect(value).to.be.undefined;
+              
+              connection.isConnected((err, connected) => {
+                  expect(connected).to.be.false;
+                  
+                  connection.dbmsName((err, name) => {
+                      expect(err).to.not.be.null;
+                      
+                      console.debug(`Error: ${err}`);
+                      
+                      done();
+                  });
+              });
+          });
+       });
+    });
 
     afterEach(function () {
      
