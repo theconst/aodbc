@@ -25,6 +25,8 @@ public:
 
     virtual void Execute() override final;
     
+    virtual void HandleOKCallback() override final;
+    
     virtual ~NanodbcAsyncWorker();
     
 protected:
@@ -34,6 +36,10 @@ protected:
         std::shared_ptr< UVMonitor<nanodbc::connection> >, Nan::Callback*);
     
     virtual void DoExecute(nanodbc::connection* connection) = 0;
+    
+    
+    //! Do not forget to escape the scope - we cannot force this
+    virtual v8::Local<v8::Value> DoGetResult() = 0;
     
     std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor;
 private:

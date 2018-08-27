@@ -40,6 +40,22 @@ void NanodbcAsyncWorker::Execute() {
     }
 }
 
+void NanodbcAsyncWorker::HandleOKCallback() {
+    Nan::HandleScope scope;
+
+    v8::Local<v8::Value> args[] = {
+        Nan::Null(),
+        DoGetResult()
+    };
+
+    Nan::Call(
+        callback->GetFunction(),
+        Nan::GetCurrentContext()->Global(),
+        NUMBER_OF_ARGS,
+        args
+    );
+}
+
 NanodbcAsyncWorker::~NanodbcAsyncWorker() {
 
 }

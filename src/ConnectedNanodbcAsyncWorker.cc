@@ -29,20 +29,10 @@ namespace AODBC {
         connected = connection->connected();
     }
     
-    void ConnectedNanodbcAsyncWorker::HandleOKCallback() {
-        Nan::HandleScope scope;
+    v8::Local<v8::Value> ConnectedNanodbcAsyncWorker::DoGetResult() {
+        Nan::EscapableHandleScope scope;
         
-        v8::Local<v8::Value> args[] = {
-            Nan::Null(),
-            Nan::New<v8::Boolean>(connected)
-        };
-        
-        Nan::Call(
-            callback->GetFunction(), 
-            Nan::GetCurrentContext()->Global(), 
-            NUMBER_OF_ARGS, 
-            args
-        );
+        return scope.Escape(Nan::New<v8::Boolean>(connected));
     }
 
     ConnectedNanodbcAsyncWorker::~ConnectedNanodbcAsyncWorker() {

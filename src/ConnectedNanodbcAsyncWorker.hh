@@ -32,9 +32,9 @@ public:
     
     virtual ~ConnectedNanodbcAsyncWorker();
     
-    virtual void HandleOKCallback() override;
-    
 protected:
+    
+    virtual v8::Local<v8::Value> DoGetResult() override;
     
     virtual void DoExecute(nanodbc::connection* connection) override;
 private:    
