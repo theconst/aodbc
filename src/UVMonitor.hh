@@ -53,7 +53,7 @@ public:
     
     UVMonitor(UVMonitor&& other) = delete;
     
-    T* operator->() {
+    T* get() {
         return &object;
     }
     

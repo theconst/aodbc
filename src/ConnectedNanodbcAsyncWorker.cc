@@ -29,10 +29,10 @@ namespace AODBC {
         UVMonitor<nanodbc::connection>* connection = connection_monitor.get();
         
         UVMonitor<nanodbc::connection>::Synchronized lock(connection);
-
+        
         
         //TODO: do something with copy construction??
-        connected = (*connection)->connected();
+        connected = connection->get()->connected();
     }
     
     void ConnectedNanodbcAsyncWorker::HandleOKCallback() {
