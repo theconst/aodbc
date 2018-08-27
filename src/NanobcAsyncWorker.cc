@@ -4,6 +4,8 @@
  * Author: kko
  * 
  * Created on August 26, 2018, 3:06 PM
+ * 
+ * //TODO: can we generalize even more to remove worker boilerplate
  */
 
 #include "NanobcAsyncWorker.hh"

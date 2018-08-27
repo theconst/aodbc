@@ -25,6 +25,20 @@ describe('CacheAdapter DataMapper integration tests', function () {
             done();
         });
     });
+    
+    
+    it('should display name of the database', function(done) {
+        const connection = new aodbc.ODBCConnection(CACHE_DSN);
+        
+        connection.dbmsName((err, dbmsName) => {
+            expect(err).to.be.null;
+            expect(dbmsName).to.not.be.null;
+            
+            console.debug(`DBMS Name: ${dbmsName}`);
+            
+            done();
+        });
+    });
 
     afterEach(function () {
      

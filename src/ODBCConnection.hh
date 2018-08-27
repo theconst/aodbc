@@ -39,7 +39,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
         
         static NAN_METHOD(JsDisconnect);
         
-//        static NAN_METHOD(JsDBMSName);
+        static NAN_METHOD(JsDBMSName);
         
 //        TODO: other dbms methods
 //        static NAN_METHOD(JsDBMSVersion);
@@ -48,12 +48,34 @@ class ODBCConnection final : public Nan::ObjectWrap {
 //        
 //        static NAN_METHOD(JsCatalogName);
         
+        template<typename WorkerT>
+        inline static NAN_METHOD(DelegateWork);
+        
         static Nan::Persistent<v8::FunctionTemplate> JS_CONSTRUCTOR;
         
         static const std::string JS_CLASS_NAME;
         
         std::shared_ptr< UVMonitor< nanodbc::connection > > connection; 
 };
+
+template<typename WorkerT>
+NAN_METHOD(ODBCConnection::DelegateWork) {
+    ODBCConnection *odbc_conn = Nan::ObjectWrap::Unwrap<ODBCConnection>(info.This());
+
+    v8::Local<v8::Value> arg0 = info[0];
+    if (!arg0->IsFunction()) {
+        return Nan::ThrowTypeError("ODBC connection accepts callback");
+    }
+
+    v8::Local<v8::Function> js_callback = Nan::To<v8::Function>(arg0)
+            .ToLocalChecked();
+
+    Nan::AsyncQueueWorker(new WorkerT(
+            odbc_conn->connection,
+            new Nan::Callback(js_callback)
+        )
+    );
+}
 
 }
 #endif /* ODBCCONNECTION_HH */
