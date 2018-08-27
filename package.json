@@ -14,7 +14,7 @@
     "clean": "node-gyp clean",
     "postinstall": "npm run compile",
     "compile": "node-gyp rebuild",
-    "start": "node js/acallin.js",
+    "start": "node js/aodbc.js",
     "test": "mocha test/**spec.js --reporter spec",
     "test:unit": "mocha test/**unit.spec.js --reporter spec",
     "test:integration": "mocha test/**integration.spec.js --reporter spec"
