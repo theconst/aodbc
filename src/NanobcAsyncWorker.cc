@@ -56,8 +56,4 @@ void NanodbcAsyncWorker::HandleOKCallback() {
     );
 }
 
-NanodbcAsyncWorker::~NanodbcAsyncWorker() {
-
-}
-
 }

@@ -22,10 +22,6 @@ ODBCConnection::ODBCConnection(std::string&& connection_string)
     : connection(std::make_shared<UVMonitor<nanodbc::connection> >(connection_string)) {
 }
 
-ODBCConnection::~ODBCConnection() {
-
-}
-
 NAN_MODULE_INIT(ODBCConnection::Init) {
     v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(JsNew);
     JS_CONSTRUCTOR.Reset(tpl);

@@ -27,7 +27,7 @@ public:
     
     virtual void HandleOKCallback() override final;
     
-    virtual ~NanodbcAsyncWorker();
+    virtual ~NanodbcAsyncWorker() = default;
     
 protected:
     static const int NUMBER_OF_ARGS = 2;

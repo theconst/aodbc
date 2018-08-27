@@ -26,12 +26,12 @@ using namespace AODBC;
 class ODBCConnection final : public Nan::ObjectWrap {
     public:
         static NAN_MODULE_INIT(Init);
+        
+        virtual ~ODBCConnection() = default;
     
     private:
         
         explicit ODBCConnection(std::string&& conn_string);
-        
-        virtual ~ODBCConnection();
         
         static NAN_METHOD(JsNew);
         

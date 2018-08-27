@@ -13,8 +13,6 @@
 
 #include "uv.h"
 
-#include <iostream>
-
 namespace AODBC {
     
     

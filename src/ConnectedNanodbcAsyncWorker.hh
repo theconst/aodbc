@@ -19,9 +19,9 @@ namespace AODBC {
     
 using namespace AODBC;
 
-class ConnectedNanodbcAsyncWorker : public NanodbcAsyncWorker {
+class ConnectedNanodbcAsyncWorker final : public NanodbcAsyncWorker {
 public:
-    ConnectedNanodbcAsyncWorker(
+    explicit ConnectedNanodbcAsyncWorker(
         std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
         Nan::Callback* callback
     );
@@ -30,7 +30,7 @@ public:
     
     ConnectedNanodbcAsyncWorker(ConnectedNanodbcAsyncWorker&& orig) = delete;
     
-    virtual ~ConnectedNanodbcAsyncWorker();
+    virtual ~ConnectedNanodbcAsyncWorker() = default;
     
 protected:
     

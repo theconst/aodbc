@@ -11,7 +11,6 @@
 #include "ConnectedNanodbcAsyncWorker.hh"
 #include "UVMonitor.hh"
 #include "nanodbc.h"
-#include <iostream>
 
 namespace AODBC {
     
@@ -33,10 +32,6 @@ namespace AODBC {
         Nan::EscapableHandleScope scope;
         
         return scope.Escape(Nan::New<v8::Boolean>(connected));
-    }
-
-    ConnectedNanodbcAsyncWorker::~ConnectedNanodbcAsyncWorker() {
-        
     }
 
 }
