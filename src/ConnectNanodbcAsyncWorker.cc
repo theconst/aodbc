@@ -26,7 +26,7 @@ timeout(timeout) {
 }
 
 void ConnectNanodbcAsyncWorker::DoExecute(nanodbc::connection* connection) {
-    connection->disconnect();
+    connection->connect(connection_string, timeout);
 }
 
 v8::Local<v8::Value> ConnectNanodbcAsyncWorker::DoGetResult() {
