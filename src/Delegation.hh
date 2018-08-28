@@ -10,6 +10,10 @@
 // make undefined not war
 
 
+//TODO: wrap my mind around variadic templates
+//TODO: manage string constant
+
+
 #ifndef DELEGATION
 #define DELEGATION
 

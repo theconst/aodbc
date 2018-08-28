@@ -31,7 +31,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
         virtual ~ODBCConnection() = default;
          
     private:
-        friend class Context<std::shared_ptr <UVMonitor <nanodbc::connection> > >;
+        friend class Context<std::shared_ptr<UVMonitor<nanodbc::connection> > >;
         
         explicit ODBCConnection();
         
@@ -58,11 +58,9 @@ class ODBCConnection final : public Nan::ObjectWrap {
         
         static const std::string JS_CLASS_NAME;
         
-        std::shared_ptr< UVMonitor< nanodbc::connection > > connection; 
+        std::shared_ptr<UVMonitor< nanodbc::connection > > connection; 
 };
 
-//TODO: wrap my mind around variadic templates
-//TODO: manage string constant
 
 }
 #endif /* ODBCCONNECTION_HH */
