@@ -10,6 +10,10 @@
 #include "ConnectedNanodbcAsyncWorker.hh"
 #include "DisconnectNanodbcAsyncWorker.hh"
 #include "ConnectNanodbcAsyncWorker.hh"
+#include "DBMSVersionNanodbcAsyncWorker.hh"
+#include "DriverNameNanodbcAsyncWorker.hh"
+#include "CatalogNameNanodbcAsyncWorker.hh"
+#include "DatabaseNameNanodbcAsyncWorker.hh"
 
 namespace AODBC {
     
@@ -40,14 +44,14 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
     Nan::SetPrototypeMethod(tpl, "disconnect", JsDisconnect);
     Nan::SetPrototypeMethod(tpl, "connect", JsConnect);
     Nan::SetPrototypeMethod(tpl, "dbmsName", JsDBMSName);
+    Nan::SetPrototypeMethod(tpl, "dbmsVersion", JsDBMSVersion);
+    Nan::SetPrototypeMethod(tpl, "driverName", JsDriverName);
+    Nan::SetPrototypeMethod(tpl, "catalogName", JsCatalogName);
+    Nan::SetPrototypeMethod(tpl, "databaseName", JsDatabaseName);
     
     Nan::Set(target,
             Nan::New(JS_CLASS_NAME.c_str()).ToLocalChecked(), 
             Nan::GetFunction(tpl).ToLocalChecked());
-
-//    Nan::SetPrototypeMethod(tpl, "driverName", JsDriverName);
-//    Nan::SetPrototypeMethod(tpl, "catalogName", JsCatalogName);
-   
 }
 
 
@@ -82,14 +86,14 @@ struct Context<std::shared_ptr<UVMonitor <nanodbc::connection> > > {
 };
 
 NAN_METHOD(ODBCConnection::JsConnected) {
-    DelegateWork<
+    return DelegateWork<
         std::shared_ptr<UVMonitor<nanodbc::connection> >,
         ConnectedNanodbcAsyncWorker
     >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsConnect) {
-    DelegateWork<
+    return DelegateWork<
         std::shared_ptr<UVMonitor<nanodbc::connection> >,
         ConnectNanodbcAsyncWorker,    
         std::string,
@@ -105,16 +109,39 @@ NAN_METHOD(ODBCConnection::JsDisconnect) {
 }
 
 NAN_METHOD(ODBCConnection::JsDBMSName) {
-    DelegateWork<
+    return DelegateWork<
         std::shared_ptr<UVMonitor<nanodbc::connection> >, 
         DBMSNameNanodbcAsyncWorker
     >(info);
 }
 
-//static NAN_METHOD(JsDBMSVersion);
-//
-//static NAN_METHOD(JsDriverName);
-//
-//static NAN_METHOD(JsCatalogName);
+NAN_METHOD(ODBCConnection::JsDBMSVersion) {
+    return DelegateWork<
+        std::shared_ptr<UVMonitor<nanodbc::connection > >,
+        DBMSVersionNanodbcAsyncWorker
+    >(info);
+};
+
+
+NAN_METHOD(ODBCConnection::JsDriverName) {
+    return DelegateWork<
+        std::shared_ptr<UVMonitor<nanodbc::connection > >,
+        DriverNameNanodbcAsyncWorker    
+    >(info);
+}
+
+NAN_METHOD(ODBCConnection::JsCatalogName) {
+    return DelegateWork<
+        std::shared_ptr<UVMonitor<nanodbc::connection > >,
+        CatalogNameNanodbcAsyncWorker  
+    >(info);
+}
+
+NAN_METHOD(ODBCConnection::JsDatabaseName) {
+    return DelegateWork<
+        std::shared_ptr<UVMonitor<nanodbc::connection > >,
+        DatabaseNameNanodbcAsyncWorker
+    >(info);
+}
 
 }
