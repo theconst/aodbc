@@ -3,7 +3,7 @@
     {
       "target_name": "aodbc",
       "cflags!": [ "-fno-exceptions", "-std=gnu++0x" ],
-      "cflags": [ "-std=c++14" ],
+      "cflags": [ "-std=c++14", "-Wno-ignored-qualifiers" ],
       "cflags_cc!": [ "-fno-exceptions", "-std=gnu++0x" ],
       "sources": [ 
             "<!@(node -p \"require('fs').readdirSync('./src').map(f=>'src/'+f).join(' ')\")"
