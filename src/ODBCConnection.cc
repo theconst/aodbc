@@ -5,11 +5,11 @@
 #include "nanodbc.h"
 
 #include "ODBCConnection.hh"
-
 #include "UVMonitor.hh"
 #include "DBMSNameNanodbcAsyncWorker.hh"
 #include "ConnectedNanodbcAsyncWorker.hh"
 #include "DisconnectNanodbcAsyncWorker.hh"
+#include "ConnectNanodbcAsyncWorker.hh"
 
 namespace AODBC {
     
@@ -18,6 +18,11 @@ using namespace AODBC;
 const std::string ODBCConnection::JS_CLASS_NAME = "ODBCConnection";
 
 Nan::Persistent<v8::FunctionTemplate> ODBCConnection::JS_CONSTRUCTOR;
+
+ODBCConnection::ODBCConnection()
+    : connection(std::make_shared<UVMonitor<nanodbc::connection> >()) {
+    
+}
 
 ODBCConnection::ODBCConnection(std::string&& connection_string)
     : connection(std::make_shared<UVMonitor<nanodbc::connection> >(connection_string)) {
@@ -33,7 +38,7 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
     
     Nan::SetPrototypeMethod(tpl, "isConnected", JsConnected);
     Nan::SetPrototypeMethod(tpl, "disconnect", JsDisconnect);
-    
+    Nan::SetPrototypeMethod(tpl, "connect", JsConnect);
     Nan::SetPrototypeMethod(tpl, "dbmsName", JsDBMSName);
     
     Nan::Set(target,
@@ -56,23 +61,54 @@ NAN_METHOD(ODBCConnection::JsNew) {
     ODBCConnection *odbc_connection = nullptr; 
     if (connection_string_js->IsString()) { 
        odbc_connection = new ODBCConnection(*v8::String::Utf8Value(connection_string_js->ToString()));
+    } else if (connection_string_js->IsUndefined()) {
+       odbc_connection = new ODBCConnection();
     } else {
-        return Nan::ThrowTypeError("Argument should be of type string");
-    } 
+       return Nan::ThrowTypeError("Argument should be of type string");
+    }
     
     odbc_connection->Wrap(info.Holder());
 }
 
+// Used to delegate 
+template <>
+struct Context<std::shared_ptr<UVMonitor <nanodbc::connection> > > {
+
+    inline static std::shared_ptr <UVMonitor <nanodbc::connection> > Unwrap(const v8::Local<v8::Object>& obj) {
+        ODBCConnection* conn = Nan::ObjectWrap::Unwrap<ODBCConnection>(obj);
+
+        return conn->connection;
+    }
+};
+
 NAN_METHOD(ODBCConnection::JsConnected) {
-    DelegateWork<ConnectedNanodbcAsyncWorker>(info);
+    DelegateWork<
+        std::shared_ptr<UVMonitor<nanodbc::connection> >,
+        ConnectedNanodbcAsyncWorker
+    >(info);
+}
+
+NAN_METHOD(ODBCConnection::JsConnect) {
+    DelegateWork<
+        std::shared_ptr<UVMonitor<nanodbc::connection> >,
+        ConnectNanodbcAsyncWorker,    
+        std::string,
+        long
+    >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsDisconnect) {
-    DelegateWork<DisconnectNanodbcAsyncWorker>(info);
+    DelegateWork<
+        std::shared_ptr<UVMonitor<nanodbc::connection> >,
+        DisconnectNanodbcAsyncWorker
+    >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsDBMSName) {
-    DelegateWork<DBMSNameNanodbcAsyncWorker>(info);
+    DelegateWork<
+        std::shared_ptr<UVMonitor<nanodbc::connection> >, 
+        DBMSNameNanodbcAsyncWorker
+    >(info);
 }
 
 //static NAN_METHOD(JsDBMSVersion);
