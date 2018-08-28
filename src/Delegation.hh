@@ -20,9 +20,6 @@
 
 #include "nan.h"
 
-
-#include <iostream>
-
 namespace AODBC {
     
 using namespace AODBC;
@@ -61,13 +58,7 @@ struct JsToCpp<long> {
     }
     
     inline static bool IsValidCppType(const v8::Local<v8::Value>& local) {
-        bool is = local->IsNumber();
-        if (is) {
-            std::cout << "TRUE";
-        } else {
-            std::cout << "FALSE";
-        }
-        return is;
+        return local->IsNumber();
     }
 };
 
