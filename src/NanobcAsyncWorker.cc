@@ -10,11 +10,7 @@
 
 #include "NanobcAsyncWorker.hh"
 
-#include <memory>
 
-#include "UVMonitor.hh"
-
-#include <exception>
 
 namespace AODBC {
     
@@ -37,8 +33,8 @@ void NanodbcAsyncWorker::Execute() {
     } catch (const nanodbc::database_error& db_err) {
         SetErrorMessage(db_err.what());
     } catch (const std::exception& e) {
-        
-        SetErrorMessage("Fatal: unhandled runtime exception");
+       
+        SetErrorMessage(e.what());
     }
 }
 

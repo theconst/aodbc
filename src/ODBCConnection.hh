@@ -11,6 +11,8 @@
 
 #include <memory>
 
+#include <vector>
+
 #include "nan.h"
 #include "uv.h"
 #include "nanodbc.h"
@@ -54,6 +56,8 @@ class ODBCConnection final : public Nan::ObjectWrap {
         static NAN_METHOD(JsCatalogName);
         
         static NAN_METHOD(JsDatabaseName);
+        
+        static NAN_METHOD(JsExecute);
         
         static Nan::Persistent<v8::FunctionTemplate> JS_CONSTRUCTOR;
         

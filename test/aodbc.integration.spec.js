@@ -14,6 +14,7 @@ describe('ODBC Connection integration tests', function () {
         aodbc = require('aodbc');
     });
     
+    
     it('should return connected for new instance', function (done) {
         const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
             
@@ -193,10 +194,46 @@ describe('ODBC Connection integration tests', function () {
             });
         });
     });
+    
+    it('should execute query 1', function(done) {
+       testQuery('select 1 as Q', done);
+    });
+    
+    it('should execute query 2', function(done) {
+        testQuery('SELECT AircraftModel from Aviation.Aircraft', done);
+    });
+    
+    it('should execute query 3', function(done) {
+        testQuery('SELECT AircraftSerialNo, AircraftModel from Aviation.Aircraft', done);
+    });
+    
+    // it takes to long
+    xit('should execute query 4', function(done) {
+        testQuery('Select * from Aviation.Aircraft', done);
+    });
+    
+    it('should execut query 5', function(done) {
+        testQuery('Select Count(*) FROM Aviation.Aircraft', done);
+    });
+    
+    function testQuery(query, done) {
+        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        
+        connection.execute(query, (err, value) => {
+            console.debug(`Error: ${err}`);
+            console.debug(`Value: ${JSON.stringify(value)}`);
+
+            expect(err).to.not.exist;
+            expect(value).to.exist;
+
+            done();
+        });
+    }
 
     afterEach(function () {
      
     });
 });
+
 
 
