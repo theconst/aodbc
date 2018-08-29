@@ -6,6 +6,7 @@
  * Created on August 28, 2018, 10:09 PM
  */
 
+//unfotunally we need this heade for constants
 #include <sql.h>
 
 #include "ExecuteNanodbcAsyncWorker.hh"
@@ -55,35 +56,35 @@ namespace AODBC {
                 const nanodbc::string& column_name = query_result.column_name(col);
 
                 if (query_result.is_null(column_name)) {
-                    nulls.push_back(column_name);
+                    nulls.emplace_back(column_name);
                 } else {
                     int datatype = query_result.column_datatype(col);
 
                     switch(datatype)  {
                     case SQL_INTEGER:
                     case SQL_SMALLINT:
-                        numbers.push_back(std::make_pair(column_name, query_result.get<int>(col)));
+                        numbers.emplace_back(column_name, query_result.get<int>(col));
                         break;
                     case SQL_FLOAT:
-                        numbers.push_back(std::make_pair(column_name, query_result.get<float>(col)));
+                        numbers.emplace_back(column_name, query_result.get<float>(col));
                         break;
                     case SQL_NUMERIC:
                     case SQL_DECIMAL:
                     case SQL_REAL:        
                     case SQL_DOUBLE:
-                        numbers.push_back(std::make_pair(column_name, query_result.get<double>(col)));
+                        numbers.emplace_back(column_name, query_result.get<double>(col));
                         break;
                     case SQL_VARCHAR: 
-                        strings.push_back(std::make_pair(column_name, query_result.get<nanodbc::string>(col)));
+                        strings.emplace_back(column_name, query_result.get<nanodbc::string>(col));
                         break;
                     case SQL_TYPE_DATE:
-                        dates.push_back(std::make_pair(column_name, query_result.get<nanodbc::date>(col)));
+                        dates.emplace_back(column_name, query_result.get<nanodbc::date>(col));
                         break;
                     case SQL_TYPE_TIME:
-                        times.push_back(std::make_pair(column_name, query_result.get<nanodbc::time>(col)));
+                        times.emplace_back(column_name, query_result.get<nanodbc::time>(col));
                         break;
                     case SQL_TYPE_TIMESTAMP:
-                        timestamps.push_back(std::make_pair(column_name, query_result.get<nanodbc::timestamp>(col)));
+                        timestamps.emplace_back(column_name, query_result.get<nanodbc::timestamp>(col));
                         break;
                     default:
                         throw std::runtime_error("Fatal Unsupported SQL type");
