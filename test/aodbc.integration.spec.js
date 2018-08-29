@@ -207,13 +207,18 @@ describe('ODBC Connection integration tests', function () {
         testQuery('SELECT AircraftSerialNo, AircraftModel from Aviation.Aircraft', done);
     });
     
-    // it takes to long
+    // it takes too long
     xit('should execute query 4', function(done) {
         testQuery('Select * from Aviation.Aircraft', done);
     });
     
     it('should execut query 5', function(done) {
         testQuery('Select Count(*) FROM Aviation.Aircraft', done);
+    });
+    
+    // it takes too long
+    xit('should execut query 6', function (done) {
+        testQuery('Select * FROM Aviation.Event', done);
     });
     
     function testQuery(query, done) {
