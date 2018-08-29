@@ -17,7 +17,7 @@
 #include "uv.h"
 #include "nanodbc.h"
 
-#include "Delegation.hh"
+#include "delegation.hh"
 
 #include "UVMonitor.hh"
 
