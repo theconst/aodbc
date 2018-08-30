@@ -16,10 +16,12 @@
 
 #include "nan.h"
 
+#include "sqltypes.hh"
+
 namespace AODBC {
 
     using namespace AODBC;
-
+    
     class ExecuteNanodbcAsyncWorker final : public NanodbcAsyncWorker {
     public:
         explicit ExecuteNanodbcAsyncWorker(
@@ -41,20 +43,8 @@ namespace AODBC {
         virtual void DoExecute(nanodbc::connection* connection) override;
     private:
         std::string query;
-        
-        //TODO: replace with variant datatype ard visitor pattern
-        
-        std::vector<std::vector<std::pair<nanodbc::string, double> > > row_numbers;
-        
-        std::vector<std::vector<std::pair<nanodbc::string, nanodbc::string> > > row_strings;
-        
-        std::vector<std::vector<std::pair<nanodbc::string, nanodbc::date> > > row_dates;
-        
-        std::vector<std::vector<std::pair<nanodbc::string, nanodbc::time> > > row_times;
-        
-        std::vector<std::vector<std::pair<nanodbc::string, nanodbc::timestamp> > > row_timestamps;
-        
-        std::vector<std::vector<nanodbc::string> > row_nulls;
+          
+        std::vector<sql_row_t> rows;
     };
 
 }
