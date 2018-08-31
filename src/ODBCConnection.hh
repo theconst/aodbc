@@ -30,6 +30,10 @@ class ODBCConnection final : public Nan::ObjectWrap {
     public:
         static NAN_MODULE_INIT(Init);
         
+        ODBCConnection(const ODBCConnection&) = delete;
+        
+        ODBCConnection(ODBCConnection&&) = delete;
+        
         virtual ~ODBCConnection() = default;
          
     private:
