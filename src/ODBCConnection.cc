@@ -80,7 +80,7 @@ NAN_METHOD(ODBCConnection::JsNew) {
 template <>
 struct Context<std::shared_ptr<UVMonitor <nanodbc::connection> > > {
 
-    inline static std::shared_ptr <UVMonitor <nanodbc::connection> > Unwrap(const v8::Local<v8::Object>& obj) {
+    inline static std::shared_ptr <UVMonitor <nanodbc::connection> > Unwrap(v8::Local<v8::Object> obj) {
         ODBCConnection* conn = Nan::ObjectWrap::Unwrap<ODBCConnection>(obj);
 
         return conn->connection;

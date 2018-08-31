@@ -27,25 +27,25 @@ using namespace AODBC;
 // unwraps this
 template<typename T>
 struct Context {
-    inline static T Unwrap(const v8::Local<v8::Object>&);
+    inline static T Unwrap(v8::Local<v8::Object>);
 };
 
 // convert and validate common js types
 template<typename T>
 struct JsToCpp {
-    inline static T Convert(const v8::Local<v8::Value>& local);
+    inline static T Convert(v8::Local<v8::Value> local);
 
-    inline static bool IsValidCppType(const v8::Local<v8::Value>& local);
+    inline static bool IsValidCppType(v8::Local<v8::Value> local);
 };
 
 template<>
 struct JsToCpp<std::string> {
 
-    inline static std::string Convert(const v8::Local<v8::Value>& local) {
+    inline static std::string Convert(v8::Local<v8::Value> local) {
         return std::string(*v8::String::Utf8Value(local->ToString()));
     }
 
-    inline static bool IsValidCppType(const v8::Local<v8::Value>& local) {
+    inline static bool IsValidCppType(v8::Local<v8::Value> local) {
         return local->IsString();
     }
 };
@@ -53,11 +53,11 @@ struct JsToCpp<std::string> {
 template<>
 struct JsToCpp<long> {
     
-    inline static long Convert(const v8::Local<v8::Value>& local) {
+    inline static long Convert(v8::Local<v8::Value> local) {
         return local->IntegerValue();
     }
     
-    inline static bool IsValidCppType(const v8::Local<v8::Value>& local) {
+    inline static bool IsValidCppType(v8::Local<v8::Value> local) {
         return local->IsNumber();
     }
 };

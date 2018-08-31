@@ -15,14 +15,15 @@
 #include "v8.h"
 #include "nan.h"
 #include "nanodbc.h"
+//TODO: give better names 
 
 namespace AODBC {
     
-    using namespace AODBC;
+using namespace AODBC;
 
-    typedef std::vector<u_int8_t> binary_t;
+typedef std::vector<u_int8_t> binary_t;
 
-    typedef boost::variant<
+typedef boost::variant<
     boost::blank,
     double,
     nanodbc::string,
@@ -30,11 +31,11 @@ namespace AODBC {
     nanodbc::time,
     nanodbc::timestamp,
     binary_t
-    > sql_col_value_t;
+> sql_col_value_t;
 
-    typedef nanodbc::string sql_col_name_t;
-    typedef std::pair<sql_col_name_t, sql_col_value_t> sql_col_t;
-    typedef std::vector<sql_col_t> sql_row_t;
+typedef nanodbc::string sql_col_name_t;
+typedef std::pair<sql_col_name_t, sql_col_value_t> sql_col_t;
+typedef std::vector<sql_col_t> sql_row_t;
     
 }
 
