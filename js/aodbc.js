@@ -25,4 +25,6 @@ const connection2 = new aodbc.ODBCConnection("DSN=CacheWinHost");
 connection2.execute(`Select * from Aviation.Crew`, (err, value) => {
     err && console.debug(`Error3: ${err}`);
     console.debug(`Crew: ${value.length}`);
+    
+    console.debug(`Crew: ${JSON.stringify(value)}`);
 });

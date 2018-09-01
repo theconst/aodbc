@@ -9,6 +9,8 @@
 #ifndef SQLTYPES_HH
 #define SQLTYPES_HH
 
+#include <vector>
+
 #include "boost/variant.hpp"
 #include "boost/blank.hpp"
 
@@ -31,12 +33,13 @@ typedef boost::variant<
     nanodbc::time,
     nanodbc::timestamp,
     binary_t
-> sql_col_value_t;
+> sql_column_t;
 
 typedef nanodbc::string sql_col_name_t;
-typedef std::pair<sql_col_name_t, sql_col_value_t> sql_col_t;
+typedef std::pair<sql_col_name_t, sql_column_t> sql_col_t;
 typedef std::vector<sql_col_t> sql_row_t;
-    
+typedef std::vector<sql_row_t> sql_result_t;
+
 }
 
 #endif /* SQLRESULTSET_HH */

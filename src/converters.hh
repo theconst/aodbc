@@ -20,6 +20,10 @@
 #include "nan.h"
 #include "nanodbc.h"
 
+#include <sql.h>
+#include <boost/variant/variant.hpp>
+
+#include <iostream>
 
 namespace AODBC {
     
@@ -35,12 +39,9 @@ namespace AODBC {
     void ConvertNanodbcTypeToJsObject(v8::Local<v8::Object> result, const nanodbc::date& date);
     void ConvertNanodbcTypeToJsObject(v8::Local<v8::Object> result, const nanodbc::time& date);
     void ConvertNanodbcTypeToJsObject(v8::Local<v8::Object> result, const nanodbc::timestamp& date);
-
-
-    //TODO: move this to another
-
     
-    //TODO: generify
+    v8::Local<v8::Array> ConvertNanodbcTypeToJsObject(const sql_result_t& result);
+    
     struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>>
     {
 
@@ -60,17 +61,9 @@ namespace AODBC {
         }
         
         v8::Local<v8::Value> operator()(const binary_t& binary) const {
-//            Nan::EscapableHandleScope handleScope;
-//            
-//            v8::Local<v8::Object> value = Nan::NewBuffer().ToLocalChecked();
-//            
-            //some byte manipulation will be done here, so special care should be taken
-//            
-//            binary.data();
+            //TODO: convert binary type
             
             throw std::runtime_error("Binary data not implemented yet");
-            
-//            return handleScope.Escape()
         }
         
         v8::Local<v8::Value> operator()(const nanodbc::date& t) const {
@@ -95,6 +88,26 @@ namespace AODBC {
         }
 
     };
+    
+    v8::Local<v8::Array> ConvertNanodbcTypeToJsObject(const sql_result_t& sql_result) {
+        Nan::EscapableHandleScope scope;
+        SQLColumnVisitor visitor;
+
+        v8::Local<v8::Array> js_result = Nan::New<v8::Array>(sql_result.size());
+        int c = 0;
+        for (const auto& row : sql_result) {
+            v8::Local<v8::Object> result_row = Nan::New<v8::Object>();
+            for (const auto& column : row) {
+                const nanodbc::string& col_name = column.first;
+                Nan::Set(result_row,
+                    Nan::New<v8::String>(col_name).ToLocalChecked(),
+                    column.second.apply_visitor(visitor)
+                );
+            }
+            js_result->Set(c++, result_row);
+        }
+        return scope.Escape(js_result);
+    }
     
     template<typename T>
     void ConvertNanodbcTypeToJsObject(v8::Local<v8::Object> time_result, 

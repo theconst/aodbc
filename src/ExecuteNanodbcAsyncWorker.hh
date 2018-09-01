@@ -10,7 +10,6 @@
 #define EXECUTENANODBCASYNCWORKER_HH
 
 #include <memory>
-#include <vector>
 
 #include "NanobcAsyncWorker.hh"
 
@@ -44,7 +43,7 @@ namespace AODBC {
     private:
         std::string query;
           
-        std::vector<sql_row_t> rows;
+        sql_result_t sql_result;
     };
 
 }
