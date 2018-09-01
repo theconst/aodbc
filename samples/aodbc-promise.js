@@ -38,11 +38,17 @@ const connectionString = "DSN=CacheWinHost";
             .order("AirportName")
             .toString();
 
-        console.log(`Executing: ${select}`);
-    
-        const result = await connectionAsync.executePromise(select);
+        const selectCount = "SELECT COUNT(*) FROM Aviation.Event"
 
-        console.table(result);
+        console.log(`Executing: ${select}, ${selectCount}`);
+    
+        //illustrate contention on single connection
+        const result = await Promise.all([
+            connectionAsync.executePromise(select),
+            connectionAsync.executePromise(selectCount)
+        ]);
+        console.log(`Number of rows ${JSON.stringify(result[1])}`);
+        console.table(result[0]);
     } catch (error) {
         console.error(error.message);
     } finally {
