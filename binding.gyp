@@ -16,7 +16,7 @@
       'conditions': [
           ['OS=="linux"', {
             'ldflags': [
-              '-lnanodbc', '-L<(module_root_dir)/lib'
+              '-lnanodbc', '-L<(module_root_dir)/lib', '-lpthread'
             ],
           }],
       ]

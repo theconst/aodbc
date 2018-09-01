@@ -1,5 +1,5 @@
 {
-  "name": "anodem",
+  "name": "aodbc",
   "version": "1.0.0",
   "description": "AODBC - javascript library for ODBC access to Intersystems Cache",
   "main": "src/js/main/index.js",
@@ -10,15 +10,17 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "console.table": "^0.10.0",
     "mocha": "*"
   },
   "scripts": {
     "clean": "node-gyp clean",
     "compile": "node-gyp rebuild",
-    "start": "node samples/aodbc.js",
+    "start": "node samples/aodbc-console-app.js",
     "test": "mocha test/**spec.js --reporter spec",
     "test:unit": "mocha test/**unit.spec.js --reporter spec",
-    "test:integration": "mocha test/**integration.spec.js --reporter spec"
+    "test:integration": "mocha test/**integration.spec.js --reporter spec",
+    "test:stress": "node samples/stress-test.js --max_old_space_size=100"
   },
   "repository": {
     "type": "git",
