@@ -18,6 +18,10 @@
     "test:unit": "mocha test/**unit.spec.js --reporter spec",
     "test:integration": "mocha test/**integration.spec.js --reporter spec"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/TheConst/aodbc.git"
+  }
   "author": "kko",
   "license": "ISC",
   "gypfile": true
