@@ -12,6 +12,7 @@ Linux x64 is the only supported platform (for now)
 
 ### Launch steps (for ubuntu and debian):
 
+* install nodejs - https://nodejs.org/
 * install unixodbc - http://www.unixodbc.org/
 * copy configuration from odbc.ini with your host address to ~/.odbc.ini
 * download ODBC driver for Intersystems Cache 
@@ -22,4 +23,10 @@ Linux x64 is the only supported platform (for now)
 
 * binary of nanodbc library is included in repository - TODO - remove. If your architecture or driver differs, you may need to build nanodbc from source - https://github.com/nanodbc/nanodbc
 
+# TODO List
 
+- Add support for prepared statements
+- Add support for transactions
+- Add support for binary type
+- Automate build for linux
+- Try to build on Windows machines
