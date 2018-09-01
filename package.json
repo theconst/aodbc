@@ -4,6 +4,7 @@
   "description": "Node native addons foolaround",
   "main": "src/js/main/index.js",
   "dependencies": {
+    "bluebird": "^3.5.1",
     "nan": "^2.10.0"
   },
   "devDependencies": {
@@ -21,7 +22,7 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/TheConst/aodbc.git"
-  }
+  },
   "author": "kko",
   "license": "MIT",
   "gypfile": true

@@ -1,3 +1,9 @@
+/**
+ * Demo sript of the aobc usage.
+ * Currently the only useful methods are execute and databaseName
+ * 
+ */
+
 const aodbc = require('aodbc');
 
 const connection = new aodbc.ODBCConnection("DSN=CacheWinHost");
