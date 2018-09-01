@@ -6,6 +6,8 @@
 
 namespace AODBC {
 
+    
+//TODO: wrap result set into its own object and allow user to navigate
 sql_result_t fetch_result_eagerly(nanodbc::result& result) {
     //todo : we can make it lazy
     sql_result_t sql_result;
