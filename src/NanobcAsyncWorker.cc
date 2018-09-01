@@ -13,6 +13,7 @@ NanodbcAsyncWorker::NanodbcAsyncWorker(
 
 void NanodbcAsyncWorker::Execute() {
     try {
+        //TODO: this will be wrapped in monitor
         UVMonitor<nanodbc::connection>* connection = connection_monitor.get();
         
         Synchronized lock(connection);
