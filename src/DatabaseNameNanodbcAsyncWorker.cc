@@ -1,11 +1,3 @@
-
-/* 
- * File:   DatabaseNameNanodbcAsyncWorker.cc
- * Author: kko
- * 
- * Created on August 28, 2018, 8:40 PM
- */
-
 #include "DatabaseNameNanodbcAsyncWorker.hh"
 
 namespace AODBC {
@@ -15,7 +7,7 @@ namespace AODBC {
     DatabaseNameNanodbcAsyncWorker::DatabaseNameNanodbcAsyncWorker(
             std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
             Nan::Callback* callback) :
-    NanodbcAsyncWorker(connection_monitor, callback) {
+        NanodbcAsyncWorker(connection_monitor, callback) {
     }
 
     void DatabaseNameNanodbcAsyncWorker::DoExecute(nanodbc::connection* connection) {

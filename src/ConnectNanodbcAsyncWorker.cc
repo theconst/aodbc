@@ -1,12 +1,5 @@
-
-/* 
- * File:   ConnectNanodbcAsyncWorker.cc
- * Author: kko
- * 
- * Created on August 28, 2018, 1:25 AM
- */
-
 #include "ConnectNanodbcAsyncWorker.hh"
+
 #include "UVMonitor.hh"
 #include "nanodbc.h"
 

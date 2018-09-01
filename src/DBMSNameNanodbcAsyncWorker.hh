@@ -1,19 +1,11 @@
-
-/* 
- * File:   DBMSNameNanodbcAsyncWorker.hh
- * Author: kko
- *
- * Created on August 27, 2018, 10:30 PM
- */
-
 #ifndef DBMSNAMENANODBCASYNCWORKER_HH
 #define DBMSNAMENANODBCASYNCWORKER_HH
 
 #include <memory>
 
-#include "NanobcAsyncWorker.hh"
-
 #include "nan.h"
+
+#include "NanobcAsyncWorker.hh"
 
 namespace AODBC {
 

@@ -1,16 +1,8 @@
-
-/* 
- * File:   ConnectionNanodbcAsyncWorker.cc
- * Author: kko
- * 
- * Created on August 26, 2018, 9:47 PM
- */
-
 #include <utility>
 
-#include "ConnectedNanodbcAsyncWorker.hh"
-#include "UVMonitor.hh"
 #include "nanodbc.h"
+
+#include "ConnectedNanodbcAsyncWorker.hh"
 
 namespace AODBC {
     

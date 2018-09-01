@@ -1,3 +1,5 @@
+#include "converters.hh"
+
 #include <exception>
 
 #include "nan.h"
@@ -5,7 +7,6 @@
 #include <sql.h>
 #include "nanodbc.h"
 
-#include "converters.hh"
 
 namespace AODBC {
 

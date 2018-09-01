@@ -1,7 +1,6 @@
-#include <sql.h>
-
 #include "fetch.hh"
 
+#include <sql.h>
 #include "sqltypes.hh"
 
 namespace AODBC {

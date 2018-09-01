@@ -1,19 +1,12 @@
-
-/* 
- * File:   DriverNameNanodbcAsyncWorker.hh
- * Author: kko
- *
- * Created on August 28, 2018, 8:16 PM
- */
-
 #ifndef DRIVERNAMENANODBCASYNCWORKER_HH
 #define DRIVERNAMENANODBCASYNCWORKER_HH
 
 #include <memory>
 
+#include "nan.h"
+
 #include "NanobcAsyncWorker.hh"
 
-#include "nan.h"
 
 namespace AODBC {
 

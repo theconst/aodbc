@@ -1,11 +1,3 @@
-
-/* 
- * File:   DBMSVersionNanodbcAsyncWorker.cc
- * Author: kko
- * 
- * Created on August 28, 2018, 8:16 PM
- */
-
 #include "DBMSVersionNanodbcAsyncWorker.hh"
 
 namespace AODBC {

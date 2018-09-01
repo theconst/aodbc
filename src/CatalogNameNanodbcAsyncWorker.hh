@@ -1,19 +1,11 @@
-
-/* 
- * File:   CatalogNameNanodbcAsyncWorker.hh
- * Author: kko
- *
- * Created on August 28, 2018, 8:16 PM
- */
-
 #ifndef CATALOGNAMENANODBCASYNCWORKER_HH
 #define CATALOGNAMENANODBCASYNCWORKER_HH
 
 #include <memory>
 
-#include "NanobcAsyncWorker.hh"
-
 #include "nan.h"
+
+#include "NanobcAsyncWorker.hh"
 
 namespace AODBC {
 

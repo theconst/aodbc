@@ -1,11 +1,3 @@
-
-/* 
- * File:   newClass.hh
- * Author: kko
- *
- * Created on August 26, 2018, 2:52 PM
- */
-
 #ifndef NEWCLASS_HH
 #define NEWCLASS_HH
 
@@ -18,8 +10,8 @@ namespace AODBC {
     
 using namespace AODBC;
 
-    
-//TODO: implement more descent synchronization
+
+//TODO: implement wrapper pattern as per http://www.stroustrup.com/wrapper.pdf
 
 
 class Synchronized;

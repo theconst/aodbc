@@ -1,11 +1,3 @@
-
-/* 
- * File:   ODBCConnection.hh
- * Author: kko
- *
- * Created on August 25, 2018, 8:22 PM
- */
-
 #ifndef ODBCCONNECTION_HH
 #define ODBCCONNECTION_HH
 
@@ -18,7 +10,6 @@
 #include "nanodbc.h"
 
 #include "delegation.hh"
-
 #include "UVMonitor.hh"
 
 

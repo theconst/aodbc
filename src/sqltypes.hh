@@ -1,21 +1,13 @@
-
-/* 
- * File:   SQLResultSet.hh
- * Author: kko
- *
- * Created on August 30, 2018, 3:40 AM
- */
-
 #ifndef SQLTYPES_HH
 #define SQLTYPES_HH
 
 #include <vector>
-
 #include "boost/variant.hpp"
 #include "boost/blank.hpp"
 
 #include "v8.h"
 #include "nan.h"
+
 #include "nanodbc.h"
 //TODO: give better names 
 

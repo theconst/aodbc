@@ -1,22 +1,8 @@
-
-/* 
- * File:   ExecuteNanodbcAsyncWorker.cc
- * Author: kko
- * 
- * Created on August 28, 2018, 10:09 PM
- */
-
-
 #include "ExecuteNanodbcAsyncWorker.hh"
+
 #include "sqltypes.hh"
 #include "converters.hh"
 #include "fetch.hh"
-
-#include <iostream>
-
-// whats left is progress worker and async statements
-
-// todo: make a stateful cursor executor
 
 namespace AODBC {
 

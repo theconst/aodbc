@@ -1,11 +1,3 @@
-
-/* 
- * File:   DisconnectNanodbcAsyncWorker.cc
- * Author: kko
- * 
- * Created on August 27, 2018, 11:15 PM
- */
-
 #include "DisconnectNanodbcAsyncWorker.hh"
 
 namespace AODBC {

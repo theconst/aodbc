@@ -1,11 +1,3 @@
-
-/* 
- * File:   DriverNameNanodbcAsyncWorker.cc
- * Author: kko
- * 
- * Created on August 28, 2018, 8:16 PM
- */
-
 #include "DriverNameNanodbcAsyncWorker.hh"
 
 namespace AODBC {

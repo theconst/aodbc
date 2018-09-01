@@ -1,11 +1,3 @@
-
-/* 
- * File:   DisconnectNanodbcAsyncWorker.hh
- * Author: kko
- *
- * Created on August 27, 2018, 11:15 PM
- */
-
 #ifndef DISCONNECTNANODBCASYNCWORKER_HH
 #define DISCONNECTNANODBCASYNCWORKER_HH
 

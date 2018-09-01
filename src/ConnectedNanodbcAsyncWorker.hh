@@ -1,19 +1,11 @@
-
-/* 
- * File:   ConnectionNanodbcAsyncWorker.hh
- * Author: kko
- *
- * Created on August 26, 2018, 9:47 PM
- */
-
 #ifndef CONNECTIONNANODBCASYNCWORKER_HH
 #define CONNECTIONNANODBCASYNCWORKER_HH
 
 #include <memory>
 
-#include "NanobcAsyncWorker.hh"
-
 #include "nan.h"
+
+#include "NanobcAsyncWorker.hh"
 
 namespace AODBC {
     

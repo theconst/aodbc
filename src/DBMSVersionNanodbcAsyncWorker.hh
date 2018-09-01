@@ -1,11 +1,3 @@
-
-/* 
- * File:   DBMSVersionNanodbcAsyncWorker.hh
- * Author: kko
- *
- * Created on August 28, 2018, 8:16 PM
- */
-
 #ifndef DBMSVERSIONNANODBCASYNCWORKER_HH
 #define DBMSVERSIONNANODBCASYNCWORKER_HH
 

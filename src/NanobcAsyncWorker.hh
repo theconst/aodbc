@@ -1,16 +1,10 @@
-
-/* 
- * File:   NanobcWorker.hh
- * Author: kko
- *
- * Created on August 26, 2018, 3:06 PM
- */
-
 #ifndef NANOBCWORKER_HH
 #define NANOBCWORKER_HH
 
 #include "nan.h"
+
 #include "nanodbc.h"
+
 #include "UVMonitor.hh"
 
 namespace AODBC {

@@ -1,20 +1,11 @@
-
-/* 
- * File:   ExecuteNanodbcAsyncWorker.hh
- * Author: kko
- *
- * Created on August 28, 2018, 10:09 PM
- */
-
 #ifndef EXECUTENANODBCASYNCWORKER_HH
 #define EXECUTENANODBCASYNCWORKER_HH
 
 #include <memory>
 
-#include "NanobcAsyncWorker.hh"
-
 #include "nan.h"
 
+#include "NanobcAsyncWorker.hh"
 #include "sqltypes.hh"
 
 namespace AODBC {

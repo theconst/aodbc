@@ -1,9 +1,12 @@
-/* 
- * File:   Delegation.hh
- * Author: kko
- *
- * Created on August 28, 2018, 12:57 AM
- */
+#ifndef DELEGATION_HH
+#define DELEGATION_HH
+
+
+#include "nan.h"
+
+namespace AODBC {
+    
+using namespace AODBC;
 
 //TODO : generalize to more than 2 args??
 //TODO : be less restrictive? this is javascript not python
@@ -12,17 +15,6 @@
 
 //TODO: wrap my mind around variadic templates
 //TODO: manage string constant
-
-
-#ifndef DELEGATION
-#define DELEGATION
-
-
-#include "nan.h"
-
-namespace AODBC {
-    
-using namespace AODBC;
 
 // unwraps this
 template<typename T>
@@ -132,5 +124,5 @@ NAN_METHOD(DelegateWork) {
 
 }
 
-#endif
+#endif /* DELEGATION_HH */
 
