@@ -12,7 +12,6 @@
   },
   "scripts": {
     "clean": "node-gyp clean",
-    "postinstall": "npm run compile",
     "compile": "node-gyp rebuild",
     "start": "node js/aodbc.js",
     "test": "mocha test/**spec.js --reporter spec",
