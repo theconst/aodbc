@@ -7,7 +7,7 @@
 
 const aodbc = require("aodbc");
 
-const connection = new ODBCConnection("DSN=CacheWinHost");
+const connection = new aodbc.ODBCConnection("DSN=CacheWinHost");
 
 connection.query("Select * from Aviation.Aircraft", (err, value) => {
     err && console.debug(`Error1: ${err}`);
@@ -16,10 +16,12 @@ connection.query("Select * from Aviation.Aircraft", (err, value) => {
 });
 
 //request on the same connection are serialized, we will wait for it
-connection.query("Select Count(*) from Aviation.Aircraft", (err, value) => {
+
+setTimeout(() => connection.query("Select Count(*) from Aviation.Aircraft", (err, value) => {
     err && console.debug(`Error2: ${err}`);
     console.debug(`Number of aircrafts 2: ${JSON.stringify(value)}`);
-});
+}), 0);
+
 
 //request on the same connection are serialized, we will wait for it
 connection.query("Select Sum(SeatsTotal) As Total from Aviation.Aircraft", (err, value) => {
@@ -27,11 +29,10 @@ connection.query("Select Sum(SeatsTotal) As Total from Aviation.Aircraft", (err,
     console.debug(`Number of seats: ${JSON.stringify(value)}`);
 });
 
-const connection2 = new ODBCConnection("DSN=CacheWinHost");
 
-connection2.query(`Select * from Aviation.Crew`, (err, value) => {
+connection.query(`Select * from Aviation.Crew`, (err, value) => {
     err && console.debug(`Error3: ${err}`);
     console.debug(`Crew: ${value.length}`);
     
-    console.debug(`Crew: ${JSON.stringify(value)}`);
+    // console.debug(`Crew: ${JSON.stringify(value)}`);
 });

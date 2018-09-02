@@ -13,9 +13,9 @@ NanodbcAsyncWorker::NanodbcAsyncWorker(
 
 void NanodbcAsyncWorker::Execute() {
     try {
-        // TODO(kko): this will be wrapped in monitor
         UVMonitor<nanodbc::connection>* connection = connection_monitor.get();
 
+        // TODO(kko): as per docs, the drivers are thread-safe
         Synchronized lock(connection);
 
         DoExecute(connection->get());
