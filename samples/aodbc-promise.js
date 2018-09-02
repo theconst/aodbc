@@ -14,7 +14,7 @@ const connectionString = "DSN=CacheWinHost";
     const connectionSync = aodbc.createConnection(connectionString);
     try {
         const result = await connectionSync
-            .executePromise("SELECT DISTINCT TOP 30 AircraftModel from Aviation.Aircraft");
+            .queryPromise("SELECT DISTINCT TOP 30 AircraftModel from Aviation.Aircraft");
         
         console.table(result);
     } catch (error) {
@@ -44,8 +44,8 @@ const connectionString = "DSN=CacheWinHost";
     
         //illustrate contention on single connection
         const result = await Promise.all([
-            connectionAsync.executePromise(select),
-            connectionAsync.executePromise(selectCount)
+            connectionAsync.queryPromise(select),
+            connectionAsync.queryPromise(selectCount)
         ]);
         console.log(`Number of rows ${JSON.stringify(result[1])}`);
         console.table(result[0]);
