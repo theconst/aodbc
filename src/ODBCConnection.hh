@@ -28,7 +28,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     virtual ~ODBCConnection() = default;
 
  private:
-    friend class Context<std::shared_ptr<UVMonitor<nanodbc::connection> > >;
+    friend class Context<std::shared_ptr<UVMonitor<nanodbc::connection>>>;
 
     static const char* JS_CLASS_NAME;
 
@@ -49,7 +49,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     ODBCConnection();
     explicit ODBCConnection(std::string&& conn_string);
 
-    std::shared_ptr<UVMonitor< nanodbc::connection > > connection;
+    std::shared_ptr<UVMonitor< nanodbc::connection>> connection;
 };
 
 

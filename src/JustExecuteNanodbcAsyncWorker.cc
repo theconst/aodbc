@@ -9,7 +9,7 @@ namespace AODBC {
 using AODBC::UVMonitor;
 
 JustExecuteNanodbcAsyncWorker::JustExecuteNanodbcAsyncWorker(
-        std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
+        std::shared_ptr< UVMonitor<nanodbc::connection>> connection_monitor,
         std::string&& query,
         Nan::Callback* callback) :
     NanodbcAsyncWorker(connection_monitor, callback),

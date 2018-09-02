@@ -22,7 +22,7 @@ namespace AODBC {
     static const int NUMBER_OF_ARGS = 2;
 
     explicit NanodbcAsyncWorker(
-        std::shared_ptr< UVMonitor<nanodbc::connection> >, Nan::Callback*);
+        std::shared_ptr< UVMonitor<nanodbc::connection>>, Nan::Callback*);
 
     virtual void DoExecute(nanodbc::connection* connection) = 0;
 
@@ -30,7 +30,7 @@ namespace AODBC {
     // returns null by default - for queries with no result
     virtual v8::Local<v8::Value> DoGetResult();
 
-    std::shared_ptr<UVMonitor<nanodbc::connection> > connection_monitor;
+    std::shared_ptr<UVMonitor<nanodbc::connection>> connection_monitor;
 
  private:
 };

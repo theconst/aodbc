@@ -14,7 +14,7 @@ using AODBC::UVMonitor;
 class ConnectNanodbcAsyncWorker final : public NanodbcAsyncWorker {
  public:
     explicit ConnectNanodbcAsyncWorker(
-        std::shared_ptr<UVMonitor<nanodbc::connection> > connection_monitor,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> connection_monitor,
         std::string&& connection_string,
         long timeout,  // NOLINT(runtime/int) - nanodbc defined API
         Nan::Callback* callback);

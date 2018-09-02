@@ -15,7 +15,7 @@ using AODBC::UVMonitor;
 class DriverNameNanodbcAsyncWorker final : public NanodbcAsyncWorker {
  public:
     explicit DriverNameNanodbcAsyncWorker(
-        std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
+        std::shared_ptr< UVMonitor<nanodbc::connection>> connection_monitor,
         Nan::Callback* callback);
 
     DriverNameNanodbcAsyncWorker(
