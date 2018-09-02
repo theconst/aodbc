@@ -9,31 +9,28 @@
 
 namespace AODBC {
 
-    using namespace AODBC;
+using AODBC::UVMonitor;
 
-    class DBMSVersionNanodbcAsyncWorker final : public NanodbcAsyncWorker {
-    public:
-        explicit DBMSVersionNanodbcAsyncWorker(
-            std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
-            Nan::Callback* callback
-        );
+class DBMSVersionNanodbcAsyncWorker final : public NanodbcAsyncWorker {
+ public:
+    explicit DBMSVersionNanodbcAsyncWorker(
+        std::shared_ptr<UVMonitor<nanodbc::connection>> connection_monitor,
+        Nan::Callback *callback);
 
-        DBMSVersionNanodbcAsyncWorker(const DBMSVersionNanodbcAsyncWorker& orig) = delete;
+    DBMSVersionNanodbcAsyncWorker(
+        const DBMSVersionNanodbcAsyncWorker &orig) = delete;
+    DBMSVersionNanodbcAsyncWorker(
+        DBMSVersionNanodbcAsyncWorker &&orig) = delete;
 
-        DBMSVersionNanodbcAsyncWorker(DBMSVersionNanodbcAsyncWorker&& orig) = delete;
+    virtual ~DBMSVersionNanodbcAsyncWorker() = default;
+ protected:
+    v8::Local<v8::Value> DoGetResult() override;
+    void DoExecute(nanodbc::connection *connection) override;
 
-        virtual ~DBMSVersionNanodbcAsyncWorker() = default;
+ private:
+    std::string dbms_version;
+};
 
-    protected:
-
-        virtual v8::Local<v8::Value> DoGetResult() override;
-
-        virtual void DoExecute(nanodbc::connection* connection) override;
-    private:
-        std::string dbms_version;
-    };
-
-}
+}  // namespace AODBC
 
 #endif /* DBMSVERSIONNANODBCASYNCWORKER_HH */
-

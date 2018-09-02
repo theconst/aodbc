@@ -9,33 +9,31 @@
 
 namespace AODBC {
 
-using namespace AODBC;
+using AODBC::UVMonitor;
 
 class ConnectNanodbcAsyncWorker final : public NanodbcAsyncWorker {
-public:
+ public:
     explicit ConnectNanodbcAsyncWorker(
-        std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
+        std::shared_ptr<UVMonitor<nanodbc::connection> > connection_monitor,
         std::string&& connection_string,
-        long timeout,
-        Nan::Callback* callback
-    );
+        long timeout,  // NOLINT(runtime/int) - nanodbc defined API
+        Nan::Callback* callback);
 
     ConnectNanodbcAsyncWorker(const ConnectNanodbcAsyncWorker& orig) = delete;
-
     ConnectNanodbcAsyncWorker(ConnectNanodbcAsyncWorker&& orig) = delete;
 
     virtual ~ConnectNanodbcAsyncWorker() = default;
-protected:
-    virtual v8::Local<v8::Value> DoGetResult() override;
+ protected:
+    v8::Local<v8::Value> DoGetResult() override;
 
-    virtual void DoExecute(nanodbc::connection* connection) override;
-private:
+    void DoExecute(nanodbc::connection* connection) override;
+
+ private:
     std::string connection_string;
-    
-    long timeout;
+    long timeout;  // NOLINT(runtime/int) - nanodbc defined API
 };
 
-}
+}  // namespace AODBC
 
 #endif /* CONNECTNANODBCASYNCWORKER_HH */
 

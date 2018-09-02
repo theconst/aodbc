@@ -15,53 +15,43 @@
 
 namespace AODBC {
 
-using namespace AODBC;
-    
+using AODBC::UVMonitor;
+
 class ODBCConnection final : public Nan::ObjectWrap {
-    public:
-        static NAN_MODULE_INIT(Init);
-        
-        ODBCConnection(const ODBCConnection&) = delete;
-        
-        ODBCConnection(ODBCConnection&&) = delete;
-        
-        virtual ~ODBCConnection() = default;
-         
-    private:
-        friend class Context<std::shared_ptr<UVMonitor<nanodbc::connection> > >;
-        
-        explicit ODBCConnection();
-        
-        explicit ODBCConnection(std::string&& conn_string);
-        
-        static NAN_METHOD(JsNew);
-        
-        static NAN_METHOD(JsConnected);
-        
-        static NAN_METHOD(JsConnect);
-        
-        static NAN_METHOD(JsDisconnect);
-        
-        static NAN_METHOD(JsDBMSName);
-        
-        static NAN_METHOD(JsDBMSVersion);
-        
-        static NAN_METHOD(JsDriverName);
-        
-        static NAN_METHOD(JsCatalogName);
-        
-        static NAN_METHOD(JsDatabaseName);
-        
-        static NAN_METHOD(JsExecute);
-        
-        static Nan::Persistent<v8::FunctionTemplate> JS_CONSTRUCTOR;
-        
-        static const std::string JS_CLASS_NAME;
-        
-        std::shared_ptr<UVMonitor< nanodbc::connection > > connection; 
+ public:
+    static NAN_MODULE_INIT(Init);
+
+    ODBCConnection(const ODBCConnection&) = delete;
+
+    ODBCConnection(ODBCConnection&&) = delete;
+
+    virtual ~ODBCConnection() = default;
+
+ private:
+    friend class Context<std::shared_ptr<UVMonitor<nanodbc::connection> > >;
+
+    static const char* JS_CLASS_NAME;
+
+    static NAN_METHOD(JsNew);
+    static NAN_METHOD(JsConnected);
+    static NAN_METHOD(JsConnect);
+    static NAN_METHOD(JsDisconnect);
+    static NAN_METHOD(JsDBMSName);
+    static NAN_METHOD(JsDBMSVersion);
+    static NAN_METHOD(JsDriverName);
+    static NAN_METHOD(JsCatalogName);
+    static NAN_METHOD(JsDatabaseName);
+    static NAN_METHOD(JsExecute);
+
+    static Nan::Persistent<v8::FunctionTemplate> JS_CONSTRUCTOR;
+
+    ODBCConnection();
+    explicit ODBCConnection(std::string&& conn_string);
+
+    std::shared_ptr<UVMonitor< nanodbc::connection > > connection;
 };
 
 
-}
+}  // namespace AODBC
 #endif /* ODBCCONNECTION_HH */
 

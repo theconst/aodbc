@@ -9,31 +9,29 @@
 
 namespace AODBC {
 
-    using namespace AODBC;
+using AODBC::UVMonitor;
 
-    class DatabaseNameNanodbcAsyncWorker final : public NanodbcAsyncWorker {
-    public:
-        explicit DatabaseNameNanodbcAsyncWorker(
-            std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
-            Nan::Callback* callback
-        );
+class DatabaseNameNanodbcAsyncWorker final : public NanodbcAsyncWorker {
+ public:
+    explicit DatabaseNameNanodbcAsyncWorker(
+        std::shared_ptr<UVMonitor<nanodbc::connection>> connection_monitor,
+        Nan::Callback *callback);
 
-        DatabaseNameNanodbcAsyncWorker(const DatabaseNameNanodbcAsyncWorker& orig) = delete;
+    DatabaseNameNanodbcAsyncWorker(
+        const DatabaseNameNanodbcAsyncWorker &orig) = delete;
+    DatabaseNameNanodbcAsyncWorker(
+        DatabaseNameNanodbcAsyncWorker &&orig) = delete;
 
-        DatabaseNameNanodbcAsyncWorker(DatabaseNameNanodbcAsyncWorker&& orig) = delete;
+    virtual ~DatabaseNameNanodbcAsyncWorker() = default;
 
-        virtual ~DatabaseNameNanodbcAsyncWorker() = default;
+ protected:
+    v8::Local<v8::Value> DoGetResult() override;
+    void DoExecute(nanodbc::connection *connection) override;
 
-    protected:
+ private:
+    std::string database_name;
+};
 
-        virtual v8::Local<v8::Value> DoGetResult() override;
-
-        virtual void DoExecute(nanodbc::connection* connection) override;
-    private:
-        std::string database_name;
-    };
-
-}
+}  // namespace AODBC
 
 #endif /* DATABASENAMENANODBCASYNCWORKER_HH */
-

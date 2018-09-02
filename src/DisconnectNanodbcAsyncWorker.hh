@@ -9,29 +9,27 @@
 
 namespace AODBC {
 
-using namespace AODBC;
+using AODBC::UVMonitor;
 
 class DisconnectNanodbcAsyncWorker final : public NanodbcAsyncWorker {
-public:
+ public:
     explicit DisconnectNanodbcAsyncWorker(
-            std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
-            Nan::Callback* callback
-    );
+        std::shared_ptr<UVMonitor<nanodbc::connection>> connection_monitor,
+        Nan::Callback *callback);
 
-    DisconnectNanodbcAsyncWorker(const DisconnectNanodbcAsyncWorker& orig) = delete;
-
-    DisconnectNanodbcAsyncWorker(DisconnectNanodbcAsyncWorker&& orig) = delete;
+    DisconnectNanodbcAsyncWorker(
+        const DisconnectNanodbcAsyncWorker &orig) = delete;
+    DisconnectNanodbcAsyncWorker(DisconnectNanodbcAsyncWorker &&orig) = delete;
 
     virtual ~DisconnectNanodbcAsyncWorker() = default;
 
-protected:
+ protected:
+    v8::Local<v8::Value> DoGetResult() override;
+    void DoExecute(nanodbc::connection *connection) override;
 
-    virtual v8::Local<v8::Value> DoGetResult() override;
-
-    virtual void DoExecute(nanodbc::connection* connection) override;
+ private:
 };
 
-}
+}  // namespace AODBC
 
 #endif /* DISCONNECTNANODBCASYNCWORKER_HH */
-

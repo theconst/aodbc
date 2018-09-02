@@ -9,11 +9,8 @@
 #include "nan.h"
 
 #include "nanodbc.h"
-//TODO: give better names 
 
 namespace AODBC {
-    
-using namespace AODBC;
 
 typedef std::vector<u_int8_t> binary_t;
 
@@ -32,7 +29,7 @@ typedef std::pair<sql_col_name_t, sql_column_t> sql_col_t;
 typedef std::vector<sql_col_t> sql_row_t;
 typedef std::vector<sql_row_t> sql_result_t;
 
-}
+}  // namespace AODBC
 
 #endif /* SQLRESULTSET_HH */
 

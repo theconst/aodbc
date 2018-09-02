@@ -10,34 +10,29 @@
 
 namespace AODBC {
 
-    using namespace AODBC;
-    
-    class ExecuteNanodbcAsyncWorker final : public NanodbcAsyncWorker {
-    public:
-        explicit ExecuteNanodbcAsyncWorker(
-            std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
-            std::string&& query,
-            Nan::Callback* callback
-        );
+using AODBC::UVMonitor;
 
-        ExecuteNanodbcAsyncWorker(const ExecuteNanodbcAsyncWorker& orig) = delete;
+class ExecuteNanodbcAsyncWorker final : public NanodbcAsyncWorker {
+ public:
+    explicit ExecuteNanodbcAsyncWorker(
+        std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
+        std::string&& query,
+        Nan::Callback* callback);
 
-        ExecuteNanodbcAsyncWorker(ExecuteNanodbcAsyncWorker&& orig) = delete;
+    ExecuteNanodbcAsyncWorker(const ExecuteNanodbcAsyncWorker& orig) = delete;
+    ExecuteNanodbcAsyncWorker(ExecuteNanodbcAsyncWorker&& orig) = delete;
 
-        virtual ~ExecuteNanodbcAsyncWorker() = default;
+    virtual ~ExecuteNanodbcAsyncWorker() = default;
+ protected:
+    v8::Local<v8::Value> DoGetResult() override;
+    void DoExecute(nanodbc::connection* connection) override;
 
-    protected:
+ private:
+    std::string query;
+    sql_result_t sql_result;
+};
 
-        virtual v8::Local<v8::Value> DoGetResult() override;
-
-        virtual void DoExecute(nanodbc::connection* connection) override;
-    private:
-        std::string query;
-          
-        sql_result_t sql_result;
-    };
-
-}
+}  // namespace AODBC
 
 #endif /* EXECUTENANODBCASYNCWORKER_HH */
 

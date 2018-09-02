@@ -5,7 +5,7 @@
 
 namespace AODBC {
 
-using namespace AODBC;
+using AODBC::UVMonitor;
 
 ConnectNanodbcAsyncWorker::ConnectNanodbcAsyncWorker(
     std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,

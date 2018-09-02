@@ -1,5 +1,5 @@
-#ifndef CONNECTIONNANODBCASYNCWORKER_HH
-#define CONNECTIONNANODBCASYNCWORKER_HH
+#ifndef CONNECTEDNANODBCASYNCWORKER_HH
+#define CONNECTEDNANODBCASYNCWORKER_HH
 
 #include <memory>
 
@@ -8,32 +8,27 @@
 #include "NanobcAsyncWorker.hh"
 
 namespace AODBC {
-    
-using namespace AODBC;
+
+using AODBC::UVMonitor;
 
 class ConnectedNanodbcAsyncWorker final : public NanodbcAsyncWorker {
-public:
-    explicit ConnectedNanodbcAsyncWorker(
-        std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
-        Nan::Callback* callback
-    );
-    
-    ConnectedNanodbcAsyncWorker(const ConnectedNanodbcAsyncWorker& orig) = delete;
-    
-    ConnectedNanodbcAsyncWorker(ConnectedNanodbcAsyncWorker&& orig) = delete;
-    
-    virtual ~ConnectedNanodbcAsyncWorker() = default;
-    
-protected:
-    
-    virtual v8::Local<v8::Value> DoGetResult() override;
-    
-    virtual void DoExecute(nanodbc::connection* connection) override;
-private:    
-    bool connected;
+ public:
+  explicit ConnectedNanodbcAsyncWorker(
+      std::shared_ptr<UVMonitor<nanodbc::connection>> connection_monitor,
+      Nan::Callback *callback);
+
+  ConnectedNanodbcAsyncWorker(const ConnectedNanodbcAsyncWorker &orig) = delete;
+  ConnectedNanodbcAsyncWorker(ConnectedNanodbcAsyncWorker &&orig) = delete;
+
+  virtual ~ConnectedNanodbcAsyncWorker() = default;
+ protected:
+  v8::Local<v8::Value> DoGetResult() override;
+  void DoExecute(nanodbc::connection *connection) override;
+
+ private:
+  bool connected;
 };
 
-}
+}  // namespace AODBC
 
-#endif /* CONNECTIONNANODBCASYNCWORKER_HH */
-
+#endif /* CONNECTEDNANODBCASYNCWORKER_HH */

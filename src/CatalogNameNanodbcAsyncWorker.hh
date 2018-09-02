@@ -9,29 +9,28 @@
 
 namespace AODBC {
 
-    using namespace AODBC;
+using AODBC::UVMonitor;
 
-    class CatalogNameNanodbcAsyncWorker final : public NanodbcAsyncWorker {
-    public:
-        explicit CatalogNameNanodbcAsyncWorker(
-            std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
-            Nan::Callback* callback
-        );
+class CatalogNameNanodbcAsyncWorker final : public NanodbcAsyncWorker {
+ public:
+    explicit CatalogNameNanodbcAsyncWorker(
+        std::shared_ptr< UVMonitor<nanodbc::connection> > connection_monitor,
+        Nan::Callback* callback);
 
-        CatalogNameNanodbcAsyncWorker(const CatalogNameNanodbcAsyncWorker& orig) = delete;
+    CatalogNameNanodbcAsyncWorker(
+        const CatalogNameNanodbcAsyncWorker& orig) = delete;
 
-        CatalogNameNanodbcAsyncWorker(CatalogNameNanodbcAsyncWorker&& orig) = delete;
+    CatalogNameNanodbcAsyncWorker(
+        CatalogNameNanodbcAsyncWorker&& orig) = delete;
 
-        virtual ~CatalogNameNanodbcAsyncWorker() = default;
+    virtual ~CatalogNameNanodbcAsyncWorker() = default;
+ protected:
+    v8::Local<v8::Value> DoGetResult() override;
+    void DoExecute(nanodbc::connection* connection) override;
 
-    protected:
-
-        virtual v8::Local<v8::Value> DoGetResult() override;
-
-        virtual void DoExecute(nanodbc::connection* connection) override;
-    private:
-        std::string catalog_name;
-    };
+ private:
+    std::string catalog_name;
+};
 
 }
 

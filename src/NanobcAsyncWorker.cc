@@ -1,28 +1,27 @@
 #include "NanobcAsyncWorker.hh"
 
 namespace AODBC {
-    
-using namespace AODBC;
+
+using AODBC::UVMonitor;
 
 NanodbcAsyncWorker::NanodbcAsyncWorker(
-        std::shared_ptr< UVMonitor<nanodbc::connection> > monitor, 
+        std::shared_ptr<UVMonitor<nanodbc::connection> > monitor,
         Nan::Callback* callback) :
-    AsyncWorker(std::move(callback), "AODBC::NanodbcAsyncWorker"), 
+    AsyncWorker(std::move(callback), "AODBC::NanodbcAsyncWorker"),
     connection_monitor(monitor) {
 }
 
 void NanodbcAsyncWorker::Execute() {
     try {
-        //TODO: this will be wrapped in monitor
+        // TODO(kko): this will be wrapped in monitor
         UVMonitor<nanodbc::connection>* connection = connection_monitor.get();
-        
+
         Synchronized lock(connection);
-        
+
         DoExecute(connection->get());
     } catch (const nanodbc::database_error& db_err) {
         SetErrorMessage(db_err.what());
     } catch (const std::exception& e) {
-       
         SetErrorMessage(e.what());
     }
 }
@@ -39,8 +38,7 @@ void NanodbcAsyncWorker::HandleOKCallback() {
         callback->GetFunction(),
         Nan::GetCurrentContext()->Global(),
         NUMBER_OF_ARGS,
-        args
-    );
+        args);
 }
 
-}
+}  // namespace AODBC

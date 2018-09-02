@@ -5,16 +5,14 @@
 #include "nan.h"
 
 namespace AODBC {
-    
-using namespace AODBC;
 
-//TODO : generalize to more than 2 args??
-//TODO : be less restrictive? this is javascript not python
+// TODO(kko) : generalize to more than 2 args??
+// TODO(kko) : be less restrictive? this is javascript not python
 // make undefined not war
 
 
-//TODO: wrap my mind around variadic templates
-//TODO: manage string constant
+// TODO(kko) : wrap my mind around variadic templates
+// TODO(kko) : manage string constant
 
 // unwraps this
 template<typename T>
@@ -32,7 +30,6 @@ struct JsToCpp {
 
 template<>
 struct JsToCpp<std::string> {
-
     inline static std::string Convert(v8::Local<v8::Value> local) {
         return std::string(*v8::String::Utf8Value(local->ToString()));
     }
@@ -43,18 +40,18 @@ struct JsToCpp<std::string> {
 };
 
 template<>
-struct JsToCpp<long> {
-    
-    inline static long Convert(v8::Local<v8::Value> local) {
+struct JsToCpp<long> {  // NOLINT(runtime/int) - nanodbc defined API
+    inline static long Convert(  // NOLINT(runtime/int) - nanodbc defined API
+            v8::Local<v8::Value> local) {
         return local->IntegerValue();
     }
-    
+
     inline static bool IsValidCppType(v8::Local<v8::Value> local) {
         return local->IsNumber();
     }
 };
 
-//TODO: should I handle callbacks in the same fashion ?
+// TODO(kko): should I handle callbacks in the same fashion ?
 
 template<typename ContextT, typename WorkerT>
 NAN_METHOD(DelegateWork) {
@@ -66,10 +63,8 @@ NAN_METHOD(DelegateWork) {
             .ToLocalChecked();
 
     Nan::AsyncQueueWorker(new WorkerT(
-            Context<ContextT>::Unwrap(info.This()),
-            new Nan::Callback(js_callback)
-        )
-    );
+        Context<ContextT>::Unwrap(info.This()),
+        new Nan::Callback(js_callback)));
 }
 
 template<typename ContextT, typename WorkerT, typename Arg0>
@@ -89,8 +84,7 @@ NAN_METHOD(DelegateWork) {
     Nan::AsyncQueueWorker(new WorkerT(
         Context<ContextT>::Unwrap(info.This()),
         JsToCpp<Arg0>::Convert(arg0),
-        new Nan::Callback(js_callback))
-    );
+        new Nan::Callback(js_callback)));
 }
 
 template<typename ContextT, typename WorkerT, typename Arg0, typename Arg1>
@@ -109,20 +103,18 @@ NAN_METHOD(DelegateWork) {
     if (!arg2->IsFunction()) {
         return Nan::ThrowTypeError("Last argument at 2 should be callback");
     }
-    
+
     v8::Local<v8::Function> js_callback = Nan::To<v8::Function>(arg2)
             .ToLocalChecked();
 
     Nan::AsyncQueueWorker(new WorkerT(
-            Context<ContextT>::Unwrap(info.This()),
-            JsToCpp<Arg0>::Convert(arg0),
-            JsToCpp<Arg1>::Convert(arg1),
-            new Nan::Callback(js_callback)
-        )
-    );
+        Context<ContextT>::Unwrap(info.This()),
+        JsToCpp<Arg0>::Convert(arg0),
+        JsToCpp<Arg1>::Convert(arg1),
+        new Nan::Callback(js_callback)));
 }
 
-}
+}  // namespace AODBC
 
 #endif /* DELEGATION_HH */
 
