@@ -17,10 +17,9 @@ sql_result_t fetch_result_eagerly(nanodbc::result* result) {
             const sql_col_name_t& column_name = result->column_name(col_no);
 
             if (result->is_null(column_name)) {
-                {
-                    sql_column_t blank = boost::blank();
-                    row.emplace_back(column_name, blank);
-                }
+                sql_column_t blank = boost::blank();
+                row.emplace_back(column_name, blank);
+
                 continue;
             }
 
@@ -87,4 +86,4 @@ sql_result_t fetch_result_eagerly(nanodbc::result* result) {
     return sql_result;
 }
 
-}
+}  // namespace AODBC

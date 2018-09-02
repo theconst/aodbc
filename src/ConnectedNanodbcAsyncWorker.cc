@@ -25,4 +25,4 @@ v8::Local<v8::Value> ConnectedNanodbcAsyncWorker::DoGetResult() {
     return scope.Escape(Nan::New<v8::Boolean>(connected));
 }
 
-}
+}  // namespace AODBC
