@@ -12,7 +12,6 @@ sql_result_t fetch_result_eagerly(nanodbc::result* result) {
     for (int row_no = 0; result->next(); ++row_no) {
         sql_row_t row = sql_row_t();
 
-
         for (short col_no = 0;  // NOLINT(runtime/int) - nanodbc defined API
                 col_no < result->columns(); ++col_no) {
             const sql_col_name_t& column_name = result->column_name(col_no);
@@ -22,7 +21,7 @@ sql_result_t fetch_result_eagerly(nanodbc::result* result) {
                     sql_column_t blank = boost::blank();
                     row.emplace_back(column_name, blank);
                 }
-                break;
+                continue;
             }
 
             int datatype = result->column_datatype(col_no);
