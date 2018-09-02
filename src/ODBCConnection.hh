@@ -42,6 +42,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     static NAN_METHOD(JsCatalogName);
     static NAN_METHOD(JsDatabaseName);
     static NAN_METHOD(JsExecute);
+    static NAN_METHOD(JsJustExecute);
 
     static Nan::Persistent<v8::FunctionTemplate> JS_CONSTRUCTOR;
 

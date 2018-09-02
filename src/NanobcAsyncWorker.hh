@@ -27,7 +27,8 @@ namespace AODBC {
     virtual void DoExecute(nanodbc::connection* connection) = 0;
 
     //! Do not forget to escape the scope - we cannot force this
-    virtual v8::Local<v8::Value> DoGetResult() = 0;
+    // returns null by default - for queries with no result
+    virtual v8::Local<v8::Value> DoGetResult();
 
     std::shared_ptr<UVMonitor<nanodbc::connection> > connection_monitor;
 

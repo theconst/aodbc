@@ -26,6 +26,11 @@ void NanodbcAsyncWorker::Execute() {
     }
 }
 
+v8::Local<v8::Value> NanodbcAsyncWorker::DoGetResult() {
+    Nan::EscapableHandleScope scope;
+    return scope.Escape(Nan::Null());
+}
+
 void NanodbcAsyncWorker::HandleOKCallback() {
     Nan::HandleScope scope;
 

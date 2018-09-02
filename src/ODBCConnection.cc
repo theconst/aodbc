@@ -11,6 +11,7 @@
 #include "CatalogNameNanodbcAsyncWorker.hh"
 #include "DatabaseNameNanodbcAsyncWorker.hh"
 #include "ExecuteNanodbcAsyncWorker.hh"
+#include "JustExecuteNanodbcAsyncWorker.hh"
 
 namespace AODBC {
 
@@ -43,7 +44,8 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
     Nan::SetPrototypeMethod(tpl, "driverName", JsDriverName);
     Nan::SetPrototypeMethod(tpl, "catalogName", JsCatalogName);
     Nan::SetPrototypeMethod(tpl, "databaseName", JsDatabaseName);
-    Nan::SetPrototypeMethod(tpl, "execute", JsExecute);
+    Nan::SetPrototypeMethod(tpl, "query", JsExecute);
+    Nan::SetPrototypeMethod(tpl, "execute", JsJustExecute);
 
     Nan::Set(target,
         Nan::New(JS_CLASS_NAME).ToLocalChecked(),
@@ -147,6 +149,14 @@ NAN_METHOD(ODBCConnection::JsExecute) {
     return DelegateWork<
         std::shared_ptr<UVMonitor<nanodbc::connection > >,
         ExecuteNanodbcAsyncWorker,
+        std::string
+    >(info);
+}
+
+NAN_METHOD(ODBCConnection::JsJustExecute) {
+    return DelegateWork<
+        std::shared_ptr<UVMonitor<nanodbc::connection> >,
+        JustExecuteNanodbcAsyncWorker,
         std::string
     >(info);
 }
