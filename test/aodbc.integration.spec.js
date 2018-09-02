@@ -224,7 +224,7 @@ describe('ODBC Connection integration tests', function () {
     function testQuery(query, done) {
         const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
         
-        connection.execute(query, (err, value) => {
+        connection.query(query, (err, value) => {
             console.debug(`Error: ${err}`);
             console.debug(`Value: ${JSON.stringify(value)}`);
 
