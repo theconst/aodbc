@@ -29,8 +29,9 @@ const connectionString = "DSN=CacheWinHost";
         const connection1 = aodbc.createConnection(connectionString);
         const connection2 = aodbc.createConnection(connectionString);
         try {
-            const delay1 = Math.floor(Math.random() * 20001);
-            const delay2 = Math.floor(Math.random() * 20001);
+            const delayInterval = 5000;
+            const delay1 = Math.floor(Math.random() * delayInterval);
+            const delay2 = Math.floor(Math.random() * delayInterval);
 
             unbufferedLog(`Delays: ${delay1}, ${delay2}`);
             await Promise.all([
