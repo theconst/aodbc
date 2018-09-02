@@ -212,7 +212,7 @@ describe('ODBC Connection integration tests', function () {
         testQuery('Select * from Aviation.Aircraft', done);
     });
     
-    it('should execut query 5', function(done) {
+    it('should execute query 5', function(done) {
         testQuery('Select Count(*) FROM Aviation.Aircraft', done);
     });
     
