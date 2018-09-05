@@ -7,7 +7,7 @@
 
 #include "nanodbc.h"
 
-#include "JsTypes.hh"
+#include "js_to_cpp_converters.hh"
 #include "UVMonitor.hh"
 
 

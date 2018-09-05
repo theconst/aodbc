@@ -2,7 +2,6 @@
 
 #include "ODBCConnection.hh"
 
-#include "JsTypes.hh"
 #include "UVMonitor.hh"
 #include "delegation.hh"
 

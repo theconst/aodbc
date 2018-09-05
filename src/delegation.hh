@@ -4,7 +4,7 @@
 
 #include "nan.h"
 
-#include "JsTypes.hh"
+#include "js_to_cpp_converters.hh"
 #include "SingleResultWorker.hh"
 
 namespace AODBC {
