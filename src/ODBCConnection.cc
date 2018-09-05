@@ -16,6 +16,7 @@
 #include "ExecuteNanodbcAsyncWorker.hh"
 #include "JustExecuteNanodbcAsyncWorker.hh"
 
+#include "nanobdc_method_dispatch.hh"
 #include "SingleResultWorker.hh"
 
 namespace AODBC {

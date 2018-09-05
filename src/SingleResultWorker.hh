@@ -8,25 +8,9 @@
 #include "UVMonitor.hh"
 
 #include "cpp_to_js_converters.hh"
+#include "method_dispatch.hh"
 
 namespace AODBC {
-
-enum struct CommandNames {
-    dbms_name
-};
-
-template<CommandNames tag>
-struct MethodTag {
-};
-
-
-template <
-    typename OwnerT,
-    typename ResultT,
-    typename MethodT,
-    typename ArgsTuple
->
-ResultT call_method(MethodT tag, OwnerT* owner, ArgsTuple args);
 
 template <
     typename OwnerT,
@@ -87,15 +71,6 @@ class SingleResultWorker : public Nan::AsyncWorker {
 
     virtual ~SingleResultWorker() = default;
 };
-
-template<>
-nanodbc::string call_method(
-        MethodTag<CommandNames::dbms_name>,
-        UVMonitor<nanodbc::connection>* owner,
-        std::tuple<> tuple) {
-    Synchronized lock {owner};
-    return owner->get()->dbms_name();
-}
 
 
 }  // namespace AODBC
