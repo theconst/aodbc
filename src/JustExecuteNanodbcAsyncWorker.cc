@@ -1,7 +1,7 @@
 #include "JustExecuteNanodbcAsyncWorker.hh"
 
 #include "sqltypes.hh"
-#include "converters.hh"
+#include "cpp_to_js_converters.hh"
 #include "fetch.hh"
 
 namespace AODBC {
