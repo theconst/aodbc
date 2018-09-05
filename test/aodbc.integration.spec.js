@@ -106,7 +106,7 @@ describe('ODBC Connection integration tests', function () {
           
           connection.disconnect((err, value) => {
               expect(err).to.be.null;
-              expect(value).to.be.undefined;
+              expect(value).to.be.null;
               
               connection.isConnected((err, connected) => {
                   expect(connected).to.be.false;
