@@ -4,6 +4,8 @@
 #include "sqltypes.hh"
 #include "fetch.hh"
 
+// TODO(kko): move method dispatch to odbc connection, where it should be
+
 namespace AODBC {
 
 template <

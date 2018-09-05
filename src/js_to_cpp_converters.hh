@@ -3,6 +3,8 @@
 
 #include "nan.h"
 
+// TODO: remove unneeded objects 
+
 namespace AODBC {
 
 template<typename T>

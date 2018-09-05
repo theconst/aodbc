@@ -81,6 +81,8 @@ struct JsContext<std::shared_ptr<UVMonitor <nanodbc::connection>>> {
     }
 };
 
+// TODO(kko): we can now make uber-define over all the methods
+
 NAN_METHOD(ODBCConnection::JsConnected) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
