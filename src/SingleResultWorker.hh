@@ -29,7 +29,7 @@ class SingleResultWorker : public Nan::AsyncWorker {
         Args... arguments)
             : AsyncWorker(callback, "AODBC::SingleResultWorker"),
               owner_ptr(owner_ptr),
-              arguments_tuple(std::forward(arguments)...) {
+              arguments_tuple(std::forward<Args>(arguments)...) {
     }
 
     SingleResultWorker(const SingleResultWorker&) = delete;

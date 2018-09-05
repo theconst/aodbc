@@ -2,24 +2,16 @@
 
 #include "ODBCConnection.hh"
 
+#include "UVMonitor.hh"
+
 #include "delegation.hh"
 
-#include "UVMonitor.hh"
-#include "DBMSNameNanodbcAsyncWorker.hh"
-#include "ConnectedNanodbcAsyncWorker.hh"
-#include "DisconnectNanodbcAsyncWorker.hh"
-#include "ConnectNanodbcAsyncWorker.hh"
-#include "DBMSVersionNanodbcAsyncWorker.hh"
-#include "DriverNameNanodbcAsyncWorker.hh"
-#include "CatalogNameNanodbcAsyncWorker.hh"
-#include "DatabaseNameNanodbcAsyncWorker.hh"
-#include "ExecuteNanodbcAsyncWorker.hh"
-#include "JustExecuteNanodbcAsyncWorker.hh"
-
-#include "nanobdc_method_dispatch.hh"
 #include "SingleResultWorker.hh"
 
 namespace AODBC {
+
+using AODBC::MethodTag;
+using AODBC::CommandNames;
 
 const char* ODBCConnection::JS_CLASS_NAME = "ODBCConnection";
 
@@ -94,86 +86,88 @@ struct JsContext<std::shared_ptr<UVMonitor <nanodbc::connection>>> {
 
 NAN_METHOD(ODBCConnection::JsConnected) {
     return DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        ConnectedNanodbcAsyncWorker
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::is_connected>,
+        bool
     >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsConnect) {
     return DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        ConnectNanodbcAsyncWorker,
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::connect>,
+        boost::blank,
         std::string,
         long  // NOLINT(runtime/int) - nanodbc defined API
     >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsDisconnect) {
-    DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        DisconnectNanodbcAsyncWorker
+    return DelegateWork<
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::disconnect>,
+        boost::blank,
+        std::string,
+        long  // NOLINT(runtime/int) - nanodbc defined API
     >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsDBMSName) {
-    v8::Local<v8::Value> arg0 = info[0];
-    if (!arg0->IsFunction()) {
-        return Nan::ThrowTypeError("Illegal argument type at position 0");
-    }
-    v8::Local<v8::Function> js_callback = Nan::To<v8::Function>(arg0)
-            .ToLocalChecked();
-
-    ODBCConnection* conn = Nan::ObjectWrap::Unwrap<ODBCConnection>(info.This());
-
-    Nan::AsyncQueueWorker(new SingleResultWorker<
-            UVMonitor<nanodbc::connection>,
-            AODBC::MethodTag<AODBC::CommandNames::dbms_name>,
-            nanodbc::string
-        >(new Nan::Callback(js_callback), conn->connection));
+    return DelegateWork<
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::dbms_name>,
+        nanodbc::string
+    >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsDBMSVersion) {
     return DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        DBMSVersionNanodbcAsyncWorker
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::dbms_version>,
+        nanodbc::string
     >(info);
 };
 
 
 NAN_METHOD(ODBCConnection::JsDriverName) {
     return DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        DriverNameNanodbcAsyncWorker
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::driver_name>,
+        nanodbc::string
     >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsCatalogName) {
     return DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        CatalogNameNanodbcAsyncWorker
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::catalog_name>,
+        nanodbc::string
     >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsDatabaseName) {
     return DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        DatabaseNameNanodbcAsyncWorker
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::database_name>,
+        nanodbc::string
     >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsExecute) {
     return DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        ExecuteNanodbcAsyncWorker,
-        std::string
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::query>,
+        AODBC::sql_result_t,
+        std::string                 // TODO(kko): fit to sql type
     >(info);
 }
 
 NAN_METHOD(ODBCConnection::JsJustExecute) {
     return DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        JustExecuteNanodbcAsyncWorker,
-        std::string
+        UVMonitor<nanodbc::connection>,
+        MethodTag<CommandNames::execute>,
+        boost::blank,               // TODO(kko) move to typedefs
+        std::string                 // TODO(kko): fit to sql type
     >(info);
 }
 
