@@ -1,6 +1,9 @@
 #include <utility>
 
 #include "ODBCConnection.hh"
+
+#include "delegation.hh"
+
 #include "UVMonitor.hh"
 #include "DBMSNameNanodbcAsyncWorker.hh"
 #include "ConnectedNanodbcAsyncWorker.hh"
@@ -79,7 +82,7 @@ NAN_METHOD(ODBCConnection::JsNew) {
 
 
 template <>
-struct Context<std::shared_ptr<UVMonitor <nanodbc::connection>>> {
+struct JsContext<std::shared_ptr<UVMonitor <nanodbc::connection>>> {
     inline static std::shared_ptr <UVMonitor<nanodbc::connection>> Unwrap(
             v8::Local<v8::Object> obj) {
         ODBCConnection* conn = Nan::ObjectWrap::Unwrap<ODBCConnection>(obj);

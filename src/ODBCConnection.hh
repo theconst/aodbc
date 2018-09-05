@@ -9,7 +9,7 @@
 #include "uv.h"
 #include "nanodbc.h"
 
-#include "delegation.hh"
+#include "JsTypes.hh"
 #include "UVMonitor.hh"
 
 
@@ -28,7 +28,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     virtual ~ODBCConnection() = default;
 
  private:
-    friend class Context<std::shared_ptr<UVMonitor<nanodbc::connection>>>;
+    friend class JsContext<std::shared_ptr<UVMonitor<nanodbc::connection>>>;
 
     static const char* JS_CLASS_NAME;
 
