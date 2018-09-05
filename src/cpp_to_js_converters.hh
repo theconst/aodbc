@@ -28,6 +28,9 @@ void convert_cpp_type_to_js(
     v8::Local<v8::Object> result,
     const nanodbc::timestamp& date);
 
+
+// TODO(kko): refactor to enum;
+
 struct IsTimeLike {
 };
 
