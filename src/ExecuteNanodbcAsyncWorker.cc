@@ -24,7 +24,7 @@ void ExecuteNanodbcAsyncWorker::DoExecute(nanodbc::connection* connection) {
 
 v8::Local<v8::Value> ExecuteNanodbcAsyncWorker::DoGetResult() {
     Nan::EscapableHandleScope scope;
-    return scope.Escape(ConvertNanodbcTypeToJsObject(sql_result));
+    return scope.Escape(convert_cpp_type_to_js(sql_result));
 }
 
 }  // namespace AODBC
