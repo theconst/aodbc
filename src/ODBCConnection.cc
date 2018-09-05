@@ -13,6 +13,8 @@
 #include "ExecuteNanodbcAsyncWorker.hh"
 #include "JustExecuteNanodbcAsyncWorker.hh"
 
+#include "SingleResultWorker.hh"
+
 namespace AODBC {
 
 const char* ODBCConnection::JS_CLASS_NAME = "ODBCConnection";
@@ -110,10 +112,20 @@ NAN_METHOD(ODBCConnection::JsDisconnect) {
 }
 
 NAN_METHOD(ODBCConnection::JsDBMSName) {
-    return DelegateWork<
-        std::shared_ptr<UVMonitor<nanodbc::connection>>,
-        DBMSNameNanodbcAsyncWorker
-    >(info);
+    v8::Local<v8::Value> arg0 = info[0];
+    if (!arg0->IsFunction()) {
+        return Nan::ThrowTypeError("Illegal argument type at position 0");
+    }
+    v8::Local<v8::Function> js_callback = Nan::To<v8::Function>(arg0)
+            .ToLocalChecked();
+
+    ODBCConnection* conn = Nan::ObjectWrap::Unwrap<ODBCConnection>(info.This());
+
+    Nan::AsyncQueueWorker(new SingleResultWorker<
+            UVMonitor<nanodbc::connection>,
+            AODBC::MethodTag<AODBC::CommandNames::dbms_name>,
+            nanodbc::string
+        >(new Nan::Callback(js_callback), conn->connection));
 }
 
 NAN_METHOD(ODBCConnection::JsDBMSVersion) {
