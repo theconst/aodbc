@@ -9,17 +9,8 @@ namespace AODBC {
 
 using AODBC::sql_result_t;
 
-v8::Local<v8::Array> convert_cpp_type_to_js(const sql_result_t& result);
-
-void convert_cpp_type_to_js(
-    v8::Local<v8::Object> result,
-    const nanodbc::date& date);
-void convert_cpp_type_to_js(
-    v8::Local<v8::Object> result,
-    const nanodbc::time& date);
-void convert_cpp_type_to_js(
-    v8::Local<v8::Object> result,
-    const nanodbc::timestamp& date);
+template <typename T>
+v8::Local<v8::Value> convert_cpp_type_to_js(const T& arg);
 
 }  // namespace AODBC
 

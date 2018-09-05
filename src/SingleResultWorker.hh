@@ -7,6 +7,8 @@
 
 #include "UVMonitor.hh"
 
+#include "converters.hh"
+
 namespace AODBC {
 
 enum struct CommandNames {
@@ -17,8 +19,6 @@ template<CommandNames tag>
 struct MethodTag {
 };
 
-template <typename T>
-v8::Local<v8::Value> convert_cpp_type_to_js(const T& arg);
 
 template <
     typename OwnerT,
@@ -87,16 +87,6 @@ class SingleResultWorker : public Nan::AsyncWorker {
 
     virtual ~SingleResultWorker() = default;
 };
-
-
-
-template<>
-v8::Local<v8::Value> convert_cpp_type_to_js<nanodbc::string>(
-        const nanodbc::string& arg) {
-    Nan::EscapableHandleScope handleScope;
-    return handleScope.Escape(
-        Nan::New<v8::String>(arg).ToLocalChecked());
-}
 
 template<>
 nanodbc::string call_method(

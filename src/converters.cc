@@ -12,6 +12,16 @@ namespace AODBC {
 
 using AODBC::sql_result_t;
 
+void convert_cpp_type_to_js(
+    v8::Local<v8::Object> result,
+    const nanodbc::date& date);
+void convert_cpp_type_to_js(
+    v8::Local<v8::Object> result,
+    const nanodbc::time& date);
+void convert_cpp_type_to_js(
+    v8::Local<v8::Object> result,
+    const nanodbc::timestamp& date);
+
 struct IsTimeLike {
 };
 
@@ -133,7 +143,15 @@ void convert_cpp_type_to_js(
     convert_cpp_type_to_js(result, date, IsTimestampLike{});
 }
 
-v8::Local<v8::Array> convert_cpp_type_to_js(
+template<>
+v8::Local<v8::Value> convert_cpp_type_to_js<nanodbc::string>(
+        const nanodbc::string& arg) {
+    Nan::EscapableHandleScope handleScope;
+    return handleScope.Escape(Nan::New<v8::String>(arg).ToLocalChecked());
+}
+
+template<>
+v8::Local<v8::Value> convert_cpp_type_to_js(
         const sql_result_t& sql_result) {
     Nan::EscapableHandleScope scope;
     SQLColumnVisitor visitor;
