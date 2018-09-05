@@ -177,6 +177,20 @@ v8::Local<v8::Value> convert_cpp_type_to_js(
     return scope.Escape(js_result);
 }
 
+template<>
+v8::Local<v8::Value> convert_cpp_type_to_js(const bool& boolean_value) {
+    Nan::EscapableHandleScope scope;
+
+    return scope.Escape(Nan::New<v8::Boolean>(boolean_value));
+}
+
+template<>
+v8::Local<v8::Value> convert_cpp_type_to_js(const boost::blank&) {
+    Nan::EscapableHandleScope scope;
+
+    return scope.Escape(Nan::Null());
+}
+
 }  // namespace AODBC
 
 #endif /* CPPTOJSCONVERTERS_HH */

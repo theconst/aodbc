@@ -104,9 +104,7 @@ NAN_METHOD(ODBCConnection::JsDisconnect) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::disconnect>,
-        boost::blank,
-        std::string,
-        long  // NOLINT(runtime/int) - nanodbc defined API
+        boost::blank
     >(info);
 }
 

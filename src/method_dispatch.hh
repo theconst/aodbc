@@ -30,6 +30,7 @@ enum struct CommandNames {
 
 template<CommandNames tag>
 struct MethodTag {
+    CommandNames value = tag;
 };
 
 
@@ -46,7 +47,7 @@ template<>
 bool call_method(
         MethodTag<CommandNames::is_connected>,
         UVMonitor<nanodbc::connection>* owner,
-        std::tuple<std::string, long> args) {  // NOLINT(runtime/int)
+        std::tuple<>) {  // NOLINT(runtime/int)
     Synchronized lock {owner};
     return owner->get()->connected();
 }
@@ -73,7 +74,7 @@ template<>
 nanodbc::string call_method(
         MethodTag<CommandNames::database_name>,
         UVMonitor<nanodbc::connection>* owner,
-        std::tuple<std::string, long> args) {  // NOLINT(runtime/int)
+        std::tuple<>) {
     Synchronized lock {owner};
     return owner->get()->database_name();
 }
@@ -82,7 +83,7 @@ template<>
 nanodbc::string call_method(
         MethodTag<CommandNames::driver_name>,
         UVMonitor<nanodbc::connection>* owner,
-        std::tuple<> tuple) {
+        std::tuple<>) {
     Synchronized lock {owner};
     return owner->get()->driver_name();
 }
