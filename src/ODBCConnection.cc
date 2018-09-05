@@ -40,8 +40,8 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
     Nan::SetPrototypeMethod(tpl, "driverName", JsDriverName);
     Nan::SetPrototypeMethod(tpl, "catalogName", JsCatalogName);
     Nan::SetPrototypeMethod(tpl, "databaseName", JsDatabaseName);
-    Nan::SetPrototypeMethod(tpl, "query", JsExecute);
-    Nan::SetPrototypeMethod(tpl, "execute", JsJustExecute);
+    Nan::SetPrototypeMethod(tpl, "query", JsQuery);
+    Nan::SetPrototypeMethod(tpl, "execute", JsExecute);
 
     Nan::Set(target,
         Nan::New(JS_CLASS_NAME).ToLocalChecked(),
@@ -149,7 +149,7 @@ NAN_METHOD(ODBCConnection::JsDatabaseName) {
     >(info);
 }
 
-NAN_METHOD(ODBCConnection::JsExecute) {
+NAN_METHOD(ODBCConnection::JsQuery) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::query>,
@@ -158,7 +158,7 @@ NAN_METHOD(ODBCConnection::JsExecute) {
     >(info);
 }
 
-NAN_METHOD(ODBCConnection::JsJustExecute) {
+NAN_METHOD(ODBCConnection::JsExecute) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::execute>,
