@@ -3,10 +3,6 @@
 
 #include "nan.h"
 
-#include "nanodbc.h"
-
-#include "UVMonitor.hh"
-
 #include "cpp_to_js_converters.hh"
 #include "method_dispatch.hh"
 
