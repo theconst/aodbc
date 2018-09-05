@@ -3,8 +3,8 @@
 
 #include "nan.h"
 
-#include "cpp_to_js_converters.hh"
 #include "method_dispatch.hh"
+#include "cpp_to_js_converters.hh"
 
 namespace AODBC {
 

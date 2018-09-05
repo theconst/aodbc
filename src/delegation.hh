@@ -3,8 +3,8 @@
 
 
 #include "nan.h"
-#include "JsTypes.hh"
 
+#include "JsTypes.hh"
 #include "SingleResultWorker.hh"
 
 namespace AODBC {

@@ -3,10 +3,8 @@
 
 #include <memory>
 
-#include <vector>
-
 #include "nan.h"
-#include "uv.h"
+
 #include "nanodbc.h"
 
 #include "JsTypes.hh"
