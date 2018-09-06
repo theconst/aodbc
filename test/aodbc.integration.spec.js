@@ -226,7 +226,7 @@ describe('ODBC Connection integration tests', function () {
         
         connection.query(query, (err, value) => {
             console.debug(`Error: ${err}`);
-            console.debug(`Value: ${JSON.stringify(value.length)}`);
+            console.debug(`Value: ${JSON.stringify(value)}`);
 
             expect(err).to.not.exist;
             expect(value).to.exist;
