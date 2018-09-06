@@ -49,7 +49,7 @@ template<>
 bool call_method(
         MethodTag<CommandNames::is_connected>,
         UVMonitor<nanodbc::connection>* owner,
-        std::tuple<>) {  // NOLINT(runtime/int)
+        std::tuple<>) {
     Synchronized lock {owner};
     return owner->get()->connected();
 }
@@ -94,7 +94,7 @@ template<>
 boost::blank call_method(
         MethodTag<CommandNames::connect>,
         UVMonitor<nanodbc::connection>* owner,
-        std::tuple<std::string, long> args) {  // NOLINT(runtime/int)
+        std::tuple<sql_string_t, sql_long_t> args) {
     Synchronized lock {owner};
     owner->get()->connect(std::get<0>(args), std::get<1>(args));
 
@@ -116,7 +116,7 @@ template<>
 AODBC::sql_result_t call_method(
         MethodTag<CommandNames::query>,
         UVMonitor<nanodbc::connection>* owner,
-        std::tuple<std::string> args) {  // NOLINT(runtime/int)
+        std::tuple<sql_string_t> args) {
     Synchronized lock {owner};
     nanodbc::result result = nanodbc::execute(*owner->get(), std::get<0>(args));
     return fetch_result_eagerly(&result);
@@ -126,7 +126,7 @@ template<>
 boost::blank call_method(
         MethodTag<CommandNames::execute>,
         UVMonitor<nanodbc::connection>* owner,
-        std::tuple<std::string> args) {  // NOLINT(runtime/int)
+        std::tuple<sql_string_t> args) {
     Synchronized lock {owner};
     nanodbc::just_execute(*owner->get(), std::get<0>(args));
     return boost::blank {};

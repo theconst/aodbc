@@ -20,64 +20,41 @@ v8::Local<v8::Value> convert_cpp_type_to_js(const T& arg);
 
 void convert_cpp_type_to_js(
     v8::Local<v8::Object> result,
-    const nanodbc::date& date);
+    const sql_date_t& date);
 void convert_cpp_type_to_js(
     v8::Local<v8::Object> result,
-    const nanodbc::time& date);
+    const sql_time_t& date);
 void convert_cpp_type_to_js(
     v8::Local<v8::Object> result,
-    const nanodbc::timestamp& date);
-
-
-// TODO(kko): refactor to enum;
-
-struct IsTimeLike {
-};
-
-struct IsDateLike {
-};
-
-struct IsTimestampLike {
-};
+    const sql_timestamp_t& date);
 
 struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
-    v8::Local<v8::Value> operator()(const boost::blank & blank) const {
+    // primitive types are optimized, so the code is somewhat duplicated
+
+    v8::Local<v8::Value> operator()(const sql_null_t& blank) const {
         Nan::EscapableHandleScope handleScope;
         return handleScope.Escape(Nan::Null());
     }
 
-    v8::Local<v8::Value> operator()(double doubleValue) const {
+    v8::Local<v8::Value> operator()(const sql_number_t& doubleValue) const {
         Nan::EscapableHandleScope handleScope;
         return handleScope.Escape(Nan::New<v8::Number>(doubleValue));
     }
 
-    v8::Local<v8::Value> operator()(const nanodbc::string & str) const {
+    v8::Local<v8::Value> operator()(const sql_string_t& str) const {
         Nan::EscapableHandleScope handleScope;
         return handleScope.Escape(
             Nan::New<v8::String>(str).ToLocalChecked());
     }
 
-    v8::Local<v8::Value> operator()(const binary_t & binary) const {
+    v8::Local<v8::Value> operator()(const sql_binary_t & binary) const {
         // TODO(kko): convert binary type
 
         throw std::runtime_error("Binary data not implemented yet");
     }
 
-    v8::Local<v8::Value> operator()(const nanodbc::date & t) const {
-        Nan::EscapableHandleScope handleScope;
-        v8::Local<v8::Object> result = Nan::New<v8::Object>();
-        convert_cpp_type_to_js(result, t);
-        return handleScope.Escape(result);
-    }
-
-    v8::Local<v8::Value> operator()(const nanodbc::time & t) const {
-        Nan::EscapableHandleScope handleScope;
-        v8::Local<v8::Object> result = Nan::New<v8::Object>();
-        convert_cpp_type_to_js(result, t);
-        return handleScope.Escape(result);
-    }
-
-    v8::Local<v8::Value> operator()(const nanodbc::timestamp & t) const {
+    template <typename T>
+    v8::Local<v8::Value> operator()(const T& t) const {
         Nan::EscapableHandleScope handleScope;
         v8::Local<v8::Object> result = Nan::New<v8::Object>();
         convert_cpp_type_to_js(result, t);
@@ -89,7 +66,7 @@ template<typename T>
 void convert_cpp_type_to_js(
         v8::Local<v8::Object> time_result,
         const T& time,
-        IsTimeLike) {
+        DateTag<DateTypes::time>) {
     Nan::HandleScope scope;
 
     Nan::Set(time_result,
@@ -109,7 +86,7 @@ template<typename T>
 void convert_cpp_type_to_js(
         v8::Local<v8::Object> date_result,
         const T& date,
-        IsDateLike) {
+        DateTag<DateTypes::date>) {
     Nan::HandleScope scope;
 
     Nan::Set(date_result,
@@ -129,39 +106,40 @@ template<typename T>
 void convert_cpp_type_to_js(
         v8::Local<v8::Object> timestamp_result,
         const T& timestamp,
-        IsTimestampLike) {
-    convert_cpp_type_to_js(timestamp_result, timestamp, IsDateLike{});
-    convert_cpp_type_to_js(timestamp_result, timestamp, IsTimeLike{});
+        DateTag<DateTypes::datetime>) {
+    convert_cpp_type_to_js(timestamp_result, timestamp,
+        DateTag<DateTypes::date>{});
+    convert_cpp_type_to_js(timestamp_result, timestamp,
+        DateTag<DateTypes::time>{});
 }
 
 void convert_cpp_type_to_js(
         v8::Local<v8::Object> result,
-        const nanodbc::date& date) {
-    convert_cpp_type_to_js(result, date, IsDateLike{});
+        const sql_date_t& date) {
+    convert_cpp_type_to_js(result, date, DateTag<DateTypes::date>{});
 }
 
 void convert_cpp_type_to_js(
         v8::Local<v8::Object> result,
-        const nanodbc::time& date) {
-    convert_cpp_type_to_js(result, date, IsTimeLike{});
+        const sql_time_t& date) {
+    convert_cpp_type_to_js(result, date, DateTag<DateTypes::time>{});
 }
 
 void convert_cpp_type_to_js(
         v8::Local<v8::Object> result,
-        const nanodbc::timestamp& date) {
-    convert_cpp_type_to_js(result, date, IsTimestampLike{});
+        const sql_timestamp_t& date) {
+    convert_cpp_type_to_js(result, date, DateTag<DateTypes::datetime>{});
 }
 
 template<>
 v8::Local<v8::Value> convert_cpp_type_to_js<nanodbc::string>(
-        const nanodbc::string& arg) {
+        const sql_string_t& arg) {
     Nan::EscapableHandleScope handleScope;
     return handleScope.Escape(Nan::New<v8::String>(arg).ToLocalChecked());
 }
 
 template<>
-v8::Local<v8::Value> convert_cpp_type_to_js(
-        const sql_result_t& sql_result) {
+v8::Local<v8::Value> convert_cpp_type_to_js(const sql_result_t& sql_result) {
     Nan::EscapableHandleScope scope;
     SQLColumnVisitor visitor;
 
@@ -188,7 +166,7 @@ v8::Local<v8::Value> convert_cpp_type_to_js(const bool& boolean_value) {
 }
 
 template<>
-v8::Local<v8::Value> convert_cpp_type_to_js(const boost::blank&) {
+v8::Local<v8::Value> convert_cpp_type_to_js(const sql_null_t&) {
     Nan::EscapableHandleScope scope;
 
     return scope.Escape(Nan::Null());

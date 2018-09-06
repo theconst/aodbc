@@ -10,9 +10,9 @@ namespace AODBC {
 using AODBC::MethodTag;
 using AODBC::CommandNames;
 
-const char* ODBCConnection::JS_CLASS_NAME = "ODBCConnection";
+const char* ODBCConnection::js_class_name = "ODBCConnection";
 
-Nan::Persistent<v8::FunctionTemplate> ODBCConnection::JS_CONSTRUCTOR;
+Nan::Persistent<v8::FunctionTemplate> ODBCConnection::js_constructor;
 
 ODBCConnection::ODBCConnection()
     : connection(std::make_shared<UVMonitor<nanodbc::connection>>()) {
@@ -25,9 +25,9 @@ ODBCConnection::ODBCConnection(std::string&& connection_string)
 
 NAN_MODULE_INIT(ODBCConnection::Init) {
     v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(JsNew);
-    JS_CONSTRUCTOR.Reset(tpl);
+    js_constructor.Reset(tpl);
 
-    tpl->SetClassName(Nan::New<v8::String>(JS_CLASS_NAME).ToLocalChecked());
+    tpl->SetClassName(Nan::New<v8::String>(js_class_name).ToLocalChecked());
 
     tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
@@ -43,7 +43,7 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
     Nan::SetPrototypeMethod(tpl, "execute", JsExecute);
 
     Nan::Set(target,
-        Nan::New(JS_CLASS_NAME).ToLocalChecked(),
+        Nan::New(js_class_name).ToLocalChecked(),
         Nan::GetFunction(tpl).ToLocalChecked());
 }
 
@@ -92,9 +92,9 @@ NAN_METHOD(ODBCConnection::JsConnect) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::connect>,
-        boost::blank,
-        std::string,
-        long  // NOLINT(runtime/int) - nanodbc defined API
+        sql_null_t,
+        sql_string_t,
+        sql_long_t
     >(info);
 }
 
@@ -102,7 +102,7 @@ NAN_METHOD(ODBCConnection::JsDisconnect) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::disconnect>,
-        boost::blank
+        sql_null_t
     >(info);
 }
 
@@ -110,7 +110,7 @@ NAN_METHOD(ODBCConnection::JsDBMSName) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::dbms_name>,
-        nanodbc::string
+        sql_string_t
     >(info);
 }
 
@@ -118,7 +118,7 @@ NAN_METHOD(ODBCConnection::JsDBMSVersion) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::dbms_version>,
-        nanodbc::string
+        sql_string_t
     >(info);
 };
 
@@ -127,7 +127,7 @@ NAN_METHOD(ODBCConnection::JsDriverName) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::driver_name>,
-        nanodbc::string
+        sql_string_t
     >(info);
 }
 
@@ -135,7 +135,7 @@ NAN_METHOD(ODBCConnection::JsCatalogName) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::catalog_name>,
-        nanodbc::string
+        sql_string_t
     >(info);
 }
 
@@ -143,7 +143,7 @@ NAN_METHOD(ODBCConnection::JsDatabaseName) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::database_name>,
-        nanodbc::string
+        sql_string_t  // TODO(kko): remove sql prefix
     >(info);
 }
 
@@ -152,7 +152,7 @@ NAN_METHOD(ODBCConnection::JsQuery) {
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::query>,
         AODBC::sql_result_t,
-        std::string                 // TODO(kko): fit to sql type
+        sql_string_t
     >(info);
 }
 
@@ -160,8 +160,8 @@ NAN_METHOD(ODBCConnection::JsExecute) {
     return DelegateWork<
         UVMonitor<nanodbc::connection>,
         MethodTag<CommandNames::execute>,
-        boost::blank,               // TODO(kko) move to typedefs
-        std::string                 // TODO(kko): fit to sql type
+        sql_null_t,
+        sql_string_t
     >(info);
 }
 

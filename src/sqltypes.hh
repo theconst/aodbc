@@ -12,16 +12,39 @@
 
 namespace AODBC {
 
-typedef std::vector<u_int8_t> binary_t;
+enum struct DateTypes {
+    date, time, datetime
+};
+
+template <DateTypes t>
+struct DateTag {
+    const DateTypes value = t;
+};
+
+typedef std::vector<u_int8_t> sql_binary_t;
+
+typedef boost::blank sql_null_t;
+
+typedef nanodbc::string sql_string_t;
+
+typedef nanodbc::date sql_date_t;
+
+typedef nanodbc::time sql_time_t;
+
+typedef nanodbc::timestamp sql_timestamp_t;
+
+typedef double sql_number_t;
+
+typedef long sql_long_t;  // NOLINT(runtime/int)
 
 typedef boost::variant<
-    boost::blank,
-    double,
-    nanodbc::string,
-    nanodbc::date,
-    nanodbc::time,
-    nanodbc::timestamp,
-    binary_t
+    sql_null_t,
+    sql_number_t,
+    sql_string_t,
+    sql_date_t,
+    sql_time_t,
+    sql_timestamp_t,
+    sql_binary_t
 > sql_column_t;
 
 typedef nanodbc::string sql_col_name_t;

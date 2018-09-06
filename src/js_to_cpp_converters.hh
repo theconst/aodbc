@@ -3,6 +3,8 @@
 
 #include "nan.h"
 
+#include "sqltypes.hh"
+
 namespace AODBC {
 
 template<typename T>
@@ -15,7 +17,7 @@ template<typename T>
 bool is_valid_cpp_type(v8::Local<v8::Value> value);
 
 template<>
-std::string convert_js_type_to_cpp<std::string>(v8::Local<v8::Value> local) {
+sql_string_t convert_js_type_to_cpp<std::string>(v8::Local<v8::Value> local) {
     return std::string(*v8::String::Utf8Value(local->ToString()));
 }
 
@@ -26,14 +28,12 @@ bool is_valid_cpp_type<std::string>(v8::Local<v8::Value> local) {
 
 
 template<>
-long convert_js_type_to_cpp<long>  // NOLINT(runtime/int)
-            (v8::Local<v8::Value> local) {
+sql_long_t convert_js_type_to_cpp<sql_long_t>(v8::Local<v8::Value> local) {
     return local->IntegerValue();
 }
 
 template<>
-bool is_valid_cpp_type<long>  // NOLINT(runtime/int)
-        (v8::Local<v8::Value> local) {
+bool is_valid_cpp_type<sql_long_t>(v8::Local<v8::Value> local) {
     return local->IsNumber();
 }
 

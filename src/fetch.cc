@@ -75,7 +75,7 @@ sql_result_t fetch_result_eagerly(nanodbc::result* result) {
                 break;
             default:
             {
-                sql_column_t binarycol = result->get<binary_t>(col_no);
+                sql_column_t binarycol = result->get<sql_binary_t>(col_no);
                 row.emplace_back(column_name, binarycol);
             }
                 break;

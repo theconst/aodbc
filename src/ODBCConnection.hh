@@ -29,7 +29,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     }
 
  private:
-    static const char* JS_CLASS_NAME;
+    static const char* js_class_name;
 
     static NAN_METHOD(JsNew);
     static NAN_METHOD(JsConnected);
@@ -43,7 +43,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     static NAN_METHOD(JsQuery);
     static NAN_METHOD(JsExecute);
 
-    static Nan::Persistent<v8::FunctionTemplate> JS_CONSTRUCTOR;
+    static Nan::Persistent<v8::FunctionTemplate> js_constructor;
 
     ODBCConnection();
     explicit ODBCConnection(std::string&& conn_string);
