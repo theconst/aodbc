@@ -5,15 +5,12 @@
 
 namespace AODBC {
 
-// TODO(kko): wrap result set into its own object and allow user to navigate
 sql_result_t fetch_result_eagerly(nanodbc::result* result) {
-    // TODO(kko) : we can make it lazy
     sql_result_t sql_result;
-    for (int row_no = 0; result->next(); ++row_no) {
+    for (auto row_no = 0; result->next(); ++row_no) {
         sql_row_t row = sql_row_t();
 
-        for (short col_no = 0;  // NOLINT(runtime/int) - nanodbc defined API
-                col_no < result->columns(); ++col_no) {
+        for (auto col_no = 0; col_no < result->columns(); ++col_no) {
             const sql_col_name_t& column_name = result->column_name(col_no);
 
             if (result->is_null(column_name)) {
