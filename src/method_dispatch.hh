@@ -35,7 +35,7 @@ struct MethodTag {
 
 
 template<>
-nanodbc::string call_method(
+sql_string_t call_method(
         MethodTag<CommandNames::dbms_name>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
@@ -55,7 +55,7 @@ bool call_method(
 }
 
 template<>
-nanodbc::string call_method(
+sql_string_t call_method(
         MethodTag<CommandNames::dbms_version>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
@@ -65,7 +65,7 @@ nanodbc::string call_method(
 }
 
 template<>
-nanodbc::string call_method(
+sql_string_t call_method(
         MethodTag<CommandNames::catalog_name>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
@@ -75,7 +75,7 @@ nanodbc::string call_method(
 }
 
 template<>
-nanodbc::string call_method(
+sql_string_t call_method(
         MethodTag<CommandNames::database_name>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
@@ -85,7 +85,7 @@ nanodbc::string call_method(
 }
 
 template<>
-nanodbc::string call_method(
+sql_string_t call_method(
         MethodTag<CommandNames::driver_name>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
@@ -95,7 +95,7 @@ nanodbc::string call_method(
 }
 
 template<>
-boost::blank call_method(
+sql_null_t call_method(
         MethodTag<CommandNames::connect>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<sql_string_t, sql_long_t> args) {
@@ -106,14 +106,14 @@ boost::blank call_method(
 }
 
 template<>
-boost::blank call_method(
+sql_null_t call_method(
         MethodTag<CommandNames::disconnect>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
     (*owner)([&](nanodbc::connection& connection) {
         connection.disconnect();
     });
-    return boost::blank {};
+    return sql_null_t {};
 }
 
 template<>
@@ -129,7 +129,7 @@ AODBC::sql_result_t call_method(
 }
 
 template<>
-boost::blank call_method(
+sql_null_t call_method(
         MethodTag<CommandNames::execute>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<sql_string_t> args) {
