@@ -57,7 +57,7 @@ NAN_METHOD(ODBCConnection::JsNew) {
 
     v8::Local<v8::Value> connection_string_js = info[0];
 
-    ODBCConnection *odbc_connection = nullptr;
+    ODBCConnection* odbc_connection {};
     if (connection_string_js->IsString()) {
        odbc_connection = new ODBCConnection(
            *v8::String::Utf8Value(connection_string_js->ToString()));

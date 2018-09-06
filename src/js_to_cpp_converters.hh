@@ -23,7 +23,6 @@ bool is_valid_cpp_type<std::string>(v8::Local<v8::Value> local) {
     return local->IsString();
 }
 
-
 template<>
 sql_long_t convert_js_type_to_cpp<sql_long_t>(v8::Local<v8::Value> local) {
     return local->IntegerValue();

@@ -14,7 +14,7 @@ namespace AODBC {
 
 using AODBC::UVMonitor;
 
-// TODO: shared ptr's are a bit intrusive in
+// TODO(kko): shared ptr's are a bit intrusive in
 // terms of contract
 
 // holder for nandobc connection

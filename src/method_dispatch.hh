@@ -33,7 +33,6 @@ struct MethodTag {
     CommandNames value = tag;
 };
 
-
 template<>
 sql_string_t call_method(
         MethodTag<CommandNames::dbms_name>,
