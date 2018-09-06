@@ -70,8 +70,6 @@ NAN_METHOD(ODBCConnection::JsNew) {
     odbc_connection->Wrap(info.Holder());
 }
 
-// TODO(kko): we can now make uber-define over all the methods
-
 NAN_METHOD(ODBCConnection::JsConnected) {
     return DelegateWork<
         ODBCConnection,
