@@ -14,8 +14,14 @@ namespace AODBC {
 
 using AODBC::UVMonitor;
 
+// TODO: shared ptr's are a bit intrusive in
+// terms of contract
+
+// holder for nandobc connection
 class ODBCConnection final : public Nan::ObjectWrap {
  public:
+    using value_type = UVMonitor<nanodbc::connection>;
+
     static NAN_MODULE_INIT(Init);
 
     ODBCConnection(const ODBCConnection&) = delete;
@@ -24,8 +30,10 @@ class ODBCConnection final : public Nan::ObjectWrap {
 
     virtual ~ODBCConnection() = default;
 
-    std::shared_ptr<UVMonitor<nanodbc::connection>> GetConnection() {
-        return connection;
+    static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
+        ODBCConnection* odbc_connection =
+            Nan::ObjectWrap::Unwrap<ODBCConnection>(self);
+        return odbc_connection->connection;
     }
 
  private:
@@ -48,7 +56,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     ODBCConnection();
     explicit ODBCConnection(std::string&& conn_string);
 
-    std::shared_ptr<UVMonitor< nanodbc::connection>> connection;
+    std::shared_ptr<UVMonitor<nanodbc::connection>> connection;
 };
 
 }  // namespace AODBC

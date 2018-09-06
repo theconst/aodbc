@@ -7,6 +7,8 @@
 #include "js_to_cpp_converters.hh"
 #include "SingleResultWorker.hh"
 
+// TODO(kko): carefully roll the loop back
+
 namespace AODBC {
 
 using AODBC::SingleResultWorker;
@@ -21,12 +23,12 @@ NAN_METHOD(DelegateWork) {
 
     Nan::AsyncQueueWorker(
         new SingleResultWorker<
-            ContextT,
+            typename ContextT::value_type,
             MethodT,
             ResultT
         >(
             new Nan::Callback(js_callback),
-            unwrap_caller<std::shared_ptr<ContextT>>(info.This())));
+            ContextT::Unwrap(info.This())));
 }
 
 template<typename ContextT, typename MethodT, typename ResultT, typename Arg0>
@@ -44,13 +46,13 @@ NAN_METHOD(DelegateWork) {
 
     Nan::AsyncQueueWorker(
         new SingleResultWorker<
-            ContextT,
+            typename ContextT::value_type,
             MethodT,
             ResultT,
             Arg0
         >(
             new Nan::Callback(js_callback),
-            unwrap_caller<std::shared_ptr<ContextT>>(info.This()),
+            ContextT::Unwrap(info.This()),
             convert_js_type_to_cpp<Arg0>(arg0)));
 }
 
@@ -76,14 +78,14 @@ NAN_METHOD(DelegateWork) {
 
      Nan::AsyncQueueWorker(
         new SingleResultWorker<
-            ContextT,
+            typename ContextT::value_type,
             MethodT,
             ResultT,
             Arg0,
             Arg1
         >(
             new Nan::Callback(js_callback),
-            unwrap_caller<std::shared_ptr<ContextT>>(info.This()),
+            ContextT::Unwrap(info.This()),
             convert_js_type_to_cpp<Arg0>(arg0),
             convert_js_type_to_cpp<Arg1>(arg1)));
 }

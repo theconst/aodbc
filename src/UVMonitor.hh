@@ -10,23 +10,23 @@ namespace AODBC {
 template <typename T>
 class UVMonitor {
  private:
-    struct Synchronized {
-        explicit Synchronized(UVMonitor<T> *monitor)
-                : mutex_handle(monitor->mutex_handle) {
+    struct UVMutexLock {
+        explicit UVMutexLock(uv_mutex_t* mutex_handle)
+                : mutex_handle(mutex_handle) {
             uv_mutex_lock(mutex_handle);
         }
 
-        Synchronized(const Synchronized &) = delete;
-        Synchronized(Synchronized &&) = delete;
+        UVMutexLock(const UVMutexLock &) = delete;
+        UVMutexLock(UVMutexLock &&) = delete;
 
-        virtual ~Synchronized() {
+        virtual ~UVMutexLock() {
             uv_mutex_unlock(mutex_handle);
         }
-        uv_mutex_t *mutex_handle;
+        uv_mutex_t* mutex_handle;
     };
 
     T object;
-    uv_mutex_t *mutex_handle;
+    uv_mutex_t* mutex_handle;
 
  public:
     template <typename... Args>
@@ -41,7 +41,7 @@ class UVMonitor {
 
     template <typename F>
     auto operator()(F func) -> decltype(func(object)) {
-        Synchronized lock{this};
+        UVMutexLock lock{mutex_handle};
         return func(object);
     }
 

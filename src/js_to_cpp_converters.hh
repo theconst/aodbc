@@ -8,9 +8,6 @@
 namespace AODBC {
 
 template<typename T>
-T unwrap_caller(v8::Local<v8::Object>);
-
-template<typename T>
 T convert_js_type_to_cpp(v8::Local<v8::Value> value);
 
 template<typename T>

@@ -47,14 +47,6 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
         Nan::GetFunction(tpl).ToLocalChecked());
 }
 
-template <>
-std::shared_ptr<UVMonitor<nanodbc::connection>> unwrap_caller(
-        v8::Local<v8::Object> obj) {
-    ODBCConnection* conn = Nan::ObjectWrap::Unwrap<ODBCConnection>(obj);
-
-    return conn->GetConnection();
-}
-
 
 NAN_METHOD(ODBCConnection::JsNew) {
     if (!info.IsConstructCall()) {
@@ -82,7 +74,7 @@ NAN_METHOD(ODBCConnection::JsNew) {
 
 NAN_METHOD(ODBCConnection::JsConnected) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::is_connected>,
         bool
     >(info);
@@ -90,7 +82,7 @@ NAN_METHOD(ODBCConnection::JsConnected) {
 
 NAN_METHOD(ODBCConnection::JsConnect) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::connect>,
         sql_null_t,
         sql_string_t,
@@ -100,7 +92,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
 
 NAN_METHOD(ODBCConnection::JsDisconnect) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::disconnect>,
         sql_null_t
     >(info);
@@ -108,7 +100,7 @@ NAN_METHOD(ODBCConnection::JsDisconnect) {
 
 NAN_METHOD(ODBCConnection::JsDBMSName) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::dbms_name>,
         sql_string_t
     >(info);
@@ -116,7 +108,7 @@ NAN_METHOD(ODBCConnection::JsDBMSName) {
 
 NAN_METHOD(ODBCConnection::JsDBMSVersion) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::dbms_version>,
         sql_string_t
     >(info);
@@ -125,7 +117,7 @@ NAN_METHOD(ODBCConnection::JsDBMSVersion) {
 
 NAN_METHOD(ODBCConnection::JsDriverName) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::driver_name>,
         sql_string_t
     >(info);
@@ -133,7 +125,7 @@ NAN_METHOD(ODBCConnection::JsDriverName) {
 
 NAN_METHOD(ODBCConnection::JsCatalogName) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::catalog_name>,
         sql_string_t
     >(info);
@@ -141,7 +133,7 @@ NAN_METHOD(ODBCConnection::JsCatalogName) {
 
 NAN_METHOD(ODBCConnection::JsDatabaseName) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::database_name>,
         sql_string_t  // TODO(kko): remove sql prefix
     >(info);
@@ -149,7 +141,7 @@ NAN_METHOD(ODBCConnection::JsDatabaseName) {
 
 NAN_METHOD(ODBCConnection::JsQuery) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::query>,
         AODBC::sql_result_t,
         sql_string_t
@@ -158,7 +150,7 @@ NAN_METHOD(ODBCConnection::JsQuery) {
 
 NAN_METHOD(ODBCConnection::JsExecute) {
     return DelegateWork<
-        UVMonitor<nanodbc::connection>,
+        ODBCConnection,
         MethodTag<CommandNames::execute>,
         sql_null_t,
         sql_string_t
