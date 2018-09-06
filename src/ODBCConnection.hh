@@ -7,7 +7,6 @@
 
 #include "nanodbc.h"
 
-#include "js_to_cpp_converters.hh"
 #include "UVMonitor.hh"
 
 
@@ -25,9 +24,11 @@ class ODBCConnection final : public Nan::ObjectWrap {
 
     virtual ~ODBCConnection() = default;
 
- private:
-    friend class JsContext<std::shared_ptr<UVMonitor<nanodbc::connection>>>;
+    std::shared_ptr<UVMonitor<nanodbc::connection>> GetConnection() {
+        return connection;
+    }
 
+ private:
     static const char* JS_CLASS_NAME;
 
     static NAN_METHOD(JsNew);
@@ -49,7 +50,6 @@ class ODBCConnection final : public Nan::ObjectWrap {
 
     std::shared_ptr<UVMonitor< nanodbc::connection>> connection;
 };
-
 
 }  // namespace AODBC
 #endif /* ODBCCONNECTION_HH */

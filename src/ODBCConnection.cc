@@ -47,6 +47,14 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
         Nan::GetFunction(tpl).ToLocalChecked());
 }
 
+template <>
+std::shared_ptr<UVMonitor<nanodbc::connection>> unwrap_caller(
+        v8::Local<v8::Object> obj) {
+    ODBCConnection* conn = Nan::ObjectWrap::Unwrap<ODBCConnection>(obj);
+
+    return conn->GetConnection();
+}
+
 
 NAN_METHOD(ODBCConnection::JsNew) {
     if (!info.IsConstructCall()) {
@@ -69,17 +77,6 @@ NAN_METHOD(ODBCConnection::JsNew) {
 
     odbc_connection->Wrap(info.Holder());
 }
-
-
-template <>
-struct JsContext<std::shared_ptr<UVMonitor <nanodbc::connection>>> {
-    inline static std::shared_ptr <UVMonitor<nanodbc::connection>> Unwrap(
-            v8::Local<v8::Object> obj) {
-        ODBCConnection* conn = Nan::ObjectWrap::Unwrap<ODBCConnection>(obj);
-
-        return conn->connection;
-    }
-};
 
 // TODO(kko): we can now make uber-define over all the methods
 

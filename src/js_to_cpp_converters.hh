@@ -1,51 +1,44 @@
-#ifndef JSTYPES_HH
-#define JSTYPES_HH
+#ifndef JSTOCPPCONVERTERS_HH
+#define JSTOCPPCONVERTERS_HH
 
 #include "nan.h"
-
-// TODO: remove unneeded objects 
 
 namespace AODBC {
 
 template<typename T>
-struct JsContext {
-    inline static T Unwrap(v8::Local<v8::Object>);
-};
+T unwrap_caller(v8::Local<v8::Object>);
 
-// convert and validate common js types
 template<typename T>
-struct JsType {
-    inline static T Convert(v8::Local<v8::Value> local);
+T convert_js_type_to_cpp(v8::Local<v8::Value> value);
 
-    inline static bool IsValidCppType(v8::Local<v8::Value> local);
-};
-
-template<>
-struct JsType<std::string> {
-    inline static std::string Convert(v8::Local<v8::Value> local) {
-        return std::string(*v8::String::Utf8Value(local->ToString()));
-    }
-
-    inline static bool IsValidCppType(v8::Local<v8::Value> local) {
-        return local->IsString();
-    }
-};
+template<typename T>
+bool is_valid_cpp_type(v8::Local<v8::Value> value);
 
 template<>
-struct JsType<long> {  // NOLINT(runtime/int)
-                                               //- nanodbc defined API
-    inline static long Convert(  // NOLINT(runtime/int) - nanodbc defined API
-            v8::Local<v8::Value> local) {
-        return local->IntegerValue();
-    }
+std::string convert_js_type_to_cpp<std::string>(v8::Local<v8::Value> local) {
+    return std::string(*v8::String::Utf8Value(local->ToString()));
+}
 
-    inline static bool IsValidCppType(v8::Local<v8::Value> local) {
-        return local->IsNumber();
-    }
-};
+template<>
+bool is_valid_cpp_type<std::string>(v8::Local<v8::Value> local) {
+    return local->IsString();
+}
+
+
+template<>
+long convert_js_type_to_cpp<long>  // NOLINT(runtime/int)
+            (v8::Local<v8::Value> local) {
+    return local->IntegerValue();
+}
+
+template<>
+bool is_valid_cpp_type<long>  // NOLINT(runtime/int)
+        (v8::Local<v8::Value> local) {
+    return local->IsNumber();
+}
 
 }  // namespace AODBC
 
 
 
-#endif  // JSTYPES_HH
+#endif  /* JSTOCPPCONVERTERS_HH */

@@ -26,13 +26,13 @@ NAN_METHOD(DelegateWork) {
             ResultT
         >(
             new Nan::Callback(js_callback),
-            JsContext<std::shared_ptr<ContextT>>::Unwrap(info.This())));
+            unwrap_caller<std::shared_ptr<ContextT>>(info.This())));
 }
 
 template<typename ContextT, typename MethodT, typename ResultT, typename Arg0>
 NAN_METHOD(DelegateWork) {
     v8::Local<v8::Value> arg0 = info[0];
-    if (!JsType<Arg0>::IsValidCppType(arg0)) {
+    if (!is_valid_cpp_type<Arg0>(arg0)) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
     }
 
@@ -50,20 +50,20 @@ NAN_METHOD(DelegateWork) {
             Arg0
         >(
             new Nan::Callback(js_callback),
-            JsContext<std::shared_ptr<ContextT>>::Unwrap(info.This()),
-            JsType<Arg0>::Convert(arg0)));
+            unwrap_caller<std::shared_ptr<ContextT>>(info.This()),
+            convert_js_type_to_cpp<Arg0>(arg0)));
 }
 
 template<typename ContextT, typename MethodT, typename ResultT,
     typename Arg0, typename Arg1>
 NAN_METHOD(DelegateWork) {
     v8::Local<v8::Value> arg0 = info[0];
-    if (!JsType<Arg0>::IsValidCppType(arg0)) {
+    if (!is_valid_cpp_type<Arg0>(arg0)) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
     }
 
     v8::Local<v8::Value> arg1 = info[1];
-    if (!JsType<Arg1>::IsValidCppType(arg1)) {
+    if (!is_valid_cpp_type<Arg1>(arg1)) {
         return Nan::ThrowTypeError("Illegal argument type at position 1");
     }
 
@@ -83,9 +83,9 @@ NAN_METHOD(DelegateWork) {
             Arg1
         >(
             new Nan::Callback(js_callback),
-            JsContext<std::shared_ptr<ContextT>>::Unwrap(info.This()),
-            JsType<Arg0>::Convert(arg0),
-            JsType<Arg1>::Convert(arg1)));
+            unwrap_caller<std::shared_ptr<ContextT>>(info.This()),
+            convert_js_type_to_cpp<Arg0>(arg0),
+            convert_js_type_to_cpp<Arg1>(arg1)));
 }
 
 }  // namespace AODBC
