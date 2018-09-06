@@ -39,8 +39,9 @@ nanodbc::string call_method(
         MethodTag<CommandNames::dbms_name>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
-    Synchronized lock {owner};
-    return owner->get()->dbms_name();
+    return (*owner)([&](nanodbc::connection& connection) {
+       return connection.dbms_name();
+    });
 }
 
 template<>
@@ -48,8 +49,9 @@ bool call_method(
         MethodTag<CommandNames::is_connected>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
-    Synchronized lock {owner};
-    return owner->get()->connected();
+    return (*owner)([&](nanodbc::connection& connection) {
+       return connection.connected();
+    });
 }
 
 template<>
@@ -57,8 +59,9 @@ nanodbc::string call_method(
         MethodTag<CommandNames::dbms_version>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
-    Synchronized lock {owner};
-    return owner->get()->dbms_version();
+    return (*owner)([&](nanodbc::connection& connection) {
+       return connection.dbms_version();
+    });
 }
 
 template<>
@@ -66,8 +69,9 @@ nanodbc::string call_method(
         MethodTag<CommandNames::catalog_name>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
-    Synchronized lock {owner};
-    return owner->get()->catalog_name();
+    return (*owner)([&](nanodbc::connection& connection) {
+       return connection.catalog_name();
+    });
 }
 
 template<>
@@ -75,8 +79,9 @@ nanodbc::string call_method(
         MethodTag<CommandNames::database_name>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
-    Synchronized lock {owner};
-    return owner->get()->database_name();
+    return (*owner)([&](nanodbc::connection& connection) {
+       return connection.database_name();
+    });
 }
 
 template<>
@@ -84,8 +89,9 @@ nanodbc::string call_method(
         MethodTag<CommandNames::driver_name>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
-    Synchronized lock {owner};
-    return owner->get()->driver_name();
+    return (*owner)([&](nanodbc::connection& connection) {
+       return connection.driver_name();
+    });
 }
 
 template<>
@@ -93,9 +99,9 @@ boost::blank call_method(
         MethodTag<CommandNames::connect>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<sql_string_t, sql_long_t> args) {
-    Synchronized lock {owner};
-    owner->get()->connect(std::get<0>(args), std::get<1>(args));
-
+    (*owner)([&](nanodbc::connection& connection) {
+        connection.connect(std::get<0>(args), std::get<1>(args));
+    });
     return boost::blank {};
 }
 
@@ -104,9 +110,9 @@ boost::blank call_method(
         MethodTag<CommandNames::disconnect>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {
-    Synchronized lock {owner};
-    owner->get()->disconnect();
-
+    (*owner)([&](nanodbc::connection& connection) {
+        connection.disconnect();
+    });
     return boost::blank {};
 }
 
@@ -115,9 +121,11 @@ AODBC::sql_result_t call_method(
         MethodTag<CommandNames::query>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<sql_string_t> args) {
-    Synchronized lock {owner};
-    nanodbc::result result = nanodbc::execute(*owner->get(), std::get<0>(args));
-    return fetch_result_eagerly(&result);
+    return (*owner)([&](nanodbc::connection& connection) {
+        nanodbc::result result = nanodbc::execute(
+            connection, std::get<0>(args));
+        return fetch_result_eagerly(&result);
+    });
 }
 
 template<>
@@ -125,8 +133,9 @@ boost::blank call_method(
         MethodTag<CommandNames::execute>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<sql_string_t> args) {
-    Synchronized lock {owner};
-    nanodbc::just_execute(*owner->get(), std::get<0>(args));
+    (*owner)([&](nanodbc::connection& connection) {
+        nanodbc::just_execute(connection, std::get<0>(args));
+    });
     return boost::blank {};
 }
 
