@@ -19,7 +19,7 @@ NAN_METHOD(DelegateWork) {
     if (!arg0->IsFunction()) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
     }
-    auto js_callback = Nan::To<v8::Function>(arg0).ToLocalChecked();
+    auto&& js_callback = Nan::To<v8::Function>(arg0).ToLocalChecked();
 
     Nan::AsyncQueueWorker(
         new SingleResultWorker<
@@ -33,8 +33,8 @@ NAN_METHOD(DelegateWork) {
 
 template<typename ContextT, typename MethodT, typename ResultT, typename Arg0>
 NAN_METHOD(DelegateWork) {
-    v8::Local<v8::Value> arg0 = info[0];
-    if (!is_valid_cpp_type<Arg0>(arg0)) {
+    auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
+    if (!arg0) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
     }
 
@@ -42,7 +42,7 @@ NAN_METHOD(DelegateWork) {
     if (!arg1->IsFunction()) {
         return Nan::ThrowTypeError("Last argument at 1 should be callback");
     }
-    auto js_callback = Nan::To<v8::Function>(arg1).ToLocalChecked();
+    auto&& js_callback = Nan::To<v8::Function>(arg1).ToLocalChecked();
 
     Nan::AsyncQueueWorker(
         new SingleResultWorker<
@@ -53,20 +53,20 @@ NAN_METHOD(DelegateWork) {
         >(
             new Nan::Callback(js_callback),
             ContextT::Unwrap(info.This()),
-            convert_js_type_to_cpp<Arg0>(arg0)));
+            *arg0));
 }
 
 template<typename ContextT, typename MethodT, typename ResultT,
     typename Arg0, typename Arg1>
 NAN_METHOD(DelegateWork) {
-    v8::Local<v8::Value> arg0 = info[0];
-    if (!is_valid_cpp_type<Arg0>(arg0)) {
+    auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
+    if (!arg0) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
     }
 
-    v8::Local<v8::Value> arg1 = info[1];
-    if (!is_valid_cpp_type<Arg1>(arg1)) {
-        return Nan::ThrowTypeError("Illegal argument type at position 1");
+    auto&& arg1 = convert_js_type_to_cpp<Arg1>(info[1]);
+    if (!arg1) {
+        return Nan::ThrowTypeError("Illegal argument type at position 0");
     }
 
     v8::Local<v8::Value> arg2 = info[2];
@@ -74,9 +74,9 @@ NAN_METHOD(DelegateWork) {
         return Nan::ThrowTypeError("Last argument at 2 should be callback");
     }
 
-    auto js_callback = Nan::To<v8::Function>(arg2).ToLocalChecked();
+    auto&& js_callback = Nan::To<v8::Function>(arg2).ToLocalChecked();
 
-     Nan::AsyncQueueWorker(
+    Nan::AsyncQueueWorker(
         new SingleResultWorker<
             typename ContextT::value_type,
             MethodT,
@@ -86,8 +86,8 @@ NAN_METHOD(DelegateWork) {
         >(
             new Nan::Callback(js_callback),
             ContextT::Unwrap(info.This()),
-            convert_js_type_to_cpp<Arg0>(arg0),
-            convert_js_type_to_cpp<Arg1>(arg1)));
+            *arg0,
+            *arg1));
 }
 
 }  // namespace AODBC
