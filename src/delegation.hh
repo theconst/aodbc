@@ -25,10 +25,9 @@ NAN_METHOD(DelegateWork) {
         new SingleResultWorker<
             typename ContextT::value_type,
             MethodT,
-            ResultT
-        >(
-            new Nan::Callback(js_callback),
-            ContextT::Unwrap(info.This())));
+            ResultT>(
+                new Nan::Callback(js_callback),
+                ContextT::Unwrap(info.This())));
 }
 
 template<typename ContextT, typename MethodT, typename ResultT, typename Arg0>
@@ -49,11 +48,10 @@ NAN_METHOD(DelegateWork) {
             typename ContextT::value_type,
             MethodT,
             ResultT,
-            Arg0
-        >(
-            new Nan::Callback(js_callback),
-            ContextT::Unwrap(info.This()),
-            *arg0));
+            Arg0>(
+                new Nan::Callback(js_callback),
+                ContextT::Unwrap(info.This()),
+                *arg0));
 }
 
 template<typename ContextT, typename MethodT, typename ResultT,
@@ -82,12 +80,11 @@ NAN_METHOD(DelegateWork) {
             MethodT,
             ResultT,
             Arg0,
-            Arg1
-        >(
-            new Nan::Callback(js_callback),
-            ContextT::Unwrap(info.This()),
-            *arg0,
-            *arg1));
+            Arg1>(
+                new Nan::Callback(js_callback),
+                ContextT::Unwrap(info.This()),
+                *arg0,
+                *arg1));
 }
 
 }  // namespace AODBC
