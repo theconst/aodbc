@@ -19,8 +19,8 @@ NAN_METHOD(DelegateWork) {
     if (!arg0->IsFunction()) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
     }
-    auto&& js_callback = Nan::To<v8::Function>(arg0).ToLocalChecked();
 
+    auto js_callback = Nan::To<v8::Function>(arg0).ToLocalChecked();
     Nan::AsyncQueueWorker(
         new SingleResultWorker<
             typename ContextT::value_type,
@@ -41,8 +41,8 @@ NAN_METHOD(DelegateWork) {
     if (!arg1->IsFunction()) {
         return Nan::ThrowTypeError("Last argument at 1 should be callback");
     }
-    auto&& js_callback = Nan::To<v8::Function>(arg1).ToLocalChecked();
 
+    auto js_callback = Nan::To<v8::Function>(arg1).ToLocalChecked();
     Nan::AsyncQueueWorker(
         new SingleResultWorker<
             typename ContextT::value_type,
@@ -72,8 +72,7 @@ NAN_METHOD(DelegateWork) {
         return Nan::ThrowTypeError("Last argument at 2 should be callback");
     }
 
-    auto&& js_callback = Nan::To<v8::Function>(arg2).ToLocalChecked();
-
+    auto js_callback = Nan::To<v8::Function>(arg2).ToLocalChecked();
     Nan::AsyncQueueWorker(
         new SingleResultWorker<
             typename ContextT::value_type,
