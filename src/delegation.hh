@@ -66,7 +66,7 @@ NAN_METHOD(DelegateWork) {
 
     auto&& arg1 = convert_js_type_to_cpp<Arg1>(info[1]);
     if (!arg1) {
-        return Nan::ThrowTypeError("Illegal argument type at position 0");
+        return Nan::ThrowTypeError("Illegal argument type at position 1");
     }
 
     v8::Local<v8::Value> arg2 = info[2];
