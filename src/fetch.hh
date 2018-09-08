@@ -4,7 +4,7 @@
 #include "sqltypes.hh"
 
 namespace AODBC {
-    sql_result_t fetch_result_eagerly(nanodbc::result* result);
+    nc_result_t fetch_result_eagerly(nanodbc::result* result);
 }
 
 

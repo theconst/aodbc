@@ -5,16 +5,16 @@
 
 namespace AODBC {
 
-sql_result_t fetch_result_eagerly(nanodbc::result* result) {
-    sql_result_t sql_result;
+nc_result_t fetch_result_eagerly(nanodbc::result* result) {
+    nc_result_t sql_result;
     for (auto row_no = 0; result->next(); ++row_no) {
-        sql_row_t row = sql_row_t();
+        nc_row_t row = nc_row_t();
 
         for (auto col_no = 0; col_no < result->columns(); ++col_no) {
-            const sql_col_name_t& column_name = result->column_name(col_no);
+            const nc_col_name_t& column_name = result->column_name(col_no);
 
             if (result->is_null(column_name)) {
-                sql_column_t blank = boost::blank();
+                nc_column_t blank = boost::blank();
                 row.emplace_back(column_name, blank);
 
                 continue;
@@ -26,13 +26,13 @@ sql_result_t fetch_result_eagerly(nanodbc::result* result) {
             case SQL_INTEGER:
             case SQL_SMALLINT:
             {
-                sql_column_t intcol = result->get<int>(col_no);
+                nc_column_t intcol = result->get<int>(col_no);
                 row.emplace_back(column_name, intcol);
             }
                 break;
             case SQL_FLOAT:
             {
-                sql_column_t floatcol = result->get<float>(col_no);
+                nc_column_t floatcol = result->get<float>(col_no);
                 row.emplace_back(column_name, floatcol);
             }
                 break;
@@ -41,38 +41,38 @@ sql_result_t fetch_result_eagerly(nanodbc::result* result) {
             case SQL_REAL:
             case SQL_DOUBLE:
             {
-                sql_column_t doublecol = result->get<double>(col_no);
+                nc_column_t doublecol = result->get<double>(col_no);
                 row.emplace_back(column_name, doublecol);
             }
                 break;
             case SQL_VARCHAR:
             {
-                sql_column_t strcol = result->get<nanodbc::string>(col_no);
+                nc_column_t strcol = result->get<nanodbc::string>(col_no);
                 row.emplace_back(column_name, strcol);
             }
                 break;
             case SQL_TYPE_DATE:
             {
-                sql_column_t datecol = result->get<nanodbc::date>(col_no);
+                nc_column_t datecol = result->get<nanodbc::date>(col_no);
                 row.emplace_back(column_name, datecol);
             }
                 break;
             case SQL_TYPE_TIME:
             {
-                sql_column_t timecol = result->get<nanodbc::time>(col_no);
+                nc_column_t timecol = result->get<nanodbc::time>(col_no);
                 row.emplace_back(column_name, timecol);
             }
                 break;
             case SQL_TYPE_TIMESTAMP:
             {
-                sql_column_t timestampcol =
+                nc_column_t timestampcol =
                     result->get<nanodbc::timestamp>(col_no);
                 row.emplace_back(column_name, timestampcol);
             }
                 break;
             default:
             {
-                sql_column_t binarycol = result->get<sql_binary_t>(col_no);
+                nc_column_t binarycol = result->get<nc_binary_t>(col_no);
                 row.emplace_back(column_name, binarycol);
             }
                 break;

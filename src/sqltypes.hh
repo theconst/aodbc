@@ -21,36 +21,36 @@ struct DateTag {
     const DateTypes value = t;
 };
 
-typedef std::vector<u_int8_t> sql_binary_t;
+typedef std::vector<u_int8_t> nc_binary_t;
 
-typedef boost::blank sql_null_t;
+typedef boost::blank nc_null_t;
 
-typedef nanodbc::string sql_string_t;
+typedef nanodbc::string nc_string_t;
 
-typedef nanodbc::date sql_date_t;
+typedef nanodbc::date nc_date_t;
 
-typedef nanodbc::time sql_time_t;
+typedef nanodbc::time nc_time_t;
 
-typedef nanodbc::timestamp sql_timestamp_t;
+typedef nanodbc::timestamp nc_timestamp_t;
 
-typedef double sql_number_t;
+typedef double nc_number_t;
 
-typedef long sql_long_t;  // NOLINT(runtime/int)
+typedef long nc_long_t;  // NOLINT(runtime/int)
 
 typedef boost::variant<
-    sql_null_t,
-    sql_number_t,
-    sql_string_t,
-    sql_date_t,
-    sql_time_t,
-    sql_timestamp_t,
-    sql_binary_t
-> sql_column_t;
+    nc_null_t,
+    nc_number_t,
+    nc_string_t,
+    nc_date_t,
+    nc_time_t,
+    nc_timestamp_t,
+    nc_binary_t
+> nc_column_t;
 
-typedef nanodbc::string sql_col_name_t;
-typedef std::pair<sql_col_name_t, sql_column_t> sql_col_t;
-typedef std::vector<sql_col_t> sql_row_t;
-typedef std::vector<sql_row_t> sql_result_t;
+typedef nanodbc::string nc_col_name_t;
+typedef std::pair<nc_col_name_t, nc_column_t> nc_col_t;
+typedef std::vector<nc_col_t> nc_row_t;
+typedef std::vector<nc_row_t> nc_result_t;
 
 }  // namespace AODBC
 

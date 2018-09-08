@@ -87,9 +87,9 @@ NAN_METHOD(ODBCConnection::JsConnect) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::connect>,
-        sql_null_t,
-        sql_string_t,
-        sql_long_t
+        nc_null_t,
+        nc_string_t,
+        nc_long_t
     >(info);
 }
 
@@ -97,7 +97,7 @@ NAN_METHOD(ODBCConnection::JsDisconnect) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::disconnect>,
-        sql_null_t
+        nc_null_t
     >(info);
 }
 
@@ -105,7 +105,7 @@ NAN_METHOD(ODBCConnection::JsDBMSName) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::dbms_name>,
-        sql_string_t
+        nc_string_t
     >(info);
 }
 
@@ -113,7 +113,7 @@ NAN_METHOD(ODBCConnection::JsDBMSVersion) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::dbms_version>,
-        sql_string_t
+        nc_string_t
     >(info);
 };
 
@@ -122,7 +122,7 @@ NAN_METHOD(ODBCConnection::JsDriverName) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::driver_name>,
-        sql_string_t
+        nc_string_t
     >(info);
 }
 
@@ -130,7 +130,7 @@ NAN_METHOD(ODBCConnection::JsCatalogName) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::catalog_name>,
-        sql_string_t
+        nc_string_t
     >(info);
 }
 
@@ -138,7 +138,7 @@ NAN_METHOD(ODBCConnection::JsDatabaseName) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::database_name>,
-        sql_string_t  // TODO(kko): remove sql prefix
+        nc_string_t  // TODO(kko): remove sql prefix
     >(info);
 }
 
@@ -146,7 +146,7 @@ NAN_METHOD(ODBCConnection::JsQuery) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::query>,
-        sql_result_t,
+        nc_result_t,
         QueryArguments
     >(info);
 }
@@ -155,8 +155,8 @@ NAN_METHOD(ODBCConnection::JsExecute) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::execute>,
-        sql_null_t,
-        sql_string_t
+        nc_null_t,
+        nc_string_t
     >(info);
 }
 
