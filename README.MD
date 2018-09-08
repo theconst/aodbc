@@ -1,32 +1,94 @@
-# nc.js (nanodbc.js) - library that wraps nanodbc
+# nc.js (nanodbc.js) - Wrapper for nanodbc library
 
-Primarily targeted on intersystems Cache database
+## Nanodbc
+Nanodbc is a proven wrapper for ODBC API. For more details see:
+https://nanodbc.github.io/nanodbc/
 
-WIP - Work in progress
+This library aims to provide a simple access to ODBC data sources for node js for different drivers.
 
-# Launch and build process
 
-## Linux 
+# Current status
 
-Linux x64 is the only supported platform (for now)
+**<span style="color:red"> WARNING </span>** - Work in progress.
 
-### Launch steps (for ubuntu and debian):
+See samples directory for example usage.
 
-* install nodejs - https://nodejs.org/
-* install unixodbc - http://www.unixodbc.org/
-* copy configuration from odbc.ini with your host address to ~/.odbc.ini
-* download ODBC driver for Intersystems Cache 
-- http://www.intersystems.com/ru/services-support/product-support/cache-odbc-driver-faq/
-* install boost library - sudo apt-get install libboost-all-dev
-* run npm install in the project directory
-* npm start will lauch the demo application
+Example:
 
-* binary of nanodbc library is included in repository - TODO - remove. If your architecture or driver differs, you may need to build nanodbc from source - https://github.com/nanodbc/nanodbc
+```javascript
+const nanodbc = require("../js/index.js");
+
+// this dependency is used for demo only
+require("console.table");
+
+const connectionString = "DSN=CacheWinHost";
+
+(async () => {
+    const connection = nanodbc.createConnection(connectionString);
+    try {
+        console.log("Cleaning up");
+        try {
+            await connection.executePromise(`DROP TABLE SQLUser.Employees`);
+        } catch (error) {
+            console.error("Error executing query");
+            console.error("Table does not exist and procedures are not supported (yet)");
+            console.error(error);
+        }
+
+        console.log("Creating table...");
+        await connection.executePromise(`
+            CREATE TABLE Employees (
+                EMPNUM     INT NOT NULL,
+                NAMELAST   CHAR(30) NOT NULL,
+                NAMEFIRST  CHAR(30) NOT NULL,
+                STARTDATE  TIMESTAMP,
+                SALARY     MONEY,
+                ACCRUEDVACATION   INT,
+                ACCRUEDSICKLEAVE  INT,
+                CONSTRAINT EMPLOYEEPK PRIMARY KEY (EMPNUM))
+        `.replace(/\n\r\t/g, " "));
+
+        console.log("Executing inert");
+        const insert = nanodbc.createQueryBuilder()
+            .insert()
+            .into("Employees")
+            .set("EMPNUM", 1)
+            .set("STARTDATE", "GETDATE()", { "dontQuote" : true })
+            .set("NAMEFIRST", "John")
+            .set("NAMELAST", "Smith")
+            .set("SALARY", 2)
+            .toString();
+        console.log(insert);
+        await connection.executePromise(insert);
+                
+        console.log("Selecting result");
+        const select = nanodbc.createQueryBuilder()
+            .select()
+            .from("Employees")
+            .toString();
+        const result = await connection.queryPromise({
+            "query": select, 
+            "batchSize": 10,
+            "timeout": 1000
+        });
+        result.forEach(e => e["STARTDATE"] = JSON.stringify(e["STARTDATE"]));
+        console.log(JSON.stringify(result));
+        console.table(result);
+    } catch (error) {
+        console.error(error.message);
+    } finally {
+        await connection.disconnectPromise();
+    }
+})();
+```
 
 # TODO List
 
-- Add support for prepared statements
-- Add support for transactions
-- Add support for binary type
-- Automate build for linux
-- Try to build on Windows machines
+- [x] Add support for setting fetch size
+- [ ] Generalize delegation code
+- [ ] Increase C++ test coverage
+- [ ] Automate build for linux
+- [ ] Add support for prepared statements
+- [ ] Add support for transactions
+- [ ] Add support for binary type
+- [ ] Add support for windows
