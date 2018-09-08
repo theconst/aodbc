@@ -16,8 +16,8 @@ struct QueryArguments {
 
     explicit QueryArguments(
             sql_string_t query,
-            sql_long_t batch_size,
-            sql_long_t timeout) :
+            sql_long_t batch_size = 1L,
+            sql_long_t timeout = 0L) :
         query(std::move(query)),
         batch_size(batch_size),
         timeout(timeout) {
