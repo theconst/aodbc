@@ -214,23 +214,25 @@ describe('ODBC Connection integration tests', function () {
     });
     
     it('should execute query 5', function(done) {
-        testQuery('Select Count(*) FROM Aviation.Aircraft', done);
+        testQuery({
+            'query': 'Select Count(*) FROM Aviation.Aircraft',
+            'batchSize' : 1,
+        }, done);
     });
     
-    // it takes too long
     it('should execut query 6', function (done) {
-        testQuery('Select * FROM Aviation.Event', done);
+        testQuery({
+            'query': 'Select * FROM Aviation.Event',
+            'batchSize': 1000,
+        }, done);
     });
     
-    function testQuery(query, done) {
+    function testQuery(args, done) {
         const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
         
-        connection.query({
-            "query" : query,
-            "batcSize" : 1,
-        }, (err, value) => {
+        connection.query(args, (err, value) => {
             console.debug(`Error: ${err}`);
-            console.debug(`Value: ${JSON.stringify(value.length)}`);
+            console.debug(`Value: ${JSON.stringify(value)}`);
 
             expect(err).to.not.exist;
             expect(value).to.exist;

@@ -39,6 +39,13 @@ boost::optional<sql_long_t>
 template<>
 boost::optional<QueryArguments> convert_js_type_to_cpp<QueryArguments>(
         v8::Local<v8::Value> local) {
+    if (local->IsString()) {
+        boost::optional<QueryArguments> result {};
+        result.emplace(*convert_js_type_to_cpp<sql_string_t>(local));
+
+        return result;
+    }
+
     if (!local->IsObject()) {
         return boost::none;
     }
