@@ -26,13 +26,13 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             case SQL_INTEGER:
             case SQL_SMALLINT:
             {
-                nc_column_t intcol = result->get<int>(col_no);
+                nc_column_t intcol { result->get<int>(col_no) };
                 row.emplace_back(column_name, intcol);
             }
                 break;
             case SQL_FLOAT:
             {
-                nc_column_t floatcol = result->get<float>(col_no);
+                nc_column_t floatcol { result->get<float>(col_no) };
                 row.emplace_back(column_name, floatcol);
             }
                 break;
@@ -41,38 +41,38 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             case SQL_REAL:
             case SQL_DOUBLE:
             {
-                nc_column_t doublecol = result->get<double>(col_no);
+                nc_column_t doublecol { result->get<double>(col_no) };
                 row.emplace_back(column_name, doublecol);
             }
                 break;
             case SQL_VARCHAR:
             {
-                nc_column_t strcol = result->get<nc_string_t>(col_no);
+                nc_column_t strcol { result->get<nc_string_t>(col_no) };
                 row.emplace_back(column_name, strcol);
             }
                 break;
             case SQL_TYPE_DATE:
             {
-                nc_column_t datecol = result->get<nc_date_t>(col_no);
+                nc_column_t datecol { result->get<nc_date_t>(col_no) };
                 row.emplace_back(column_name, datecol);
             }
                 break;
             case SQL_TYPE_TIME:
             {
-                nc_column_t timecol = result->get<nc_time_t>(col_no);
+                nc_column_t timecol {result->get<nc_time_t>(col_no) };
                 row.emplace_back(column_name, timecol);
             }
                 break;
             case SQL_TYPE_TIMESTAMP:
             {
-                nc_column_t timestampcol =
-                    result->get<nc_timestamp_t>(col_no);
+                nc_column_t timestampcol
+                    { result->get<nc_timestamp_t>(col_no) };
                 row.emplace_back(column_name, timestampcol);
             }
                 break;
             default:
             {
-                nc_column_t binarycol = result->get<nc_binary_t>(col_no);
+                nc_column_t binarycol { result->get<nc_binary_t>(col_no) };
                 row.emplace_back(column_name, binarycol);
             }
                 break;
