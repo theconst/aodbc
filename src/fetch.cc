@@ -66,7 +66,7 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             case SQL_TYPE_TIMESTAMP:
             {
                 nc_column_t timestampcol =
-                    result->get<nanodbc::timestamp>(col_no);
+                    result->get<nc_timestamp_t>(col_no);
                 row.emplace_back(column_name, timestampcol);
             }
                 break;
