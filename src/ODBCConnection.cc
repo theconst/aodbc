@@ -65,7 +65,7 @@ NAN_METHOD(ODBCConnection::JsNew) {
     ODBCConnection* odbc_connection {};
     if (connection_string_js->IsString()) {
        odbc_connection = new ODBCConnection(
-           *v8::String::Utf8Value(connection_string_js->ToString()));
+           *Nan::Utf8String(connection_string_js));
     } else if (connection_string_js->IsUndefined()) {
        odbc_connection = new ODBCConnection();
     } else {

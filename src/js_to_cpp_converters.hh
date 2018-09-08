@@ -28,7 +28,7 @@ boost::optional<sql_string_t>
         return boost::none;
     }
     boost::optional<sql_string_t> result {};
-    result.emplace(*v8::String::Utf8Value(local->ToString()));
+    result.emplace(*Nan::Utf8String(local));
     return result;
 }
 
@@ -54,7 +54,7 @@ boost::optional<QueryArguments> convert_js_type_to_cpp<QueryArguments>(
     if (!local->IsObject()) {
         return boost::none;
     }
-    auto object = local->ToObject();
+    auto object = Nan::To<v8::Object>(local).ToLocalChecked();
 
     Nan::HandleScope scope {};
 
