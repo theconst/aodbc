@@ -11,7 +11,7 @@ class promisifiedNC {
     }
 
     static createQueryBuilder() {
-        //TODO: which flavor is cache closer to ?
+        //TODO(kko): which flavor is cache closer to ?
         return squel;
     }
 
