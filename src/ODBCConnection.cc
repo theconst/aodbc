@@ -3,12 +3,17 @@
 #include "ODBCConnection.hh"
 
 #include "UVMonitor.hh"
+
+#include "arguments.hh"
+
 #include "delegation.hh"
 
 namespace AODBC {
 
 using AODBC::MethodTag;
 using AODBC::CommandNames;
+
+using AODBC::QueryArguments;
 
 const char* ODBCConnection::js_class_name = "ODBCConnection";
 
@@ -141,8 +146,8 @@ NAN_METHOD(ODBCConnection::JsQuery) {
     return DelegateWork<
         ODBCConnection,
         MethodTag<CommandNames::query>,
-        AODBC::sql_result_t,
-        sql_string_t
+        sql_result_t,
+        QueryArguments
     >(info);
 }
 

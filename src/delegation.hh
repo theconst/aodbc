@@ -4,6 +4,7 @@
 
 #include "nan.h"
 
+#include "arguments.hh"
 #include "js_to_cpp_converters.hh"
 #include "SingleResultWorker.hh"
 

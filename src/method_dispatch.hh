@@ -6,6 +6,8 @@
 
 namespace AODBC {
 
+using AODBC::QueryArguments;
+
 template <
     typename OwnerT,
     typename ResultT,
@@ -119,10 +121,11 @@ template<>
 AODBC::sql_result_t call_method(
         MethodTag<CommandNames::query>,
         UVMonitor<nanodbc::connection>* owner,
-        std::tuple<sql_string_t> args) {
+        std::tuple<QueryArguments> args) {
     return (*owner)([&](nanodbc::connection& connection) {
+        const QueryArguments& qargs = std::get<0>(args);
         nanodbc::result result = nanodbc::execute(
-            connection, std::get<0>(args));
+            connection, qargs.query, qargs.batch_size, qargs.timeout);
         return fetch_result_eagerly(&result);
     });
 }
