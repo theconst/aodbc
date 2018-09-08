@@ -97,7 +97,8 @@ describe('ODBC Connection integration tests', function () {
         });
     });
     
-    // it prints error, i expected it to be idempotent
+    // prints error, but not crashes. disconnect should be performed once in the 
+    // javascript wrapper
     xit('should return disconnected after disconnect', function(done) {
        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
        
@@ -124,8 +125,7 @@ describe('ODBC Connection integration tests', function () {
        });
     });
     
-    //TODO: i guess i am missing some described behaviour,
-    //of the wrapee
+    // test is wrong - connection is not usable after disconnect
     xit('should reconnect after disconnect', function(done) {
         const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
         
@@ -224,8 +224,7 @@ describe('ODBC Connection integration tests', function () {
         testQuery('SELECT AircraftSerialNo, AircraftModel from Aviation.Aircraft', done);
     });
     
-    // it takes too long
-    xit('should execute query 4', function(done) {
+    it('should execute query 4', function(done) {
         testQuery('Select * from Aviation.Aircraft', done);
     });
     
@@ -248,6 +247,8 @@ describe('ODBC Connection integration tests', function () {
         
         connection.query(args, (err, value) => {
             console.debug(`Error: ${err}`);
+
+            // ucomment to see full output
             // console.debug(`Value: ${JSON.stringify(value)}`);
 
             expect(err).to.not.exist;
