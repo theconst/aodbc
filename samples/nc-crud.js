@@ -5,7 +5,7 @@
  * https://github.com/nanodbc/nanodbc/issues/113
  */
 
-const NC = require("../js/index.js");
+const nanodbc = require("../js/index.js");
 
 require("console.table"); // this dependency is used for demo only
 
@@ -13,11 +13,11 @@ const connectionString = "DSN=CacheWinHost";
 
 (async () => {
     // open connection synchronously and then work async
-    const connectionSync = NC.createConnection(connectionString);
+    const connection = nanodbc.createConnection(connectionString);
     try {
         console.log("Cleaning up");
         try {
-            await connectionSync.executePromise(`DROP TABLE SQLUser.EmployeeTest2`);
+            await connection.executePromise(`DROP TABLE SQLUser.Employees`);
         } catch (error) {
             console.error("Error executing query");
             console.error("Table does not exist and procedures are not supported (yet)");
@@ -25,8 +25,8 @@ const connectionString = "DSN=CacheWinHost";
         }
 
         console.log("Creating table...");
-        await connectionSync.executePromise(`
-            CREATE TABLE EmployeeTest2 (
+        await connection.executePromise(`
+            CREATE TABLE Employees (
                 EMPNUM     INT NOT NULL,
                 NAMELAST   CHAR(30) NOT NULL,
                 NAMEFIRST  CHAR(30) NOT NULL,
@@ -38,9 +38,9 @@ const connectionString = "DSN=CacheWinHost";
         `.replace(/\n\r\t/g, " "));
 
         console.log("Executing inert");
-        const insert = NC.createQueryBuilder()
+        const insert = nanodbc.createQueryBuilder()
             .insert()
-            .into("EmployeeTest2")
+            .into("Employees")
             .set("EMPNUM", 1)
             .set("STARTDATE", "GETDATE()", { "dontQuote" : true })
             .set("NAMEFIRST", "John")
@@ -48,20 +48,20 @@ const connectionString = "DSN=CacheWinHost";
             .set("SALARY", 2)
             .toString();
         console.log(insert);
-        await connectionSync.executePromise(insert);
+        await connection.executePromise(insert);
                 
         console.log("Selecting result");
-        const select = NC.createQueryBuilder()
+        const select = nanodbc.createQueryBuilder()
             .select()
-            .from("EmployeeTest2")
+            .from("Employees")
             .toString();
-        const result = await connectionSync.queryPromise(select);
+        const result = await connection.queryPromise(select);
         result.forEach(e => e["STARTDATE"] = JSON.stringify(e["STARTDATE"]));
         console.log(JSON.stringify(result));
         console.table(result);
     } catch (error) {
         console.error(error.message);
     } finally {
-        await connectionSync.disconnectPromise();
+        await connection.disconnectPromise();
     }
 })();

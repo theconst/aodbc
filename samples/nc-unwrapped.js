@@ -1,13 +1,13 @@
 #!/usr/bin/node
 /**
- * Demo sript of the native NC usage.
+ * Demo sript of the native nc usage.
  * You typically may want to use a blubird wrapper in js/index.
  * 
  */
 
-const NC = require("nc");
+const nc = require("nc");
 
-const connection = new NC.ODBCConnection("DSN=CacheWinHost");
+const connection = new nc.ODBCConnection("DSN=CacheWinHost");
 
 connection.query("Select * from Aviation.Aircraft", (err, value) => {
     err && console.debug(`Error1: ${err}`);
