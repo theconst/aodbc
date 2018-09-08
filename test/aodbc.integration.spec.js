@@ -218,7 +218,7 @@ describe('ODBC Connection integration tests', function () {
     });
     
     // it takes too long
-    xit('should execut query 6', function (done) {
+    it('should execut query 6', function (done) {
         testQuery('Select * FROM Aviation.Event', done);
     });
     
@@ -226,10 +226,11 @@ describe('ODBC Connection integration tests', function () {
         const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
         
         connection.query({
-            "query" : query
+            "query" : query,
+            "batcSize" : 1,
         }, (err, value) => {
             console.debug(`Error: ${err}`);
-            console.debug(`Value: ${JSON.stringify(value)}`);
+            console.debug(`Value: ${JSON.stringify(value.length)}`);
 
             expect(err).to.not.exist;
             expect(value).to.exist;

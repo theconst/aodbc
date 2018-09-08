@@ -56,12 +56,12 @@ boost::optional<QueryArguments> convert_js_type_to_cpp<QueryArguments>(
 
     auto batch_size_key = Nan::New<v8::String>("batchSize").ToLocalChecked();
     auto batch_size_prop = Nan::Get(object, batch_size_key).ToLocalChecked();
-    auto batch_size = convert_js_type_to_cpp<sql_number_t>(batch_size_prop)
-        .get_value_or(0);
+    auto batch_size = convert_js_type_to_cpp<sql_long_t>(batch_size_prop)
+        .get_value_or(1);
 
     auto timeout_key = Nan::New<v8::String>("timeout").ToLocalChecked();
     auto timeout_prop = Nan::Get(object, timeout_key).ToLocalChecked();
-    auto timeout = convert_js_type_to_cpp<sql_number_t>(timeout_prop)
+    auto timeout = convert_js_type_to_cpp<sql_long_t>(timeout_prop)
         .get_value_or(0);
 
     boost::optional<QueryArguments> result {};
