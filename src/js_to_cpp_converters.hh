@@ -7,7 +7,7 @@
 
 #include "arguments.hh"
 
-#include "sqltypes.hh"
+#include "nctypes.hh"
 
 namespace AODBC {
 

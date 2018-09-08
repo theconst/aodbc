@@ -4,7 +4,7 @@
 #ifndef ARGUMENTS_HH
 #define ARGUMENTS_HH
 
-#include "sqltypes.hh"
+#include "nctypes.hh"
 
 
 namespace AODBC {

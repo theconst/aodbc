@@ -10,7 +10,7 @@
 #include <sql.h>
 #include "nanodbc.h"
 
-#include "sqltypes.hh"
+#include "nctypes.hh"
 
 namespace AODBC {
 

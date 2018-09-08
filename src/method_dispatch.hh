@@ -1,7 +1,7 @@
 #ifndef METHODDISPATCH_HH
 #define METHODDISPATCH_HH
 
-#include "sqltypes.hh"
+#include "nctypes.hh"
 #include "fetch.hh"
 
 namespace AODBC {

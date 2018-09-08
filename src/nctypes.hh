@@ -1,5 +1,5 @@
-#ifndef SQLTYPES_HH
-#define SQLTYPES_HH
+#ifndef NCTYPES_HH
+#define NCTYPES_HH
 
 #include <vector>
 #include "boost/variant.hpp"
@@ -54,5 +54,5 @@ typedef std::vector<nc_row_t> nc_result_t;
 
 }  // namespace AODBC
 
-#endif /* SQLRESULTSET_HH */
+#endif /* NCTYPES_HH */
 

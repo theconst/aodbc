@@ -1,14 +1,14 @@
 #include "fetch.hh"
 
 #include <sql.h>
-#include "sqltypes.hh"
+#include "nctypes.hh"
 
 namespace AODBC {
 
 nc_result_t fetch_result_eagerly(nanodbc::result* result) {
     nc_result_t sql_result;
     for (auto row_no = 0; result->next(); ++row_no) {
-        nc_row_t row = nc_row_t();
+        nc_row_t row = nc_row_t {};
 
         for (auto col_no = 0; col_no < result->columns(); ++col_no) {
             const nc_col_name_t& column_name = result->column_name(col_no);
