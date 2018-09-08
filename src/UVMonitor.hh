@@ -31,7 +31,7 @@ class UVMonitor {
  public:
     template <typename... Args>
     explicit UVMonitor(Args &&... args) : object(std::forward<Args>(args)...) {
-        mutex_handle = new uv_mutex_t;
+        mutex_handle = new uv_mutex_t {};
         uv_mutex_init_recursive(mutex_handle);
     }
 

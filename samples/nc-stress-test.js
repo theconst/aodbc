@@ -37,7 +37,10 @@ const connectionString = "DSN=CacheWinHost";
             await Promise.all([
                 resolveAfter(delay1)
                     .then(() => unbufferedLog("Delay 1 ready"))
-                    .then(() => connection1.queryPromise(select1))
+                    .then(() => connection1.queryPromise({
+                      "query": select1,
+                      "batchSize": 1200,
+                    }))
                     .then(val => unbufferedLog(`Query on connection 1 ready, size: ${val.length}`)),
                 resolveAfter(delay2)
                     .then(() => unbufferedLog("Delay 2 ready"))

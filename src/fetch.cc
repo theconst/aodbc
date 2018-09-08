@@ -6,7 +6,7 @@
 namespace NC {
 
 nc_result_t fetch_result_eagerly(nanodbc::result* result) {
-    nc_result_t sql_result;
+    nc_result_t sql_result {};
     for (auto row_no = 0; result->next(); ++row_no) {
         nc_row_t row = nc_row_t {};
 
@@ -47,19 +47,19 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
                 break;
             case SQL_VARCHAR:
             {
-                nc_column_t strcol = result->get<nanodbc::string>(col_no);
+                nc_column_t strcol = result->get<nc_string_t>(col_no);
                 row.emplace_back(column_name, strcol);
             }
                 break;
             case SQL_TYPE_DATE:
             {
-                nc_column_t datecol = result->get<nanodbc::date>(col_no);
+                nc_column_t datecol = result->get<nc_date_t>(col_no);
                 row.emplace_back(column_name, datecol);
             }
                 break;
             case SQL_TYPE_TIME:
             {
-                nc_column_t timecol = result->get<nanodbc::time>(col_no);
+                nc_column_t timecol = result->get<nc_time_t>(col_no);
                 row.emplace_back(column_name, timecol);
             }
                 break;

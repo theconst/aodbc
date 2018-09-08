@@ -32,18 +32,18 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
     // primitive types are optimized, so the code is somewhat duplicated
 
     v8::Local<v8::Value> operator()(const nc_null_t& blank) const {
-        Nan::EscapableHandleScope handleScope;
-        return handleScope.Escape(Nan::Null());
+        Nan::EscapableHandleScope scope {};
+        return scope.Escape(Nan::Null());
     }
 
     v8::Local<v8::Value> operator()(const nc_number_t& doubleValue) const {
-        Nan::EscapableHandleScope handleScope;
-        return handleScope.Escape(Nan::New<v8::Number>(doubleValue));
+        Nan::EscapableHandleScope scope {};
+        return scope.Escape(Nan::New<v8::Number>(doubleValue));
     }
 
     v8::Local<v8::Value> operator()(const nc_string_t& str) const {
-        Nan::EscapableHandleScope handleScope;
-        return handleScope.Escape(
+        Nan::EscapableHandleScope scope {};
+        return scope.Escape(
             Nan::New<v8::String>(str).ToLocalChecked());
     }
 
@@ -55,10 +55,10 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
 
     template <typename T>
     v8::Local<v8::Value> operator()(const T& t) const {
-        Nan::EscapableHandleScope handleScope;
+        Nan::EscapableHandleScope scope {};
         v8::Local<v8::Object> result = Nan::New<v8::Object>();
         convert_cpp_type_to_js(result, t);
-        return handleScope.Escape(result);
+        return scope.Escape(result);
     }
 };
 
@@ -67,7 +67,7 @@ void convert_cpp_type_to_js(
         v8::Local<v8::Object> time_result,
         const T& time,
         DateTag<DateTypes::time>) {
-    Nan::HandleScope scope;
+    Nan::HandleScope scope {};
 
     Nan::Set(time_result,
         Nan::New<v8::String>("hour").ToLocalChecked(),
@@ -87,7 +87,7 @@ void convert_cpp_type_to_js(
         v8::Local<v8::Object> date_result,
         const T& date,
         DateTag<DateTypes::date>) {
-    Nan::HandleScope scope;
+    Nan::HandleScope scope {};
 
     Nan::Set(date_result,
         Nan::New<v8::String>("day").ToLocalChecked(),
@@ -134,16 +134,16 @@ void convert_cpp_type_to_js(
 template<>
 v8::Local<v8::Value> convert_cpp_type_to_js<nanodbc::string>(
         const nc_string_t& arg) {
-    Nan::EscapableHandleScope handleScope;
-    return handleScope.Escape(Nan::New<v8::String>(arg).ToLocalChecked());
+    Nan::EscapableHandleScope scope {};
+    return scope.Escape(Nan::New<v8::String>(arg).ToLocalChecked());
 }
 
 template<>
 v8::Local<v8::Value> convert_cpp_type_to_js(const nc_result_t& sql_result) {
-    Nan::EscapableHandleScope scope;
-    SQLColumnVisitor visitor;
+    Nan::EscapableHandleScope scope {};
+    SQLColumnVisitor visitor {};
 
-    v8::Local<v8::Array> js_result = Nan::New<v8::Array>(sql_result.size());
+    auto js_result = Nan::New<v8::Array>(sql_result.size());
     int c = 0;
     for (const auto& row : sql_result) {
         v8::Local<v8::Object> result_row = Nan::New<v8::Object>();
@@ -160,15 +160,13 @@ v8::Local<v8::Value> convert_cpp_type_to_js(const nc_result_t& sql_result) {
 
 template<>
 v8::Local<v8::Value> convert_cpp_type_to_js(const bool& boolean_value) {
-    Nan::EscapableHandleScope scope;
-
+    Nan::EscapableHandleScope scope {};
     return scope.Escape(Nan::New<v8::Boolean>(boolean_value));
 }
 
 template<>
 v8::Local<v8::Value> convert_cpp_type_to_js(const nc_null_t&) {
-    Nan::EscapableHandleScope scope;
-
+    Nan::EscapableHandleScope scope {};
     return scope.Escape(Nan::Null());
 }
 

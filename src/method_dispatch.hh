@@ -32,7 +32,7 @@ enum struct CommandNames {
 
 template<CommandNames tag>
 struct MethodTag {
-    CommandNames value = tag;
+    static constexpr CommandNames value = tag;
 };
 
 template<>
@@ -103,7 +103,7 @@ nc_null_t call_method(
     (*owner)([&](nanodbc::connection& connection) {
         connection.connect(std::get<0>(args), std::get<1>(args));
     });
-    return boost::blank {};
+    return nc_null_t {};
 }
 
 template<>
@@ -114,7 +114,7 @@ nc_null_t call_method(
     (*owner)([&](nanodbc::connection& connection) {
         connection.connect(std::get<0>(args));
     });
-    return boost::blank {};
+    return nc_null_t {};
 }
 
 template<>
@@ -129,7 +129,7 @@ nc_null_t call_method(
 }
 
 template<>
-NC::nc_result_t call_method(
+nc_result_t call_method(
         MethodTag<CommandNames::query>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<QueryArguments> args) {
@@ -149,7 +149,7 @@ nc_null_t call_method(
     (*owner)([&](nanodbc::connection& connection) {
         nanodbc::just_execute(connection, std::get<0>(args));
     });
-    return boost::blank {};
+    return nc_null_t {};
 }
 
 

@@ -17,6 +17,9 @@ const char* query_key_name = "query";
 const char* batch_size_key_name = "batchSize";
 const char* timeout_key_name = "timeout";
 
+const int default_timeout = 0;
+const int default_batch_size = 1;
+
 
 template<typename T>
 boost::optional<T> convert_js_type_to_cpp(v8::Local<v8::Value> value);
@@ -70,12 +73,12 @@ boost::optional<QueryArguments> convert_js_type_to_cpp<QueryArguments>(
         .ToLocalChecked();
     auto batch_size_prop = Nan::Get(object, batch_size_key).ToLocalChecked();
     auto batch_size = convert_js_type_to_cpp<nc_long_t>(batch_size_prop)
-        .get_value_or(1);
+        .get_value_or(default_batch_size);
 
     auto timeout_key = Nan::New<v8::String>(timeout_key_name).ToLocalChecked();
     auto timeout_prop = Nan::Get(object, timeout_key).ToLocalChecked();
     auto timeout = convert_js_type_to_cpp<nc_long_t>(timeout_prop)
-        .get_value_or(0);
+        .get_value_or(default_timeout);
 
     boost::optional<QueryArguments> result {};
     result.emplace(*maybe_query, batch_size, timeout);

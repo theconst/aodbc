@@ -51,7 +51,7 @@ class SingleResultWorker : public Nan::AsyncWorker {
     }
 
     void HandleOKCallback() override {
-        Nan::HandleScope scope;
+        Nan::HandleScope scope {};
 
         v8::Local<v8::Value> args[] {
             Nan::Null(),
