@@ -1,6 +1,8 @@
 #include "fetch.hh"
 
 #include <sql.h>
+#include <sqlext.h>
+
 #include "nctypes.hh"
 
 namespace NC {
@@ -23,8 +25,10 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             auto datatype = result->column_datatype(col_no);
             // TODO(kko): switch on c types - they will eliminate most cases?
             switch (datatype) {
+            case SQL_TINYINT:
             case SQL_INTEGER:
             case SQL_SMALLINT:
+            case SQL_BIT:       // TODO(kko): check if this works
             {
                 nc_column_t intcol { result->get<int>(col_no) };
                 row.emplace_back(column_name, intcol);
@@ -40,12 +44,14 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             case SQL_DECIMAL:
             case SQL_REAL:
             case SQL_DOUBLE:
+            case SQL_BIGINT:  // TODO(kko): check if this works
             {
                 nc_column_t doublecol { result->get<double>(col_no) };
                 row.emplace_back(column_name, doublecol);
             }
                 break;
             case SQL_VARCHAR:
+            case SQL_LONGVARCHAR:
             {
                 nc_column_t&& strcol { result->get<nc_string_t>(col_no) };
                 row.emplace_back(column_name, strcol);
@@ -58,18 +64,25 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             }
                 break;
             case SQL_TYPE_TIME:
+            case SQL_TIME:
             {
                 nc_column_t&& timecol {result->get<nc_time_t>(col_no) };
                 row.emplace_back(column_name, timecol);
             }
                 break;
             case SQL_TYPE_TIMESTAMP:
+            case SQL_TIMESTAMP:
             {
                 nc_column_t&& timestampcol
                     { result->get<nc_timestamp_t>(col_no) };
                 row.emplace_back(column_name, timestampcol);
             }
                 break;
+            case SQL_BINARY:
+            case SQL_VARBINARY:
+            case SQL_LONGVARBINARY:
+            // fallthough is intentional - try to handle
+            // data as binary as last resort
             default:
             {
                 nc_column_t&& binarycol { result->get<nc_binary_t>(col_no) };
