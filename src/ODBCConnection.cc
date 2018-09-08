@@ -23,7 +23,7 @@ ODBCConnection::ODBCConnection()
     : connection(std::make_shared<UVMonitor<nanodbc::connection>>()) {
 }
 
-ODBCConnection::ODBCConnection(std::string&& connection_string)
+ODBCConnection::ODBCConnection(const nc_string_t& connection_string)
     : connection(std::make_shared<UVMonitor<nanodbc::connection>>(
         connection_string)) {
 }
