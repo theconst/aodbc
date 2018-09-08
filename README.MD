@@ -1,4 +1,4 @@
-# AODBC - library that wraps nanodbc
+# NC - library that wraps nanodbc
 
 Primarily targeted on intersystems Cache database
 

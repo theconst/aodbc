@@ -7,7 +7,7 @@
 #include "nctypes.hh"
 
 
-namespace AODBC {
+namespace NC {
 
 struct QueryArguments {
     nc_string_t query;
@@ -28,7 +28,7 @@ struct QueryArguments {
     virtual ~QueryArguments() = default;
 };
 
-}  // namespace AODBC
+}  // namespace NC
 
 
 #endif /* ARGUMETNS_HH */

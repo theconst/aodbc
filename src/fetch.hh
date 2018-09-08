@@ -3,7 +3,7 @@
 
 #include "nctypes.hh"
 
-namespace AODBC {
+namespace NC {
     nc_result_t fetch_result_eagerly(nanodbc::result* result);
 }
 

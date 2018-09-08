@@ -5,7 +5,7 @@
 
 #include "uv.h"
 
-namespace AODBC {
+namespace NC {
 
 template <typename T>
 class UVMonitor {
@@ -54,6 +54,6 @@ class UVMonitor {
 
 
 
-}  // namespace AODBC
+}  // namespace NC
 
 #endif /* UVMONITOR_HH */

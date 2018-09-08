@@ -10,7 +10,7 @@
 
 #include "nanodbc.h"
 
-namespace AODBC {
+namespace NC {
 
 enum struct DateTypes {
     date, time, datetime
@@ -52,7 +52,7 @@ typedef std::pair<nc_col_name_t, nc_column_t> nc_col_t;
 typedef std::vector<nc_col_t> nc_row_t;
 typedef std::vector<nc_row_t> nc_result_t;
 
-}  // namespace AODBC
+}  // namespace NC
 
 #endif /* NCTYPES_HH */
 

@@ -5,7 +5,7 @@
  * https://github.com/nanodbc/nanodbc/issues/113
  */
 
-const aodbc = require("../js/index.js");
+const NC = require("../js/index.js");
 
 require("console.table"); // this dependency is used for demo only
 
@@ -13,7 +13,7 @@ const connectionString = "DSN=CacheWinHost";
 
 (async () => {
     // open connection synchronously and then work async
-    const connectionSync = aodbc.createConnection(connectionString);
+    const connectionSync = NC.createConnection(connectionString);
     try {
         console.log("Cleaning up");
         try {
@@ -38,7 +38,7 @@ const connectionString = "DSN=CacheWinHost";
         `.replace(/\n\r\t/g, " "));
 
         console.log("Executing inert");
-        const insert = aodbc.createQueryBuilder()
+        const insert = NC.createQueryBuilder()
             .insert()
             .into("EmployeeTest2")
             .set("EMPNUM", 1)
@@ -51,7 +51,7 @@ const connectionString = "DSN=CacheWinHost";
         await connectionSync.executePromise(insert);
                 
         console.log("Selecting result");
-        const select = aodbc.createQueryBuilder()
+        const select = NC.createQueryBuilder()
             .select()
             .from("EmployeeTest2")
             .toString();

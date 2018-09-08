@@ -8,15 +8,15 @@ describe('ODBC Connection integration tests', function () {
 
     this.timeout(60000);
 
-    let aodbc; //SUT
+    let nc; //SUT
 
     beforeEach(function () {
-        aodbc = require('aodbc');
+        nc = require('nc');
     });
     
     
     it('should return connected for new instance', function (done) {
-        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
             
         connection.isConnected((err, isConnected) => {
             expect(err).to.be.null;
@@ -28,7 +28,7 @@ describe('ODBC Connection integration tests', function () {
     
     
     it('should display name of the dbms', function(done) {
-        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
         
         connection.dbmsName((err, dbmsName) => {
             expect(err).to.be.null;
@@ -41,7 +41,7 @@ describe('ODBC Connection integration tests', function () {
     });
     
     it('should display version of the database', function(done) {
-        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
         
         connection.dbmsVersion((err, value) => {
             expect(err).to.be.null;
@@ -55,7 +55,7 @@ describe('ODBC Connection integration tests', function () {
     });
     
     it('should display driver name', function(done) {
-        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
         
         connection.driverName((err, value) => {
             expect(err).to.be.null;
@@ -70,7 +70,7 @@ describe('ODBC Connection integration tests', function () {
     
     //optional feature not implemented by cache - target of the lib
     xit('should display catalog name', function (done) {
-        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
 
         connection.catalogName((err, value) => {
             expect(err).to.be.null;
@@ -84,7 +84,7 @@ describe('ODBC Connection integration tests', function () {
     });
     
     it('should display dabase name', function (done) {
-        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
 
         connection.databaseName((err, value) => {
             expect(err).to.not.exist;
@@ -99,7 +99,7 @@ describe('ODBC Connection integration tests', function () {
     
     // it prints error, i expected it to be idempotent
     xit('should return disconnected after disconnect', function(done) {
-       const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+       const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
        
        connection.isConnected((err, connected) => {
           expect(err).to.be.null;
@@ -127,7 +127,7 @@ describe('ODBC Connection integration tests', function () {
     //TODO: i guess i am missing some described behaviour,
     //of the wrapee
     xit('should reconnect after disconnect', function(done) {
-        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
         
         connection.isConnected((err, connected) => {
             expect(err).to.be.null;
@@ -151,7 +151,7 @@ describe('ODBC Connection integration tests', function () {
     });
     
     it('should do do nothing on connection close', function(done) {
-        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
         
         connection.isConnected((err, connected) => {
             expect(connected).to.be.true;
@@ -177,7 +177,7 @@ describe('ODBC Connection integration tests', function () {
     });
     
     it('should create with default constructor and no timeout args', function(done) {
-        const connection = new aodbc.ODBCConnection();
+        const connection = new nc.ODBCConnection();
         
         connection.isConnected((err, connected) => {
             expect(connected).to.be.false;
@@ -197,7 +197,7 @@ describe('ODBC Connection integration tests', function () {
     });
 
     it('should create with default constructor and timeout args', function(done) {
-        const connection = new aodbc.ODBCConnection();
+        const connection = new nc.ODBCConnection();
 
         connection.connect(INTEGRATION_TEST_DSN, 10000, (err, val) => {
             expect(err).to.be.null;
@@ -244,7 +244,7 @@ describe('ODBC Connection integration tests', function () {
     });
     
     function testQuery(args, done) {
-        const connection = new aodbc.ODBCConnection(INTEGRATION_TEST_DSN);
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
         
         connection.query(args, (err, value) => {
             console.debug(`Error: ${err}`);

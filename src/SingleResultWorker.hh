@@ -6,7 +6,7 @@
 #include "method_dispatch.hh"
 #include "cpp_to_js_converters.hh"
 
-namespace AODBC {
+namespace NC {
 
 template <
     typename OwnerT,
@@ -27,7 +27,7 @@ class SingleResultWorker : public Nan::AsyncWorker {
         Nan::Callback* callback,
         std::shared_ptr<OwnerT> owner_ptr,
         Args... arguments)
-            : AsyncWorker(callback, "AODBC::SingleResultWorker"),
+            : AsyncWorker(callback, "NC::SingleResultWorker"),
               owner_ptr(owner_ptr),
               arguments_tuple(std::forward<Args>(arguments)...) {
     }
@@ -69,6 +69,6 @@ class SingleResultWorker : public Nan::AsyncWorker {
 };
 
 
-}  // namespace AODBC
+}  // namespace NC
 
 #endif /* SINGLERESULTWORKER_HH */

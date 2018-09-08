@@ -9,9 +9,9 @@
 
 #include "nctypes.hh"
 
-namespace AODBC {
+namespace NC {
 
-using AODBC::QueryArguments;
+using NC::QueryArguments;
 
 const char* query_key_name = "query";
 const char* batch_size_key_name = "batchSize";
@@ -84,7 +84,7 @@ boost::optional<QueryArguments> convert_js_type_to_cpp<QueryArguments>(
 }
 
 
-}  // namespace AODBC
+}  // namespace NC
 
 
 #endif  /* JSTOCPPCONVERTERS_HH */

@@ -2,7 +2,7 @@
 #include "ODBCConnection.hh"
 
 NAN_MODULE_INIT(Init) {
-    AODBC::ODBCConnection::Init(target);
+    NC::ODBCConnection::Init(target);
 }
 
-NODE_MODULE(aodbc, Init)
+NODE_MODULE(NC, Init)

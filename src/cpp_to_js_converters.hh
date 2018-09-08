@@ -12,7 +12,7 @@
 
 #include "nctypes.hh"
 
-namespace AODBC {
+namespace NC {
 
 template <typename T>
 v8::Local<v8::Value> convert_cpp_type_to_js(const T& arg);
@@ -172,7 +172,7 @@ v8::Local<v8::Value> convert_cpp_type_to_js(const nc_null_t&) {
     return scope.Escape(Nan::Null());
 }
 
-}  // namespace AODBC
+}  // namespace NC
 
 #endif /* CPPTOJSCONVERTERS_HH */
 

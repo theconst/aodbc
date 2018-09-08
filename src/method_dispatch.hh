@@ -4,9 +4,9 @@
 #include "nctypes.hh"
 #include "fetch.hh"
 
-namespace AODBC {
+namespace NC {
 
-using AODBC::QueryArguments;
+using NC::QueryArguments;
 
 template <
     typename OwnerT,
@@ -129,7 +129,7 @@ nc_null_t call_method(
 }
 
 template<>
-AODBC::nc_result_t call_method(
+NC::nc_result_t call_method(
         MethodTag<CommandNames::query>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<QueryArguments> args) {
@@ -153,6 +153,6 @@ nc_null_t call_method(
 }
 
 
-}  // namespace AODBC
+}  // namespace NC
 
 #endif  /* METHODDISPATCH_HH */

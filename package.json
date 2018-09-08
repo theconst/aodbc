@@ -1,7 +1,7 @@
 {
-  "name": "aodbc",
+  "name": "NC",
   "version": "1.0.0",
-  "description": "AODBC - javascript library for ODBC access to Intersystems Cache",
+  "description": "NC - javascript library for ODBC access to Intersystems Cache",
   "main": "src/js/main/index.js",
   "dependencies": {
     "bluebird": "^3.5.1",
@@ -16,7 +16,7 @@
   "scripts": {
     "clean": "node-gyp clean",
     "compile": "node-gyp rebuild",
-    "start": "node samples/aodbc-console-app.js",
+    "start": "node samples/NC-console-app.js",
     "test": "mocha test/**spec.js --reporter spec",
     "test:unit": "mocha test/**unit.spec.js --reporter spec",
     "test:integration": "mocha test/**integration.spec.js --reporter spec",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/TheConst/aodbc.git"
+    "url": "git://github.com/TheConst/NC.git"
   },
   "author": "kko",
   "license": "MIT",

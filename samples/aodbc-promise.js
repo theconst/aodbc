@@ -3,7 +3,7 @@
  * Sample usage of bluebird-wrapped API 
  */
 
-const aodbc = require("../js/index.js");
+const nc = require("../js/index.js");
 
 require("console.table"); // this dependency is used for demo only
 
@@ -11,7 +11,7 @@ const connectionString = "DSN=CacheWinHost";
 
 (async () => {
     // open connection synchronously and then work async
-    const connectionSync = aodbc.createConnection(connectionString);
+    const connectionSync = nc.createConnection(connectionString);
     try {
         const result = await connectionSync
             .queryPromise("SELECT DISTINCT TOP 30 AircraftModel from Aviation.Aircraft");
@@ -24,11 +24,11 @@ const connectionString = "DSN=CacheWinHost";
     }
 
     //connect asynchronously
-    const connectionAsync = aodbc.createConnection();
+    const connectionAsync = nc.createConnection();
     try {
         await connectionAsync.connectPromise(connectionString, 0);
 
-        const select = aodbc.createQueryBuilder()
+        const select = nc.createQueryBuilder()
             .select()
             .distinct()
             .from("Aviation.Event")

@@ -10,9 +10,9 @@
 #include "UVMonitor.hh"
 
 
-namespace AODBC {
+namespace NC {
 
-using AODBC::UVMonitor;
+using NC::UVMonitor;
 
 // TODO(kko): shared ptr's are a bit intrusive in
 // terms of contract
@@ -59,6 +59,6 @@ class ODBCConnection final : public Nan::ObjectWrap {
     std::shared_ptr<UVMonitor<nanodbc::connection>> connection;
 };
 
-}  // namespace AODBC
+}  // namespace NC
 #endif /* ODBCCONNECTION_HH */
 

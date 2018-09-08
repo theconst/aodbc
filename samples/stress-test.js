@@ -4,7 +4,7 @@
  * It illustrates case of contention for a single table from multiple connections
  */
 
-const aodbc = require("../js/index.js");
+const nc = require("../js/index.js");
 const connectionString = "DSN=CacheWinHost";
 
 (async ()  => {
@@ -26,8 +26,8 @@ const connectionString = "DSN=CacheWinHost";
         //connect asynchronously
         unbufferedLog(`Iteration # ${i}`);
 
-        const connection1 = aodbc.createConnection(connectionString);
-        const connection2 = aodbc.createConnection(connectionString);
+        const connection1 = nc.createConnection(connectionString);
+        const connection2 = nc.createConnection(connectionString);
         try {
             const delayInterval = 5000;
             const delay1 = Math.floor(Math.random() * delayInterval);

@@ -10,9 +10,9 @@
 
 // TODO(kko): carefully roll the loop back
 
-namespace AODBC {
+namespace NC {
 
-using AODBC::SingleResultWorker;
+using NC::SingleResultWorker;
 
 template<typename ContextT, typename MethodT, typename ResultT>
 NAN_METHOD(delegate_work) {
@@ -87,7 +87,7 @@ NAN_METHOD(delegate_work) {
                 *arg1));
 }
 
-}  // namespace AODBC
+}  // namespace NC
 
 #endif /* DELEGATION_HH */
 

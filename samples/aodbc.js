@@ -1,13 +1,13 @@
 #!/usr/bin/node
 /**
- * Demo sript of the native AODBC usage.
+ * Demo sript of the native NC usage.
  * You typically may want to use a blubird wrapper in js/index.
  * 
  */
 
-const aodbc = require("aodbc");
+const NC = require("nc");
 
-const connection = new aodbc.ODBCConnection("DSN=CacheWinHost");
+const connection = new NC.ODBCConnection("DSN=CacheWinHost");
 
 connection.query("Select * from Aviation.Aircraft", (err, value) => {
     err && console.debug(`Error1: ${err}`);

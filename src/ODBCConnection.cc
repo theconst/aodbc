@@ -8,12 +8,12 @@
 
 #include "delegation.hh"
 
-namespace AODBC {
+namespace NC {
 
-using AODBC::MethodTag;
-using AODBC::CommandNames;
+using NC::MethodTag;
+using NC::CommandNames;
 
-using AODBC::QueryArguments;
+using NC::QueryArguments;
 
 const char* ODBCConnection::js_class_name = "ODBCConnection";
 
@@ -149,7 +149,7 @@ NAN_METHOD(ODBCConnection::JsDatabaseName) {
     return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::database_name>,
-        nc_string_t  // TODO(kko): remove sql prefix
+        nc_string_t
     >(info);
 }
 
@@ -171,4 +171,4 @@ NAN_METHOD(ODBCConnection::JsExecute) {
     >(info);
 }
 
-}  // namespace AODBC
+}  // namespace NC

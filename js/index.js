@@ -1,11 +1,11 @@
-const AODBC = require("aodbc");
+const AODBC = require("NC");
 const bluebird = require("bluebird");
 const squel = require("squel");
 
-class promisifiedAODBC {
+class promisifiedNC {
 
     static createConnection(connectionString) {
-        return bluebird.promisifyAll(new AODBC.ODBCConnection(connectionString), {
+        return bluebird.promisifyAll(new NC.ODBCConnection(connectionString), {
             suffix: "Promise",
         });
     }
@@ -17,4 +17,4 @@ class promisifiedAODBC {
 
 }
 
-module.exports = promisifiedAODBC;
+module.exports = promisifiedNC;
