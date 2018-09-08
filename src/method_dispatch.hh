@@ -108,6 +108,17 @@ nc_null_t call_method(
 
 template<>
 nc_null_t call_method(
+        MethodTag<CommandNames::connect>,
+        UVMonitor<nanodbc::connection>* owner,
+        std::tuple<nc_string_t> args) {
+    (*owner)([&](nanodbc::connection& connection) {
+        connection.connect(std::get<0>(args));
+    });
+    return boost::blank {};
+}
+
+template<>
+nc_null_t call_method(
         MethodTag<CommandNames::disconnect>,
         UVMonitor<nanodbc::connection>* owner,
         std::tuple<>) {

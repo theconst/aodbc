@@ -84,13 +84,24 @@ NAN_METHOD(ODBCConnection::JsConnected) {
 }
 
 NAN_METHOD(ODBCConnection::JsConnect) {
-    return delegate_work<
-        ODBCConnection,
-        MethodTag<CommandNames::connect>,
-        nc_null_t,
-        nc_string_t,
-        nc_long_t
-    >(info);
+    switch (info.Length()) {
+    // TODO(kko): encapsulate into object like query
+    case 2 + 1:             // nargs + callback
+        return delegate_work<
+            ODBCConnection,
+            MethodTag<CommandNames::connect>,
+            nc_null_t,
+            nc_string_t,
+            nc_long_t
+        >(info);
+    default:
+        return delegate_work<
+            ODBCConnection,
+            MethodTag<CommandNames::connect>,
+            nc_null_t,
+            nc_string_t
+        >(info);
+    }
 }
 
 NAN_METHOD(ODBCConnection::JsDisconnect) {

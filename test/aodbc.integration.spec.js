@@ -176,13 +176,13 @@ describe('ODBC Connection integration tests', function () {
         });
     });
     
-    it('should create with default constructor', function(done) {
+    it('should create with default constructor and no timeout args', function(done) {
         const connection = new aodbc.ODBCConnection();
         
         connection.isConnected((err, connected) => {
             expect(connected).to.be.false;
             
-            connection.connect(INTEGRATION_TEST_DSN, 0, (err, val) => {
+            connection.connect(INTEGRATION_TEST_DSN, (err, val) => {
                 expect(err).to.be.null;
                 expect(val).to.not.exist;
                 
@@ -195,6 +195,22 @@ describe('ODBC Connection integration tests', function () {
             });
         });
     });
+
+    it('should create with default constructor and timeout args', function(done) {
+        const connection = new aodbc.ODBCConnection();
+
+        connection.connect(INTEGRATION_TEST_DSN, 10000, (err, val) => {
+            expect(err).to.be.null;
+            expect(val).to.not.exist;
+            
+            connection.isConnected((err, connected) => {
+                expect(err).to.be.null;
+                expect(connected).to.be.true;
+
+                done();
+            });
+        });
+    })
     
     it('should execute query 1', function(done) {
        testQuery('select 1 as Q', done);
@@ -232,7 +248,7 @@ describe('ODBC Connection integration tests', function () {
         
         connection.query(args, (err, value) => {
             console.debug(`Error: ${err}`);
-            console.debug(`Value: ${JSON.stringify(value)}`);
+            // console.debug(`Value: ${JSON.stringify(value)}`);
 
             expect(err).to.not.exist;
             expect(value).to.exist;
