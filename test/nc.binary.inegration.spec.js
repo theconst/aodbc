@@ -40,8 +40,8 @@ describe('ODBC Connection integration tests', function() {
     const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
 
     connection.query({
-          'query': `SELECT ID AS id, PICTURE AS picture FROM Sample.Employee
-                      WHERE ID IN (104, 105)`,
+          'query': `SELECT ID AS id, PICTURE AS picture, NOTES as notes FROM Sample.Employee
+                    WHERE ID IN (104, 105)`,
           'batchSize': 1,
         }, (err, resultSet) => {
             console.debug(`Query result: ${JSON.stringify(resultSet)}`);
@@ -61,6 +61,7 @@ describe('ODBC Connection integration tests', function() {
         expect(employee.id).to.equal(id);
         expect(employee).to.have.property('picture');
         expect(employee.picture.length).to.equal(picSize);
+        expect(employee).to.have.property('notes');
     }
   });
 
