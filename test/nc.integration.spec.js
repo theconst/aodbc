@@ -242,27 +242,6 @@ describe('ODBC Connection integration tests', function () {
             'batchSize': 1000,
         }, done);
     });
-
-    it('should exctract binary type to javascript buffer', function(done) {
-        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
-
-        connection.query({
-            'query': `SELECT ID AS id, PICTURE AS picture FROM Sample.Employee
-                      WHERE ID = 104`,
-            'batchSize': 10,
-        }, (err, resultSet) => {
-            expect(err).to.not.exist;
-
-            console.debug(`Query result: ${JSON.stringify(resultSet)}`);
-
-            // resultSet.array.forEach(element => {
-            //     console.debug(element.notes.toJSON());
-            //     console.debug(element.picture.toJSON());
-            // });
-
-            done();
-        });
-    });
     
     function testQuery(args, done) {
         const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
