@@ -20,7 +20,7 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
                 continue;
             }
 
-            int datatype = result->column_datatype(col_no);
+            auto datatype = result->column_datatype(col_no);
             // TODO(kko): switch on c types - they will eliminate most cases?
             switch (datatype) {
             case SQL_INTEGER:
