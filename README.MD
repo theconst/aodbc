@@ -11,7 +11,7 @@ This library aims to provide a simple access to ODBC data sources for node js fo
 
 **<span style="color:red"> WARNING </span>** - Work in progress.
 
-See samples directory for example usage.
+See "samples" directory for examples.
 
 Example:
 
@@ -90,5 +90,5 @@ const connectionString = "DSN=CacheWinHost";
 - [ ] Automate build for linux
 - [ ] Add support for prepared statements
 - [ ] Add support for transactions
-- [ ] Add support for binary type
+- [x] Add support for binary type
 - [ ] Add support for windows
