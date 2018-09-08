@@ -29,7 +29,6 @@ void convert_cpp_type_to_js(
     const nc_timestamp_t& date);
 
 struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
-    // primitive types are optimized, so the code is somewhat duplicated
 
     v8::Local<v8::Value> operator()(const nc_null_t& blank) const {
         Nan::EscapableHandleScope scope {};
@@ -47,10 +46,14 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
             Nan::New<v8::String>(str).ToLocalChecked());
     }
 
-    v8::Local<v8::Value> operator()(const nc_binary_t & binary) const {
-        // TODO(kko): convert binary type
+    v8::Local<v8::Value> operator()(const nc_binary_t& binary) const {
+        Nan::EscapableHandleScope scope {};
 
-        throw std::runtime_error("Binary data not implemented yet");
+        size_t raw_size = binary.size() * sizeof(nc_binary_t::value_type);
+
+        // node::Encode copies the buffer and hands it off to GC
+        return scope.Escape(
+            Nan::Encode(binary.data(), raw_size, Nan::Encoding::BUFFER));
     }
 
     template <typename T>
