@@ -47,8 +47,6 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
     }
 
     v8::Local<v8::Value> operator()(const nc_binary_t& binary) const {
-        //TODO(kko): I guess this leaks badly
-
         Nan::EscapableHandleScope scope {};
 
         size_t raw_size = binary.size() * sizeof(nc_binary_t::value_type);
