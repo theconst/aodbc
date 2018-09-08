@@ -15,7 +15,7 @@ namespace AODBC {
 using AODBC::SingleResultWorker;
 
 template<typename ContextT, typename MethodT, typename ResultT>
-NAN_METHOD(DelegateWork) {
+NAN_METHOD(delegate_work) {
     v8::Local<v8::Value> arg0 = info[0];
     if (!arg0->IsFunction()) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
@@ -32,7 +32,7 @@ NAN_METHOD(DelegateWork) {
 }
 
 template<typename ContextT, typename MethodT, typename ResultT, typename Arg0>
-NAN_METHOD(DelegateWork) {
+NAN_METHOD(delegate_work) {
     auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
     if (!arg0) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
@@ -57,7 +57,7 @@ NAN_METHOD(DelegateWork) {
 
 template<typename ContextT, typename MethodT, typename ResultT,
     typename Arg0, typename Arg1>
-NAN_METHOD(DelegateWork) {
+NAN_METHOD(delegate_work) {
     auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
     if (!arg0) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");

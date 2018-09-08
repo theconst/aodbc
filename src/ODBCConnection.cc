@@ -76,7 +76,7 @@ NAN_METHOD(ODBCConnection::JsNew) {
 }
 
 NAN_METHOD(ODBCConnection::JsConnected) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::is_connected>,
         bool
@@ -84,7 +84,7 @@ NAN_METHOD(ODBCConnection::JsConnected) {
 }
 
 NAN_METHOD(ODBCConnection::JsConnect) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::connect>,
         sql_null_t,
@@ -94,7 +94,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
 }
 
 NAN_METHOD(ODBCConnection::JsDisconnect) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::disconnect>,
         sql_null_t
@@ -102,7 +102,7 @@ NAN_METHOD(ODBCConnection::JsDisconnect) {
 }
 
 NAN_METHOD(ODBCConnection::JsDBMSName) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::dbms_name>,
         sql_string_t
@@ -110,7 +110,7 @@ NAN_METHOD(ODBCConnection::JsDBMSName) {
 }
 
 NAN_METHOD(ODBCConnection::JsDBMSVersion) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::dbms_version>,
         sql_string_t
@@ -119,7 +119,7 @@ NAN_METHOD(ODBCConnection::JsDBMSVersion) {
 
 
 NAN_METHOD(ODBCConnection::JsDriverName) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::driver_name>,
         sql_string_t
@@ -127,7 +127,7 @@ NAN_METHOD(ODBCConnection::JsDriverName) {
 }
 
 NAN_METHOD(ODBCConnection::JsCatalogName) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::catalog_name>,
         sql_string_t
@@ -135,7 +135,7 @@ NAN_METHOD(ODBCConnection::JsCatalogName) {
 }
 
 NAN_METHOD(ODBCConnection::JsDatabaseName) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::database_name>,
         sql_string_t  // TODO(kko): remove sql prefix
@@ -143,7 +143,7 @@ NAN_METHOD(ODBCConnection::JsDatabaseName) {
 }
 
 NAN_METHOD(ODBCConnection::JsQuery) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::query>,
         sql_result_t,
@@ -152,7 +152,7 @@ NAN_METHOD(ODBCConnection::JsQuery) {
 }
 
 NAN_METHOD(ODBCConnection::JsExecute) {
-    return DelegateWork<
+    return delegate_work<
         ODBCConnection,
         MethodTag<CommandNames::execute>,
         sql_null_t,
