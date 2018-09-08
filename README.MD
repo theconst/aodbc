@@ -1,4 +1,4 @@
-# NC - library that wraps nanodbc
+# nc.js (nanodbc.js) - library that wraps nanodbc
 
 Primarily targeted on intersystems Cache database
 
@@ -30,4 +30,3 @@ Linux x64 is the only supported platform (for now)
 - Add support for binary type
 - Automate build for linux
 - Try to build on Windows machines
-- Fetch results in batches instead consuming one by one in result set

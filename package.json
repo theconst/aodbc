@@ -16,7 +16,7 @@
   "scripts": {
     "clean": "node-gyp clean",
     "compile": "node-gyp rebuild",
-    "start": "node samples/NC-console-app.js",
+    "start": "node samples/nc.js",
     "test": "mocha test/**spec.js --reporter spec",
     "test:unit": "mocha test/**unit.spec.js --reporter spec",
     "test:integration": "mocha test/**integration.spec.js --reporter spec",
