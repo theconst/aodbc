@@ -7,7 +7,7 @@
       "cflags_cc!": [ "-fno-exceptions", "-std=gnu++0x" ],
       "sources": [ 
         "<!@(node -p \
-          \"require('fs').readdirSync('./src') \
+          \"require('fs').readdirSync('<(module_root_dir)/src') \
               .map(function(f) { \
                 return 'src/'+f \
               }) \
@@ -22,7 +22,8 @@
           [
             "OS=='linux'", {
               "ldflags": [
-                "-lnanodbc", "-L<(module_root_dir)/lib", "-lpthread"
+                "-lnanodbc", "-L<(module_root_dir)/lib", "-lpthread",
+                "-Wl,-rpath,<(module_root_dir)/lib/"
               ],
             }
           ],

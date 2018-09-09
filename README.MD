@@ -82,6 +82,19 @@ const connectionString = "DSN=CacheWinHost";
 })();
 ```
 
+# Launch steps
+
+Prerequisites:
+
+1. Node.js, prefarably 8-th version http://nodejs.org
+1. Unixodbc and Intersystems Cache driver, see: http://www.intersystems.com/ru/services-support/product-support/cache-odbc-driver-faq/
+1. Nanodbc libary: https://github.com/nanodbc/nanodbc. For your convinience it is prebuild for x64 linux 
+   and unixODBC driver in the `./lib` folder
+1. Boost libary: https://www.boost.org/users/history/version_1_68_0.html.
+1. Configured DataSource (see odbc.init in `./config`)
+1. After installing the prerequisites, run `npm install`
+
+
 # TODO List
 
 - [x] Add support for setting fetch size
