@@ -85,6 +85,7 @@ const connectionString = "DSN=CacheWinHost";
 # TODO List
 
 - [x] Add support for setting fetch size
+- [ ] Add tracing
 - [ ] Generalize delegation code
 - [ ] Increase C++ test coverage
 - [ ] Automate build for linux
