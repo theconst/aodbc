@@ -56,7 +56,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     static Nan::Persistent<v8::FunctionTemplate> js_constructor;
 
     ODBCConnection();
-    explicit ODBCConnection(const nc_string_t& conn_string);
+    explicit ODBCConnection(nc_string_t conn_string);
 
     std::shared_ptr<UVMonitor<nanodbc::connection>> connection;
 };

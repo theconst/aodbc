@@ -23,9 +23,9 @@ ODBCConnection::ODBCConnection()
     : connection(std::make_shared<UVMonitor<nanodbc::connection>>()) {
 }
 
-ODBCConnection::ODBCConnection(const nc_string_t& connection_string)
+ODBCConnection::ODBCConnection(nc_string_t connection_string)
     : connection(std::make_shared<UVMonitor<nanodbc::connection>>(
-        connection_string)) {
+        std::move(connection_string))) {
 }
 
 NAN_MODULE_INIT(ODBCConnection::Init) {
