@@ -41,6 +41,11 @@ class UVMonitor {
 
     template <typename F>
     auto operator()(F func) -> decltype(func(object)) {
+        return synchronized(func);
+    }
+
+    template<typename F>
+    auto synchronized(F func) -> decltype(func(object)) {
         UVMutexLock lock{mutex_handle};
         return func(object);
     }
