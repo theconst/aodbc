@@ -43,12 +43,30 @@ describe('ODBC Connection integration tests', function () {
         });
     });
 
+    it('should execute prepared statement twice', function(done) {
+        statement.prepare('Select ? As Q', (err, result) => {
+            expect(err).to.not.exist;
+            expect(result).to.not.exist;
+
+            statement.query([1], (err, result) => {
+                expect(err).to.not.exist;
+                expect(result).to.deep.equal([{'Q': '1'}]);
+
+                statement.query([2], (err, result) => {
+                    expect(err).to.not.exist;
+                    expect(result).to.deep.equal([{'Q': '2'}]);
+                });
+            })
+        });
+    });
+
     it('should execute no args prepared statement', function(done) {
         statement.prepare(`
             Select ID, Name, Company->Name from Sample.Employee 
             Where Name < ? and Company->Name > ? 
             Order By Company->Name
         `, (err, result) => {
+            expect(err).to.not.exist;
             expect(result).to.not.exist;
 
             statement.query(["F", "L"], (err, result) => {

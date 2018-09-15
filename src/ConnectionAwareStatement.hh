@@ -50,7 +50,7 @@ class ConnectionAwareStatement final {
         }
 
         void operator()(const nc_string_t& str) const {
-            statement_ptr->bind(position, str.c_str);
+            statement_ptr->bind(position, str.c_str());
         }
 
         template<typename T>
@@ -74,7 +74,8 @@ class ConnectionAwareStatement final {
     void execute(const std::vector<nc_variant_t>& bound_parameters,
             nc_long_t batch_size = 1L, nc_long_t timeout = 0L) {
         return (*connection_monitor)([&](const nanodbc::connection&) {
-           for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
+            statement.reset_parameters();
+            for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
                 BindingVisitor visitor {&statement, pos};
                 boost::apply_visitor(visitor, bound_parameters[pos]);
             }
@@ -91,11 +92,13 @@ class ConnectionAwareStatement final {
     nc_result_t query(const std::vector<nc_variant_t>& bound_parameters,
             nc_long_t batch_size = 1L, nc_long_t timeout = 0L) {
         return (*connection_monitor)([&](const nanodbc::connection&) {
+            statement.reset_parameters();
             for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
                 BindingVisitor visitor {&statement, pos};
                 boost::apply_visitor(visitor, bound_parameters[pos]);
             }
             nanodbc::result result { statement.execute(batch_size, timeout) };
+
             return fetch_result_eagerly(&result);
         });
     }
