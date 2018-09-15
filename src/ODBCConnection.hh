@@ -22,6 +22,8 @@ using NC::UVMonitor;
 // holder for nandobc connection
 class ODBCConnection final : public Nan::ObjectWrap {
  public:
+    static const char* js_class_name;
+
     using value_type = UVMonitor<nanodbc::connection>;
 
     static NAN_MODULE_INIT(Init);
@@ -39,8 +41,6 @@ class ODBCConnection final : public Nan::ObjectWrap {
     }
 
  private:
-    static const char* js_class_name;
-
     static NAN_METHOD(JsNew);
     static NAN_METHOD(JsConnected);
     static NAN_METHOD(JsConnect);
