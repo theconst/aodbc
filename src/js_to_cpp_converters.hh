@@ -86,6 +86,44 @@ boost::optional<QueryArguments> convert_js_type_to_cpp<QueryArguments>(
     return result;
 }
 
+template<>
+boost::optional<nc_column_t> convert_js_type_to_cpp<nc_column_t>(
+        v8::Local<v8::Value> local) {
+    if (auto number = convert_js_type_to_cpp<nc_number_t>(local)) {
+        return nc_column_t {std::move(*number)};
+    } else if (auto str = convert_js_type_to_cpp<nc_string_t>(local)) {
+        return nc_column_t {std::move(*str)};
+    } else if (auto blank = convert_js_type_to_cpp<nc_null_t>(local)) {
+        return nc_column_t {std::move(*blank)};
+    }
+     // TODO(kko): add support for other types
+    return boost::none;
+}
+
+template<>
+boost::optional<std::vector<nc_column_t>>
+convert_js_type_to_cpp<std::vector<nc_column_t>>(
+        v8::Local<v8::Value> local) {
+    if (!local->IsArray()) {
+        return boost::none;
+    }
+
+    auto array = v8::Local<v8::Array>::Cast(local);
+    auto len = array->Length();
+
+    std::vector<nc_column_t> result(len);
+
+    // TODO(kko): not sure if this is the best way to prevent compiler warnings
+    for (decltype(len) i = 0; i < len; ++i) {
+        auto bound_arg {convert_js_type_to_cpp<nc_column_t>(array->Get(i))};
+        if (!bound_arg) {
+            return boost::none;
+        }
+        result.push_back(std::move(*bound_arg));
+    }
+    return boost::make_optional(std::move(result));
+}
+
 
 }  // namespace NC
 
