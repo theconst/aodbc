@@ -14,7 +14,8 @@ template <
     typename MethodT,
     typename ArgsTuple
 >
-ResultT call_method(MethodT tag, std::shared_ptr<OwnerT> owner, ArgsTuple args);
+ResultT call_method(MethodT tag, std::shared_ptr<OwnerT> owner,
+    const ArgsTuple& args);
 
 
 enum struct CommandNames {
@@ -39,7 +40,7 @@ template<>
 nc_string_t call_method(
         MethodTag<CommandNames::dbms_name>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<>) {
+        const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.dbms_name();
     });
@@ -49,7 +50,7 @@ template<>
 bool call_method(
         MethodTag<CommandNames::is_connected>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<>) {
+        const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.connected();
     });
@@ -59,7 +60,7 @@ template<>
 nc_string_t call_method(
         MethodTag<CommandNames::dbms_version>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<>) {
+        const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.dbms_version();
     });
@@ -69,7 +70,7 @@ template<>
 nc_string_t call_method(
         MethodTag<CommandNames::catalog_name>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<>) {
+        const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.catalog_name();
     });
@@ -79,7 +80,7 @@ template<>
 nc_string_t call_method(
         MethodTag<CommandNames::database_name>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<>) {
+        const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.database_name();
     });
@@ -89,7 +90,7 @@ template<>
 nc_string_t call_method(
         MethodTag<CommandNames::driver_name>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<>) {
+        const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.driver_name();
     });
@@ -99,7 +100,7 @@ template<>
 nc_null_t call_method(
         MethodTag<CommandNames::connect>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<nc_string_t, nc_long_t> args) {
+        const std::tuple<nc_string_t, nc_long_t>& args) {
     (*owner)([&](nanodbc::connection& connection) {
         connection.connect(std::get<0>(args), std::get<1>(args));
     });
@@ -110,7 +111,7 @@ template<>
 nc_null_t call_method(
         MethodTag<CommandNames::connect>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<nc_string_t> args) {
+        const std::tuple<nc_string_t>& args) {
     (*owner)([&](nanodbc::connection& connection) {
         connection.connect(std::get<0>(args));
     });
@@ -121,7 +122,7 @@ template<>
 nc_null_t call_method(
         MethodTag<CommandNames::disconnect>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<>) {
+        const std::tuple<>&) {
     (*owner)([&](nanodbc::connection& connection) {
         connection.disconnect();
     });
@@ -132,7 +133,7 @@ template<>
 nc_result_t call_method(
         MethodTag<CommandNames::query>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<QueryArguments> args) {
+        const std::tuple<QueryArguments>& args) {
     return (*owner)([&](nanodbc::connection& connection) {
         const QueryArguments& qargs = std::get<0>(args);
         nanodbc::result result = nanodbc::execute(
@@ -145,7 +146,7 @@ template<>
 nc_null_t call_method(
         MethodTag<CommandNames::execute>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        std::tuple<nc_string_t> args) {
+        const std::tuple<nc_string_t>& args) {
     (*owner)([&](nanodbc::connection& connection) {
         nanodbc::just_execute(connection, std::get<0>(args));
     });
