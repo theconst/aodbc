@@ -37,6 +37,8 @@ typedef double nc_number_t;
 
 typedef long nc_long_t;  // NOLINT(runtime/int)
 
+typedef short nc_short_t;  // NOLINT(runtime/int)
+
 typedef boost::variant<
     nc_null_t,
     nc_number_t,
