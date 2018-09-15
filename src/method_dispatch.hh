@@ -18,7 +18,7 @@ ResultT call_method(MethodT tag, std::shared_ptr<OwnerT> owner,
     const ArgsTuple& args);
 
 
-enum struct CommandNames {
+enum struct ConnectionCommands {
     dbms_name,
     is_connected,
     dbms_version,
@@ -31,14 +31,14 @@ enum struct CommandNames {
     execute
 };
 
-template<CommandNames tag>
+template<ConnectionCommands tag>
 struct MethodTag {
-    static constexpr CommandNames value = tag;
+    static constexpr ConnectionCommands value = tag;
 };
 
 template<>
 nc_string_t call_method(
-        MethodTag<CommandNames::dbms_name>,
+        MethodTag<ConnectionCommands::dbms_name>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
@@ -48,7 +48,7 @@ nc_string_t call_method(
 
 template<>
 bool call_method(
-        MethodTag<CommandNames::is_connected>,
+        MethodTag<ConnectionCommands::is_connected>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
@@ -58,7 +58,7 @@ bool call_method(
 
 template<>
 nc_string_t call_method(
-        MethodTag<CommandNames::dbms_version>,
+        MethodTag<ConnectionCommands::dbms_version>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
@@ -68,7 +68,7 @@ nc_string_t call_method(
 
 template<>
 nc_string_t call_method(
-        MethodTag<CommandNames::catalog_name>,
+        MethodTag<ConnectionCommands::catalog_name>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
@@ -78,7 +78,7 @@ nc_string_t call_method(
 
 template<>
 nc_string_t call_method(
-        MethodTag<CommandNames::database_name>,
+        MethodTag<ConnectionCommands::database_name>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
@@ -88,7 +88,7 @@ nc_string_t call_method(
 
 template<>
 nc_string_t call_method(
-        MethodTag<CommandNames::driver_name>,
+        MethodTag<ConnectionCommands::driver_name>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<>&) {
     return (*owner)([&](nanodbc::connection& connection) {
@@ -98,7 +98,7 @@ nc_string_t call_method(
 
 template<>
 nc_null_t call_method(
-        MethodTag<CommandNames::connect>,
+        MethodTag<ConnectionCommands::connect>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<nc_string_t, nc_long_t>& args) {
     (*owner)([&](nanodbc::connection& connection) {
@@ -109,7 +109,7 @@ nc_null_t call_method(
 
 template<>
 nc_null_t call_method(
-        MethodTag<CommandNames::connect>,
+        MethodTag<ConnectionCommands::connect>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<nc_string_t>& args) {
     (*owner)([&](nanodbc::connection& connection) {
@@ -120,7 +120,7 @@ nc_null_t call_method(
 
 template<>
 nc_null_t call_method(
-        MethodTag<CommandNames::disconnect>,
+        MethodTag<ConnectionCommands::disconnect>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<>&) {
     (*owner)([&](nanodbc::connection& connection) {
@@ -131,7 +131,7 @@ nc_null_t call_method(
 
 template<>
 nc_result_t call_method(
-        MethodTag<CommandNames::query>,
+        MethodTag<ConnectionCommands::query>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<QueryArguments>& args) {
     return (*owner)([&](nanodbc::connection& connection) {
@@ -144,7 +144,7 @@ nc_result_t call_method(
 
 template<>
 nc_null_t call_method(
-        MethodTag<CommandNames::execute>,
+        MethodTag<ConnectionCommands::execute>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<nc_string_t>& args) {
     (*owner)([&](nanodbc::connection& connection) {
