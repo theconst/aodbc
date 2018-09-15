@@ -1,5 +1,7 @@
 #include "js_to_cpp_converters.hh"
 
+#include <iostream>
+
 namespace NC {
 
 using NC::QueryArguments;
@@ -129,11 +131,11 @@ convert_js_type_to_cpp<std::vector<nc_variant_t>>(
         if (!bound_arg) {
             return boost::none;
         }
-        result.push_back(std::move(*bound_arg));
+        result[i] = *bound_arg;
     }
     return boost::make_optional(std::move(result));
 }
 
 
 
-}
+}  // namespace NC
