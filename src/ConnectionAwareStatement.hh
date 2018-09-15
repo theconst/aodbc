@@ -63,6 +63,15 @@ class ConnectionAwareStatement final {
 
     nanodbc::statement statement;
 
+    void bind_parameters(const std::vector<nc_variant_t>& bound_parameters) {
+        // TODO(kko): remove this dirty hack
+        statement.cancel();
+        for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
+            BindingVisitor visitor {&statement, pos};
+            boost::apply_visitor(visitor, bound_parameters[pos]);
+        }
+    }
+
  public:
     ConnectionAwareStatement(
             std::shared_ptr<UVMonitor<nanodbc::connection>> m) :
@@ -74,11 +83,7 @@ class ConnectionAwareStatement final {
     void execute(const std::vector<nc_variant_t>& bound_parameters,
             nc_long_t batch_size = 1L, nc_long_t timeout = 0L) {
         return (*connection_monitor)([&](const nanodbc::connection&) {
-            statement.reset_parameters();
-            for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
-                BindingVisitor visitor {&statement, pos};
-                boost::apply_visitor(visitor, bound_parameters[pos]);
-            }
+            bind_parameters(bound_parameters);
             statement.just_execute(batch_size, timeout);
         });
     }
@@ -92,11 +97,7 @@ class ConnectionAwareStatement final {
     nc_result_t query(const std::vector<nc_variant_t>& bound_parameters,
             nc_long_t batch_size = 1L, nc_long_t timeout = 0L) {
         return (*connection_monitor)([&](const nanodbc::connection&) {
-            statement.reset_parameters();
-            for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
-                BindingVisitor visitor {&statement, pos};
-                boost::apply_visitor(visitor, bound_parameters[pos]);
-            }
+            bind_parameters(bound_parameters);
             nanodbc::result result { statement.execute(batch_size, timeout) };
 
             return fetch_result_eagerly(&result);
