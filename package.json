@@ -20,6 +20,7 @@
     "test": "mocha test/**spec.js --reporter spec",
     "test:unit": "mocha test/**unit.spec.js --reporter spec",
     "test:integration": "mocha test/**integration.spec.js --reporter spec",
+    "test:integration:statement": "mocha test/*statement.integration.spec.js --reporter spec",
     "test:stress": "node samples/nc-stress-test.js --max_old_space_size=100"
   },
   "repository": {
