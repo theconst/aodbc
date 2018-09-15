@@ -1,0 +1,76 @@
+#include "ODBCStatement.hh"
+
+#include "delegation.hh"
+
+namespace NC {
+
+using NC::StatementCommands;
+using NC::ODBCConnection;
+
+const char* ODBCStatement::js_class_name = "ODBCStatement";
+
+Nan::Persistent<v8::FunctionTemplate> ODBCStatement::js_constructor;
+
+NAN_MODULE_INIT(ODBCStatement::Init) {
+    v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(JsNew);
+    js_constructor.Reset(tpl);
+
+    tpl->SetClassName(Nan::New<v8::String>(js_class_name).ToLocalChecked());
+
+    tpl->InstanceTemplate()->SetInternalFieldCount(1);
+
+    Nan::SetPrototypeMethod(tpl, "query", JsQuery);
+    Nan::SetPrototypeMethod(tpl, "execute", JsExecute);
+
+    Nan::Set(target,
+        Nan::New(js_class_name).ToLocalChecked(),
+        Nan::GetFunction(tpl).ToLocalChecked());
+}
+
+NAN_METHOD(ODBCStatement::JsQuery) {
+    return delegate_work<
+        ODBCStatement,
+        StatementMethodTag<StatementCommands::query>,
+        std::vector<nc_column_t>
+    >(info);
+}
+
+NAN_METHOD(ODBCStatement::JsExecute) {
+    return delegate_work<
+        ODBCStatement,
+        StatementMethodTag<StatementCommands::execute>,
+        std::vector<nc_column_t>
+    >(info);
+}
+
+NAN_METHOD(ODBCStatement::JsPrepare) {
+    return delegate_work<
+        ODBCStatement,
+        StatementMethodTag<StatementCommands::prepare>,
+        nc_string_t
+    >(info);
+}
+
+NAN_METHOD(ODBCStatement::JsNew) {
+    if (!info.IsConstructCall()) {
+        return Nan::ThrowError(
+            Nan::New("ODBC Statement should be called with new")
+            .ToLocalChecked());
+    }
+
+    v8::Local<v8::Value> arg0 { info[0] };
+
+    if (!arg0->IsObject()) {
+        return Nan::ThrowError("Error: connection should be object");
+    }
+
+    v8::Local<v8::Object> obj0 { arg0->ToObject() };
+
+    // TODO(kko): do sanity check of of object type
+    ODBCStatement* odbc_statement {};
+    odbc_statement = new ODBCStatement(ODBCConnection::Unwrap(obj0));
+    odbc_statement->Wrap(info.Holder());
+    info.GetReturnValue().Set(info.Holder());
+}
+
+}  // namespace NC
