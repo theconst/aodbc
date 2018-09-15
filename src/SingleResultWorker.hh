@@ -55,7 +55,7 @@ class SingleResultWorker : public Nan::AsyncWorker {
 
         v8::Local<v8::Value> args[] {
             Nan::Null(),
-            convert_cpp_type_to_js(result)
+            convert_cpp_type_to_js(std::move(result))
         };
 
         Nan::Call(
