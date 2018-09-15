@@ -16,11 +16,15 @@
 
 #include "fetch.hh"
 
+#include <iostream>
+
 
 namespace NC {
 
 using NC::UVMonitor;
 
+
+// TODO(kko) : examine lifetime one more time
 class ConnectionAwareStatement final {
  private:
     class BindingVisitor final : public boost::static_visitor<> {
@@ -43,6 +47,10 @@ class ConnectionAwareStatement final {
 
         void operator()(const nc_null_t& v) const {
             statement_ptr->bind_null(position);
+        }
+
+        void operator()(const nc_string_t& str) const {
+            statement_ptr->bind(position, str.c_str);
         }
 
         template<typename T>
