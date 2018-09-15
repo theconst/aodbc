@@ -73,6 +73,8 @@ NAN_METHOD(ODBCConnection::JsNew) {
     }
 
     odbc_connection->Wrap(info.Holder());
+
+    info.GetReturnValue().Set(info.Holder());
 }
 
 NAN_METHOD(ODBCConnection::JsConnected) {
