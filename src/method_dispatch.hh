@@ -33,10 +33,10 @@ template <
     typename OwnerT,
     typename ResultT,
     typename MethodT,
-    typename ArgsTuple
+    typename ArgsTupleT
 >
-ResultT call_method(MethodT tag, std::shared_ptr<OwnerT> owner,
-    const ArgsTuple& args);
+inline ResultT call_method(MethodT tag, std::shared_ptr<OwnerT> owner,
+    const ArgsTupleT& args);
 
 
 template<>
