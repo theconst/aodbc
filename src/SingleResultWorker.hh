@@ -42,7 +42,7 @@ class SingleResultWorker : public Nan::AsyncWorker {
                 ResultT,
                 MethodT,
                 std::tuple<Args...>
-            >(MethodT {}, owner_ptr.get(), arguments_tuple);
+            >(MethodT {}, owner_ptr, arguments_tuple);
         } catch (const nanodbc::database_error& db_err) {
             SetErrorMessage(db_err.what());
         } catch (const std::exception& e) {

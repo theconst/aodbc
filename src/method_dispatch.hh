@@ -14,7 +14,7 @@ template <
     typename MethodT,
     typename ArgsTuple
 >
-ResultT call_method(MethodT tag, OwnerT* owner, ArgsTuple args);
+ResultT call_method(MethodT tag, std::shared_ptr<OwnerT> owner, ArgsTuple args);
 
 
 enum struct CommandNames {
@@ -38,7 +38,7 @@ struct MethodTag {
 template<>
 nc_string_t call_method(
         MethodTag<CommandNames::dbms_name>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<>) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.dbms_name();
@@ -48,7 +48,7 @@ nc_string_t call_method(
 template<>
 bool call_method(
         MethodTag<CommandNames::is_connected>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<>) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.connected();
@@ -58,7 +58,7 @@ bool call_method(
 template<>
 nc_string_t call_method(
         MethodTag<CommandNames::dbms_version>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<>) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.dbms_version();
@@ -68,7 +68,7 @@ nc_string_t call_method(
 template<>
 nc_string_t call_method(
         MethodTag<CommandNames::catalog_name>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<>) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.catalog_name();
@@ -78,7 +78,7 @@ nc_string_t call_method(
 template<>
 nc_string_t call_method(
         MethodTag<CommandNames::database_name>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<>) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.database_name();
@@ -88,7 +88,7 @@ nc_string_t call_method(
 template<>
 nc_string_t call_method(
         MethodTag<CommandNames::driver_name>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<>) {
     return (*owner)([&](nanodbc::connection& connection) {
        return connection.driver_name();
@@ -98,7 +98,7 @@ nc_string_t call_method(
 template<>
 nc_null_t call_method(
         MethodTag<CommandNames::connect>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<nc_string_t, nc_long_t> args) {
     (*owner)([&](nanodbc::connection& connection) {
         connection.connect(std::get<0>(args), std::get<1>(args));
@@ -109,7 +109,7 @@ nc_null_t call_method(
 template<>
 nc_null_t call_method(
         MethodTag<CommandNames::connect>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<nc_string_t> args) {
     (*owner)([&](nanodbc::connection& connection) {
         connection.connect(std::get<0>(args));
@@ -120,7 +120,7 @@ nc_null_t call_method(
 template<>
 nc_null_t call_method(
         MethodTag<CommandNames::disconnect>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<>) {
     (*owner)([&](nanodbc::connection& connection) {
         connection.disconnect();
@@ -131,7 +131,7 @@ nc_null_t call_method(
 template<>
 nc_result_t call_method(
         MethodTag<CommandNames::query>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<QueryArguments> args) {
     return (*owner)([&](nanodbc::connection& connection) {
         const QueryArguments& qargs = std::get<0>(args);
@@ -144,7 +144,7 @@ nc_result_t call_method(
 template<>
 nc_null_t call_method(
         MethodTag<CommandNames::execute>,
-        UVMonitor<nanodbc::connection>* owner,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         std::tuple<nc_string_t> args) {
     (*owner)([&](nanodbc::connection& connection) {
         nanodbc::just_execute(connection, std::get<0>(args));
