@@ -56,19 +56,15 @@ class ConnectionAwareStatement final {
     nanodbc::statement statement;
 
  public:
-    template <typename... T>
     ConnectionAwareStatement(
-            std::shared_ptr<UVMonitor<nanodbc::connection>>
-            connection_monitor, T&&... args) :
-        connection_monitor(connection_monitor),
-        statement(std::forward(args)...) {
+            std::shared_ptr<UVMonitor<nanodbc::connection>> m) :
+        connection_monitor(m),
+        statement() {
     }
 
-    // TODO(kko): move constants
     template <typename... T>
     void execute(const std::vector<nc_variant_t>& bound_parameters,
             nc_long_t batch_size = 1L, nc_long_t timeout = 0L) {
-        // TODO(kko) : consider overall sync
         return (*connection_monitor)([&](const nanodbc::connection&) {
            for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
                 BindingVisitor visitor {&statement, pos};
@@ -79,8 +75,8 @@ class ConnectionAwareStatement final {
     }
 
     void prepare(nc_string_t query_string, nc_long_t timeout = 0) {
-        (*connection_monitor)([&](const nanodbc::connection& conn) {
-            statement.prepare(query_string, timeout);
+        (*connection_monitor)([&](nanodbc::connection& conn) {
+            statement.prepare(conn, query_string, timeout);
         });
     }
 

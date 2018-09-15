@@ -77,6 +77,25 @@ boost::optional<QueryArguments> convert_js_type_to_cpp<QueryArguments>(
     return result;
 }
 
+
+template<>
+boost::optional<nc_null_t>
+        convert_js_type_to_cpp<nc_null_t>(v8::Local<v8::Value> local) {
+    if (local->IsNull() || local->IsUndefined()) {
+        return nc_null_t {};
+    }
+    return boost::none;
+}
+
+template<>
+boost::optional<nc_number_t>
+        convert_js_type_to_cpp<nc_number_t>(v8::Local<v8::Value> local) {
+    if (local->IsNumber()) {
+        return nc_number_t {local->NumberValue()};
+    }
+    return boost::none;
+}
+
 template<>
 boost::optional<nc_variant_t> convert_js_type_to_cpp<nc_variant_t>(
         v8::Local<v8::Value> local) {

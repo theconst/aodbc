@@ -1,6 +1,8 @@
 #ifndef JSTOCPPCONVERTERS_HH
 #define JSTOCPPCONVERTERS_HH
 
+#include <vector>
+
 #include <boost/optional.hpp>
 
 #include "nan.h"
@@ -22,6 +24,14 @@ boost::optional<nc_string_t>
         convert_js_type_to_cpp<nc_string_t>(v8::Local<v8::Value> local);
 
 template<>
+boost::optional<nc_null_t>
+        convert_js_type_to_cpp<nc_null_t>(v8::Local<v8::Value> local);
+
+template<>
+boost::optional<nc_number_t>
+        convert_js_type_to_cpp<nc_number_t>(v8::Local<v8::Value> local);
+
+template<>
 boost::optional<nc_long_t>
         convert_js_type_to_cpp<nc_long_t>(v8::Local<v8::Value> local);
 
@@ -34,9 +44,8 @@ boost::optional<nc_variant_t> convert_js_type_to_cpp<nc_variant_t>(
         v8::Local<v8::Value> local);
 
 template<>
-boost::optional<std::vector<nc_variant_t>>
-convert_js_type_to_cpp<std::vector<nc_variant_t>>(
-        v8::Local<v8::Value> local);
+boost::optional<std::vector<nc_variant_t>> convert_js_type_to_cpp<
+                std::vector<nc_variant_t>>(v8::Local<v8::Value> local);
 
 
 }  // namespace NC

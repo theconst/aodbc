@@ -148,4 +148,4 @@ nc_null_t call_method(
     return nc_null_t {};
 }
 
-}
+}  // namespace NC

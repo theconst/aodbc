@@ -1,5 +1,7 @@
 #include "ODBCStatement.hh"
 
+#include "ConnectionAwareStatement.hh"
+
 #include "delegation.hh"
 
 namespace NC {
@@ -11,6 +13,11 @@ const char* ODBCStatement::js_class_name = "ODBCStatement";
 
 Nan::Persistent<v8::FunctionTemplate> ODBCStatement::js_constructor;
 
+ODBCStatement::ODBCStatement(
+        std::shared_ptr<UVMonitor<nanodbc::connection>> connection) :
+    statement(std::make_shared<ConnectionAwareStatement>(connection)) {
+}
+
 NAN_MODULE_INIT(ODBCStatement::Init) {
     v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(JsNew);
     js_constructor.Reset(tpl);
@@ -21,6 +28,7 @@ NAN_MODULE_INIT(ODBCStatement::Init) {
 
     Nan::SetPrototypeMethod(tpl, "query", JsQuery);
     Nan::SetPrototypeMethod(tpl, "execute", JsExecute);
+    Nan::SetPrototypeMethod(tpl, "prepare", JsPrepare);
 
     Nan::Set(target,
         Nan::New(js_class_name).ToLocalChecked(),
@@ -31,7 +39,8 @@ NAN_METHOD(ODBCStatement::JsQuery) {
     return delegate_work<
         ODBCStatement,
         StatementMethodTag<StatementCommands::query>,
-        std::vector<nc_column_t>
+        nc_result_t,
+        std::vector<nc_variant_t>
     >(info);
 }
 
@@ -39,7 +48,8 @@ NAN_METHOD(ODBCStatement::JsExecute) {
     return delegate_work<
         ODBCStatement,
         StatementMethodTag<StatementCommands::execute>,
-        std::vector<nc_column_t>
+        nc_null_t,
+        std::vector<nc_variant_t>
     >(info);
 }
 
@@ -47,6 +57,7 @@ NAN_METHOD(ODBCStatement::JsPrepare) {
     return delegate_work<
         ODBCStatement,
         StatementMethodTag<StatementCommands::prepare>,
+        nc_null_t,
         nc_string_t
     >(info);
 }
