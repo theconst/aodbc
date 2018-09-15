@@ -13,10 +13,10 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
         nc_row_t row = nc_row_t {};
 
         for (auto col_no = 0; col_no < result->columns(); ++col_no) {
-            const nc_col_name_t& column_name = result->column_name(col_no);
+            const nc_string_t& column_name = result->column_name(col_no);
 
             if (result->is_null(column_name)) {
-                nc_column_t blank = boost::blank();
+                nc_variant_t blank = boost::blank();
                 row.emplace_back(column_name, blank);
 
                 continue;
@@ -30,13 +30,13 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             case SQL_SMALLINT:
             case SQL_BIT:       // TODO(kko): check if this works
             {
-                nc_column_t intcol { result->get<int>(col_no) };
+                nc_variant_t intcol { result->get<int>(col_no) };
                 row.emplace_back(column_name, intcol);
             }
                 break;
             case SQL_FLOAT:
             {
-                nc_column_t floatcol { result->get<float>(col_no) };
+                nc_variant_t floatcol { result->get<float>(col_no) };
                 row.emplace_back(column_name, floatcol);
             }
                 break;
@@ -46,34 +46,34 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             case SQL_DOUBLE:
             case SQL_BIGINT:  // TODO(kko): check if this works
             {
-                nc_column_t doublecol { result->get<double>(col_no) };
+                nc_variant_t doublecol { result->get<double>(col_no) };
                 row.emplace_back(column_name, doublecol);
             }
                 break;
             case SQL_VARCHAR:
             case SQL_LONGVARCHAR:
             {
-                nc_column_t&& strcol { result->get<nc_string_t>(col_no) };
+                nc_variant_t&& strcol { result->get<nc_string_t>(col_no) };
                 row.emplace_back(column_name, strcol);
             }
                 break;
             case SQL_TYPE_DATE:
             {
-                nc_column_t&& datecol { result->get<nc_date_t>(col_no) };
+                nc_variant_t&& datecol { result->get<nc_date_t>(col_no) };
                 row.emplace_back(column_name, datecol);
             }
                 break;
             case SQL_TYPE_TIME:
             case SQL_TIME:
             {
-                nc_column_t&& timecol {result->get<nc_time_t>(col_no) };
+                nc_variant_t&& timecol {result->get<nc_time_t>(col_no) };
                 row.emplace_back(column_name, timecol);
             }
                 break;
             case SQL_TYPE_TIMESTAMP:
             case SQL_TIMESTAMP:
             {
-                nc_column_t&& timestampcol
+                nc_variant_t&& timestampcol
                     { result->get<nc_timestamp_t>(col_no) };
                 row.emplace_back(column_name, timestampcol);
             }
@@ -85,7 +85,7 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             // data as binary as last resort
             default:
             {
-                nc_column_t&& binarycol { result->get<nc_binary_t>(col_no) };
+                nc_variant_t&& binarycol { result->get<nc_binary_t>(col_no) };
                 row.emplace_back(column_name, binarycol);
             }
                 break;

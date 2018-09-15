@@ -47,11 +47,10 @@ typedef boost::variant<
     nc_time_t,
     nc_timestamp_t,
     nc_binary_t
-> nc_column_t;
+> nc_variant_t;
 
-typedef nanodbc::string nc_col_name_t;
-typedef std::pair<nc_col_name_t, nc_column_t> nc_col_t;
-typedef std::vector<nc_col_t> nc_row_t;
+typedef std::pair<nc_string_t, nc_variant_t> nc_column_t;
+typedef std::vector<nc_column_t> nc_row_t;
 typedef std::vector<nc_row_t> nc_result_t;
 
 }  // namespace NC
