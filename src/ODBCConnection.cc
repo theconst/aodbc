@@ -1,16 +1,12 @@
-#include <utility>
-
 #include "ODBCConnection.hh"
 
-#include "UVMonitor.hh"
-
-#include "arguments.hh"
+#include <utility>
 
 #include "delegation.hh"
 
 namespace NC {
 
-using NC::MethodTag;
+using NC::ConnectionMethodTag;
 using NC::ConnectionCommands;
 
 using NC::QueryArguments;
@@ -80,7 +76,7 @@ NAN_METHOD(ODBCConnection::JsNew) {
 NAN_METHOD(ODBCConnection::JsConnected) {
     return delegate_work<
         ODBCConnection,
-        MethodTag<ConnectionCommands::is_connected>,
+        ConnectionMethodTag<ConnectionCommands::is_connected>,
         bool
     >(info);
 }
@@ -91,7 +87,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
     case 2 + 1:             // nargs + callback
         return delegate_work<
             ODBCConnection,
-            MethodTag<ConnectionCommands::connect>,
+            ConnectionMethodTag<ConnectionCommands::connect>,
             nc_null_t,
             nc_string_t,
             nc_long_t
@@ -99,7 +95,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
     default:
         return delegate_work<
             ODBCConnection,
-            MethodTag<ConnectionCommands::connect>,
+            ConnectionMethodTag<ConnectionCommands::connect>,
             nc_null_t,
             nc_string_t
         >(info);
@@ -109,7 +105,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
 NAN_METHOD(ODBCConnection::JsDisconnect) {
     return delegate_work<
         ODBCConnection,
-        MethodTag<ConnectionCommands::disconnect>,
+        ConnectionMethodTag<ConnectionCommands::disconnect>,
         nc_null_t
     >(info);
 }
@@ -117,7 +113,7 @@ NAN_METHOD(ODBCConnection::JsDisconnect) {
 NAN_METHOD(ODBCConnection::JsDBMSName) {
     return delegate_work<
         ODBCConnection,
-        MethodTag<ConnectionCommands::dbms_name>,
+        ConnectionMethodTag<ConnectionCommands::dbms_name>,
         nc_string_t
     >(info);
 }
@@ -125,7 +121,7 @@ NAN_METHOD(ODBCConnection::JsDBMSName) {
 NAN_METHOD(ODBCConnection::JsDBMSVersion) {
     return delegate_work<
         ODBCConnection,
-        MethodTag<ConnectionCommands::dbms_version>,
+        ConnectionMethodTag<ConnectionCommands::dbms_version>,
         nc_string_t
     >(info);
 };
@@ -134,7 +130,7 @@ NAN_METHOD(ODBCConnection::JsDBMSVersion) {
 NAN_METHOD(ODBCConnection::JsDriverName) {
     return delegate_work<
         ODBCConnection,
-        MethodTag<ConnectionCommands::driver_name>,
+        ConnectionMethodTag<ConnectionCommands::driver_name>,
         nc_string_t
     >(info);
 }
@@ -142,7 +138,7 @@ NAN_METHOD(ODBCConnection::JsDriverName) {
 NAN_METHOD(ODBCConnection::JsCatalogName) {
     return delegate_work<
         ODBCConnection,
-        MethodTag<ConnectionCommands::catalog_name>,
+        ConnectionMethodTag<ConnectionCommands::catalog_name>,
         nc_string_t
     >(info);
 }
@@ -150,7 +146,7 @@ NAN_METHOD(ODBCConnection::JsCatalogName) {
 NAN_METHOD(ODBCConnection::JsDatabaseName) {
     return delegate_work<
         ODBCConnection,
-        MethodTag<ConnectionCommands::database_name>,
+        ConnectionMethodTag<ConnectionCommands::database_name>,
         nc_string_t
     >(info);
 }
@@ -158,7 +154,7 @@ NAN_METHOD(ODBCConnection::JsDatabaseName) {
 NAN_METHOD(ODBCConnection::JsQuery) {
     return delegate_work<
         ODBCConnection,
-        MethodTag<ConnectionCommands::query>,
+        ConnectionMethodTag<ConnectionCommands::query>,
         nc_result_t,
         QueryArguments
     >(info);
@@ -167,7 +163,7 @@ NAN_METHOD(ODBCConnection::JsQuery) {
 NAN_METHOD(ODBCConnection::JsExecute) {
     return delegate_work<
         ODBCConnection,
-        MethodTag<ConnectionCommands::execute>,
+        ConnectionMethodTag<ConnectionCommands::execute>,
         nc_null_t,
         nc_string_t
     >(info);
