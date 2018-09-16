@@ -116,8 +116,12 @@ describe('ODBC Statement integration tests', function () {
     });
     
 
-    afterEach(function () {
-     
+    afterEach(function (done) {
+        statement.close((err) => {
+            expect(err).to.not.exist;
+
+            done();
+        })
     });
 });
 
