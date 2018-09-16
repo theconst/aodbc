@@ -29,6 +29,7 @@ NAN_MODULE_INIT(ODBCStatement::Init) {
     Nan::SetPrototypeMethod(tpl, "query", JsQuery);
     Nan::SetPrototypeMethod(tpl, "execute", JsExecute);
     Nan::SetPrototypeMethod(tpl, "prepare", JsPrepare);
+    Nan::SetPrototypeMethod(tpl, "close", JsClose);
 
     Nan::Set(target,
         Nan::New(js_class_name).ToLocalChecked(),
@@ -77,11 +78,18 @@ NAN_METHOD(ODBCStatement::JsNew) {
 
     v8::Local<v8::Object> obj0 { arg0->ToObject() };
 
-    // TODO(kko): do sanity check of of object type
     ODBCStatement* odbc_statement {};
     odbc_statement = new ODBCStatement(ODBCConnection::Unwrap(obj0));
     odbc_statement->Wrap(info.Holder());
     info.GetReturnValue().Set(info.Holder());
+}
+
+NAN_METHOD(ODBCStatement::JsClose) {
+    return delegate_work<
+        ODBCStatement,
+        StatementMethodTag<StatementCommands::close>,
+        nc_null_t
+    >(info);
 }
 
 }  // namespace NC

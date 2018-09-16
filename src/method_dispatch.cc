@@ -148,4 +148,13 @@ nc_null_t call_method(
     return nc_null_t {};
 }
 
+template<>
+nc_null_t call_method(
+        StatementMethodTag<StatementCommands::close>,
+        std::shared_ptr<ConnectionAwareStatement> owner,
+        const std::tuple<>&) {
+    owner->Close();
+    return nc_null_t {};
+}
+
 }  // namespace NC

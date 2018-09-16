@@ -102,7 +102,8 @@ Prerequisites:
 - [ ] Generalize delegation code
 - [ ] Increase C++ test coverage
 - [ ] Automate build for linux
-- [ ] Add support for prepared statements
+- [x] Add support for prepared statements
+    - [ ] Add support for dates in prepared statements 
 - [ ] Add support for transactions
 - [x] Add support for binary type
 - [ ] Add support for windows

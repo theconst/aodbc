@@ -6,7 +6,8 @@ namespace NC {
 enum struct StatementCommands {
     prepare,
     execute,
-    query
+    query,
+    close
 };
 
 }

@@ -124,4 +124,10 @@ nc_result_t ConnectionAwareStatement::Query(
     });
 }
 
+void ConnectionAwareStatement::Close() {
+    connection_monitor->Synchronized([&](const nanodbc::connection&) {
+        statement.close();
+    });
+}
+
 }  // namespace NC

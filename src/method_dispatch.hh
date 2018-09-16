@@ -123,6 +123,12 @@ nc_null_t call_method(
         std::shared_ptr<ConnectionAwareStatement> owner,
         const std::tuple<std::vector<nc_variant_t>>& args);
 
+template<>
+nc_null_t call_method(
+        StatementMethodTag<StatementCommands::close>,
+        std::shared_ptr<ConnectionAwareStatement> owner,
+        const std::tuple<>&);
+
 }  // namespace NC
 
 #endif  /* METHODDISPATCH_HH */

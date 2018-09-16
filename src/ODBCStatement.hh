@@ -50,6 +50,7 @@ class ODBCStatement final : public Nan::ObjectWrap {
     static NAN_METHOD(JsQuery);
     static NAN_METHOD(JsExecute);
     static NAN_METHOD(JsPrepare);
+    static NAN_METHOD(JsClose);
 
     std::shared_ptr<ConnectionAwareStatement> statement;
 };
