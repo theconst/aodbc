@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect;
 
-describe('ODBC Connection integration tests', function () {
+describe('ODBC Statement integration tests', function () {
     
     const INTEGRATION_TEST_DSN = 'DSN=CacheWinHost';
 
@@ -26,6 +26,20 @@ describe('ODBC Connection integration tests', function () {
         done();
     });
 
+    it('should execute prepared statement with no args', function(done) {
+       statement.prepare('Select 1 as Q', (err) => {
+            expect(err).to.not.exist;
+
+            statement.query([], (err, res) => {
+                expect(err).to.not.exist;
+                expect(res).to.deep.equal([{'Q': 1}]);
+
+                done();
+            })
+       });
+    });
+
+    //TODO(kko): looks like a  bug
     it('should execute prepared statement twice 1', function(done) {
         statement.prepare('select ? as Q', (err, result) => {
             expect(result).to.not.exist;
