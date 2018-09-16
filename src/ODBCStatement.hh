@@ -9,6 +9,8 @@
 
 #include "ConnectionAwareStatement.hh"
 
+#include "cstring"
+
 
 namespace NC {
 
@@ -36,6 +38,11 @@ class ODBCStatement final : public Nan::ObjectWrap {
     virtual ~ODBCStatement() = default;
 
     static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
+        char* constructor_name = *Nan::Utf8String(self->GetConstructorName());
+        if (0 != std::strcmp(constructor_name, js_class_name)) {
+            Nan::ThrowTypeError("Illegal object type");
+        }
+
         auto* odbc_statement = Nan::ObjectWrap::Unwrap<ODBCStatement>(self);
         return odbc_statement->statement;
     }
