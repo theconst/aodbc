@@ -126,7 +126,8 @@ convert_js_type_to_cpp<std::vector<nc_variant_t>>(
     result.reserve(len);
 
     for (int i = 0; i < len; ++i) {
-        auto bound_arg {convert_js_type_to_cpp<nc_variant_t>(array->Get(i))};
+        boost::optional<nc_variant_t> bound_arg {
+            convert_js_type_to_cpp<nc_variant_t>(array->Get(i))};
         if (!bound_arg) {
             return boost::none;
         }
