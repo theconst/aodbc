@@ -101,15 +101,16 @@ boost::optional<nc_number_t>
 template<>
 boost::optional<nc_variant_t> convert_js_type_to_cpp<nc_variant_t>(
         v8::Local<v8::Value> local) {
+    boost::optional<nc_variant_t> result {};
     if (auto number = convert_js_type_to_cpp<nc_number_t>(local)) {
-        return nc_variant_t {std::move(*number)};
+        result.emplace(std::move(*number));
     } else if (auto str = convert_js_type_to_cpp<nc_string_t>(local)) {
-        return nc_variant_t {std::move(*str)};
+        result.emplace(std::move(*str));
     } else if (auto blank = convert_js_type_to_cpp<nc_null_t>(local)) {
-        return nc_variant_t {std::move(*blank)};
+        result.emplace(std::move(*blank));
     }
      // TODO(kko): add support for other types
-    return boost::none;
+    return result;
 }
 
 template<>
@@ -121,19 +122,21 @@ convert_js_type_to_cpp<std::vector<nc_variant_t>>(
     }
 
     auto array = v8::Local<v8::Array>::Cast(local);
-    auto len = array->Length();
+    int len = array->Length();
 
-    std::vector<nc_variant_t> result(len);
+    std::vector<nc_variant_t> result {};
+    result.reserve(len);
 
-    // TODO(kko): not sure if this is the best way to prevent compiler warnings
-    for (decltype(len) i = 0; i < len; ++i) {
+    for (int i = 0; i < len; ++i) {
         auto bound_arg {convert_js_type_to_cpp<nc_variant_t>(array->Get(i))};
         if (!bound_arg) {
             return boost::none;
         }
-        result[i] = *bound_arg;
+        result.emplace_back(std::move(*bound_arg));
     }
-    return boost::make_optional(std::move(result));
+    boost::optional<std::vector<nc_variant_t>> definitely_variant {};
+    definitely_variant.emplace(std::move(result));
+    return definitely_variant;
 }
 
 
