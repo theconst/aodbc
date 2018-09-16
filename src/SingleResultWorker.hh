@@ -29,7 +29,8 @@ class SingleResultWorker : public Nan::AsyncWorker {
         Args... arguments)
             : AsyncWorker(callback, "NC::SingleResultWorker"),
               owner_ptr(owner_ptr),
-              arguments_tuple(std::forward<Args>(arguments)...) {
+              arguments_tuple(std::forward<Args>(arguments)...),
+              result() {
     }
 
     SingleResultWorker(const SingleResultWorker&) = delete;
@@ -55,7 +56,7 @@ class SingleResultWorker : public Nan::AsyncWorker {
 
         v8::Local<v8::Value> args[] {
             Nan::Null(),
-            convert_cpp_type_to_js(std::move(result))
+            convert_cpp_type_to_js(result)
         };
 
         Nan::Call(
