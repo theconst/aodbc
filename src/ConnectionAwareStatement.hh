@@ -79,26 +79,28 @@ class ConnectionAwareStatement final {
     }
 
     void close_cursor() {
-// ORIGINAL COMMENT FROM nanodbc:
-// if (statement.open())
-// {
-//   Looks like some
-//   The ODBC cursor must be closed before subsequent executions, as described
-//   here
-//   http://msdn.microsoft.com/en-us/library/windows/desktop/ms713584%28v=vs.85%29.aspx
-//
-//   However, we don't necessarily want to call SQLCloseCursor() because that
-//   will cause an invalid cursor state in the case that no cursor is currently open.
-//   A better solution is to use SQLFreeStmt() with the SQL_CLOSE option, which has
+        // ORIGINAL CODE FROM nanodbc:
+        // if (statement.open())
+        // {
+        //   Looks like some
+        //   The ODBC cursor must be closed before subsequent executions, as described
+        //   here
+        //   http://msdn.microsoft.com/en-us/library/windows/desktop/ms713584%28v=vs.85%29.aspx
+        //
+        //   However, we don't necessarily want to call SQLCloseCursor() because that
+        //   will cause an invalid cursor state in the case that no cursor is currently open.
+        //   A better solution is to use SQLFreeStmt() with the SQL_CLOSE option, which has
 
-//   SQLRetrun retcode = SQLCloseCursor(statement.native_statement_handle());
-//   the same effect without the undesired limitations.
-//   NANODBC_CALL_RC(SQLFreeStmt, rc, stmt_, SQL_CLOSE);
-//   if (!success(rc))
-//      NANODBC_THROW_DATABASE_ERROR(stmt_, SQL_HANDLE_STMT);
-// }
-// Looks like for cache we still need to close cursor
-// SQLFreeStmt will have no effect in this case
+        //   SQLRetrun retcode = SQLCloseCursor(statement.native_statement_handle());
+        //   the same effect without the undesired limitations.
+        //   NANODBC_CALL_RC(SQLFreeStmt, rc, stmt_, SQL_CLOSE);
+        //   if (!success(rc))
+        //      NANODBC_THROW_DATABASE_ERROR(stmt_, SQL_HANDLE_STMT);
+        // }
+        // END OF ORIGINAL CODE
+        // Looks like for cache we still need to close cursor
+        // SQLFreeStmt will have no effect in this case and SQLCloseCursor will
+        // fire with error, because we know that it is still open.
 #ifdef FREE_STMT_WORKAROUND
         if (statement.open()) {
            SQLHANDLE handle = statement.native_statement_handle();
