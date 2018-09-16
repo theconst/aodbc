@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 /**
  * Demo sript of the native nc usage.
  * You typically may want to use a blubird wrapper in js/index.

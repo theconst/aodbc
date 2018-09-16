@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 /**
  * Sample usage of bluebird-wrapped API 
  */

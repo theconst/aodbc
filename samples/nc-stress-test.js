@@ -1,4 +1,4 @@
-#!/usr/bin/node --max_old_space_size=100
+#!/usr/bin/env node --max_old_space_size=100
 /**
  * This is simple test that will create lots of connections.
  * It illustrates case of contention for a single table from multiple connections

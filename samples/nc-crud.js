@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 /**
  * Sample usage of crud.
  * Note the difference between query and execute.
