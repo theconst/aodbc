@@ -20,13 +20,13 @@ describe('ODBC Connection integration tests', function () {
     });
     
     
-    // it('should create prepared statement', function(done) {
-    //     expect(statement).to.exist;
+    it('should create prepared statement', function(done) {
+        expect(statement).to.exist;
 
-    //     done();
-    // });
+        done();
+    });
 
-    it('should execute no args prepared statement', function(done) {
+    it('should execute prepared statement twice 1', function(done) {
         statement.prepare('select ? as Q', (err, result) => {
             expect(result).to.not.exist;
 
@@ -51,55 +51,55 @@ describe('ODBC Connection integration tests', function () {
         });
     });
 
-    // it('should execute prepared statement twice', function(done) {
-    //     statement.prepare(`
-    //         Select ID, Name, Company->Name from Sample.Employee 
-    //         Where Name < ? and Company->Name > ? 
-    //         Order By Company->Name
-    //     `, (err, result) => {
-    //         expect(err).to.not.exist;
-    //         expect(result).to.not.exist;
+    it('should execute prepared statement twice 2', function(done) {
+        statement.prepare(`
+            Select ID, Name, Company->Name from Sample.Employee 
+            Where Name < ? and Company->Name > ? 
+            Order By Company->Name
+        `, (err, result) => {
+            expect(err).to.not.exist;
+            expect(result).to.not.exist;
 
-    //         statement.query(["F", "L"], (err, result) => {
-    //             expect(err).to.not.exist;
+            statement.query(["F", "L"], (err, result) => {
+                expect(err).to.not.exist;
     
-    //             expect(result).to.exist;
+                expect(result).to.exist;
 
-    //             console.debug(result);
+                console.debug(result);
 
-    //             setTimeout(() => statement.query(["H", "K"], (err, result) => {
-    //                 expect(err).to.not.exist;
+                setTimeout(() => statement.query(["H", "K"], (err, result) => {
+                    expect(err).to.not.exist;
         
-    //                 expect(result).to.exist;
+                    expect(result).to.exist;
     
-    //                 console.debug(result);
+                    console.debug(result);
     
-    //                 done();
-    //             }), 0);
-    //         });
-    //     });
-    // });
+                    done();
+                }), 0);
+            });
+        });
+    });
 
-    // it('should execute no args prepared statement', function(done) {
-    //     statement.prepare(`
-    //         Select ID, Name, Company->Name from Sample.Employee 
-    //         Where Name < ? and Company->Name > ? 
-    //         Order By Company->Name
-    //     `, (err, result) => {
-    //         expect(err).to.not.exist;
-    //         expect(result).to.not.exist;
+    it('should execute no args prepared statement', function(done) {
+        statement.prepare(`
+            Select ID, Name, Company->Name from Sample.Employee 
+            Where Name < ? and Company->Name > ? 
+            Order By Company->Name
+        `, (err, result) => {
+            expect(err).to.not.exist;
+            expect(result).to.not.exist;
 
-    //         statement.query(["F", "L"], (err, result) => {
-    //             expect(err).to.not.exist;
+            statement.query(["F", "L"], (err, result) => {
+                expect(err).to.not.exist;
     
-    //             expect(result).to.exist;
+                expect(result).to.exist;
 
-    //             console.debug(result);
+                console.debug(result);
 
-    //             done();
-    //         });
-    //     });
-    // });
+                done();
+            });
+        });
+    });
     
 
     afterEach(function () {
