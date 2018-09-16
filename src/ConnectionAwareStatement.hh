@@ -32,7 +32,7 @@ class ConnectionAwareStatement final {
 
     nc_result_t Query(const std::vector<nc_variant_t>& bound_parameters,
         nc_long_t batch_size = 1L, nc_long_t timeout = 0L);
-    
+
     void Close();
 
     ConnectionAwareStatement(const ConnectionAwareStatement&) = delete;

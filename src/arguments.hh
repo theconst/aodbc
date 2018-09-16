@@ -1,6 +1,3 @@
-/*
- * Contains definitions for argument types of various functions 
- */
 #ifndef ARGUMENTS_HH
 #define ARGUMENTS_HH
 
