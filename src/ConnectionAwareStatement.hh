@@ -1,12 +1,20 @@
 #ifndef CONNECTIONAWARESTATEMENT_HH
 #define CONNECTIONAWARESTATEMENT_HH
 
+#ifndef FREE_STMT_WORKAROUND
+#define FREE_STMT_WORKAROUND
+#endif
+
 
 #include <memory>
 #include <utility>
 #include <cstddef>
 
 #include "nan.h"
+
+#include <sql.h>
+
+#include <iostream>
 
 #include "UVMonitor.hh"
 
@@ -64,12 +72,47 @@ class ConnectionAwareStatement final {
     nanodbc::statement statement;
 
     void bind_parameters(const std::vector<nc_variant_t>& bound_parameters) {
-        // TODO(kko): remove this dirty hack
-        statement.cancel();
         for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
             BindingVisitor visitor {&statement, pos};
             boost::apply_visitor(visitor, bound_parameters[pos]);
         }
+    }
+
+    void close_cursor() {
+// ORIGINAL COMMENT FROM nanodbc:
+// if (statement.open())
+// {
+//   Looks like some
+//   The ODBC cursor must be closed before subsequent executions, as described
+//   here
+//   http://msdn.microsoft.com/en-us/library/windows/desktop/ms713584%28v=vs.85%29.aspx
+//
+//   However, we don't necessarily want to call SQLCloseCursor() because that
+//   will cause an invalid cursor state in the case that no cursor is currently open.
+//   A better solution is to use SQLFreeStmt() with the SQL_CLOSE option, which has
+
+//   SQLRetrun retcode = SQLCloseCursor(statement.native_statement_handle());
+//   the same effect without the undesired limitations.
+//   NANODBC_CALL_RC(SQLFreeStmt, rc, stmt_, SQL_CLOSE);
+//   if (!success(rc))
+//      NANODBC_THROW_DATABASE_ERROR(stmt_, SQL_HANDLE_STMT);
+// }
+// Looks like for cache we still need to close cursor
+// SQLFreeStmt will have no effect in this case
+#ifdef FREE_STMT_WORKAROUND
+        if (statement.open()) {
+           SQLHANDLE handle = statement.native_statement_handle();
+           SQLRETURN rc = SQLCloseCursor(handle);
+           if (!success(rc)) {
+               throw nanodbc::database_error(handle, SQL_HANDLE_STMT,
+                 std::string("Failed to close cursor"));
+           }
+        }
+#endif
+    }
+
+    inline bool success(SQLRETURN rc) {
+        return rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO;
     }
 
  public:
@@ -99,8 +142,10 @@ class ConnectionAwareStatement final {
         return (*connection_monitor)([&](const nanodbc::connection&) {
             bind_parameters(bound_parameters);
             nanodbc::result result { statement.execute(batch_size, timeout) };
+            nc_result_t fetched_result = fetch_result_eagerly(&result);
 
-            return fetch_result_eagerly(&result);
+            close_cursor();
+            return fetched_result;
         });
     }
 
