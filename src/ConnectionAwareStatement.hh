@@ -124,7 +124,6 @@ class ConnectionAwareStatement final {
         statement() {
     }
 
-    template <typename... T>
     void execute(const std::vector<nc_variant_t>& bound_parameters,
             nc_long_t batch_size = 1L, nc_long_t timeout = 0L) {
         return (*connection_monitor)([&](const nanodbc::connection&) {
