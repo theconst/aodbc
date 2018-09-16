@@ -1,0 +1,7 @@
+lib/**
+build/**
+node_modules/**
+package-lock.json
+nbproject/**
+.vscode
+reports/**

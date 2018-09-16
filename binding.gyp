@@ -15,15 +15,15 @@
       ],
       "include_dirs": [
         "<!(node -e \"require('nan')\")",
-        "include",
+        "nanodbc/nanodbc/",
         "src"
       ],
       "conditions": [
           [
             "OS=='linux'", {
               "ldflags": [
-                "-lnanodbc", "-L<(module_root_dir)/lib", "-lpthread",
-                "-Wl,-rpath,<(module_root_dir)/lib/"
+                "-lnanodbc", "-L<(module_root_dir)/nanodbc/build/lib", "-lpthread",
+                "-Wl,-rpath,<(module_root_dir)/nanodbc/build/lib"
               ],
             }
           ],
