@@ -36,7 +36,7 @@ describe('ODBC Connection integration tests', function() {
 
   // OK - you can read one by one
 
-  it('should exctract binary type to javascript buffer', function(done) {
+  it('should extract binary type to javascript buffer', function(done) {
     const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
 
     connection.query({

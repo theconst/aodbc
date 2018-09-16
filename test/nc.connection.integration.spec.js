@@ -259,6 +259,20 @@ describe('ODBC Connection integration tests', function () {
         });
     }
 
+    it('should call stored procedure', function(done) {
+        const connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
+  
+        connection.query("CALL Sample.PersonSets('D','NY')", (err, res) => {
+            expect(err).to.not.exist;
+  
+            console.debug(res);
+  
+            expect(res).to.exist;
+  
+            done();
+        });
+    });
+
     afterEach(function () {
      
     });
