@@ -84,16 +84,18 @@ const connectionString = "DSN=CacheWinHost";
 
 # Launch steps
 
-Prerequisites:
-
-1. Node.js, prefarably 8-th version http://nodejs.org
-1. Unixodbc and Intersystems Cache driver, see: http://www.intersystems.com/ru/services-support/product-support/cache-odbc-driver-faq/
-1. Nanodbc libary: https://github.com/nanodbc/nanodbc. For your convinience it is prebuild for x64 linux 
-   and unixODBC driver in the `./lib` folder
-1. Boost libary: https://www.boost.org/users/history/version_1_68_0.html.
-1. Configured DataSource (see odbc.init in `./config`)
-1. After installing the prerequisites, run `npm install`
-
+For now Linux is the only supported platform
+To launch the application in Docker container, follow the following steps:
+1. `git --recurse-submodules clone https://github.com/theconst/aodbc`
+2. cd aodbc
+3. Change settings for your ODBC host in odbc.ini
+4. `docker build -t nc:latest .`
+5. 
+    - For Linux run the following command
+    `docker run -t --network host nc:latest &`
+    - For Windows, follow the instructions on https://stackoverflow.com/questions/40746453/how-to-connect-to-docker-host-from-container-on-windows-10-docker-for-windows or if you happen to launch Caché in docker, connect the two via bridge network.
+6. `docker exec -it <docker_image_id> /bin/bash`
+7. `./samples/nc-crud.js` will run the sample of the library
 
 # TODO List
 
@@ -101,9 +103,9 @@ Prerequisites:
 - [ ] Add tracing
 - [ ] Generalize delegation code
 - [ ] Increase C++ test coverage
-- [ ] Automate build for linux
+- [x] Automate build for linux
 - [x] Add support for prepared statements
     - [ ] Add support for dates in prepared statements 
 - [ ] Add support for transactions
 - [x] Add support for binary type
-- [ ] Add support for windows
+- [ ] Add support for Windows
