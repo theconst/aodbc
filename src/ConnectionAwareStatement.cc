@@ -46,7 +46,7 @@ ConnectionAwareStatement::ConnectionAwareStatement(
         statement() {
 }
 
-void ConnectionAwareStatement::bind_parameters(
+void ConnectionAwareStatement::BindParameters(
         const std::vector<nc_variant_t>& bound_parameters) {
     for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
         BindingVisitor visitor {&statement, pos};
@@ -58,7 +58,7 @@ inline bool success(SQLRETURN rc) {
     return rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO;
 }
 
-void ConnectionAwareStatement::close_cursor() {
+void ConnectionAwareStatement::CloseCursor() {
     // ORIGINAL CODE FROM nanodbc:
     // if (statement.open())
     // {
@@ -93,17 +93,17 @@ void ConnectionAwareStatement::close_cursor() {
 #endif
 }
 
-void ConnectionAwareStatement::execute(
+void ConnectionAwareStatement::Execute(
         const std::vector<nc_variant_t>& bound_parameters,
         nc_long_t batch_size,
         nc_long_t timeout) {
     return (*connection_monitor)([&](const nanodbc::connection&) {
-        bind_parameters(bound_parameters);
+        BindParameters(bound_parameters);
         statement.just_execute(batch_size, timeout);
     });
 }
 
-void ConnectionAwareStatement::prepare(
+void ConnectionAwareStatement::Prepare(
         nc_string_t query_string,
         nc_long_t timeout) {
     (*connection_monitor)([&](nanodbc::connection& conn) {
@@ -111,15 +111,15 @@ void ConnectionAwareStatement::prepare(
     });
 }
 
-nc_result_t ConnectionAwareStatement::query(
+nc_result_t ConnectionAwareStatement::Query(
         const std::vector<nc_variant_t>& bound_parameters,
         nc_long_t batch_size,
         nc_long_t timeout) {
     return (*connection_monitor)([&](const nanodbc::connection&) {
-        bind_parameters(bound_parameters);
+        BindParameters(bound_parameters);
         nanodbc::result result { statement.execute(batch_size, timeout) };
         nc_result_t fetched_result = fetch_result_eagerly(&result);
-        close_cursor();
+        CloseCursor();
         return fetched_result;
     });
 }

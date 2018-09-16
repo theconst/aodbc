@@ -25,12 +25,12 @@ class ConnectionAwareStatement final {
     ConnectionAwareStatement(
         std::shared_ptr<UVMonitor<nanodbc::connection>> m);
 
-    void execute(const std::vector<nc_variant_t>& bound_parameters,
+    void Execute(const std::vector<nc_variant_t>& bound_parameters,
             nc_long_t batch_size = 1L, nc_long_t timeout = 0L);
 
-    void prepare(nc_string_t query_string, nc_long_t timeout = 0L);
+    void Prepare(nc_string_t query_string, nc_long_t timeout = 0L);
 
-    nc_result_t query(const std::vector<nc_variant_t>& bound_parameters,
+    nc_result_t Query(const std::vector<nc_variant_t>& bound_parameters,
             nc_long_t batch_size = 1L, nc_long_t timeout = 0L);
 
     ConnectionAwareStatement(const ConnectionAwareStatement&) = delete;
@@ -38,9 +38,9 @@ class ConnectionAwareStatement final {
     ~ConnectionAwareStatement() = default;
 
  private:
-    void bind_parameters(const std::vector<nc_variant_t>& bound_parameters);
+    void BindParameters(const std::vector<nc_variant_t>& bound_parameters);
 
-    void close_cursor();
+    void CloseCursor();
 
     std::shared_ptr<UVMonitor<nanodbc::connection>> connection_monitor;
 
