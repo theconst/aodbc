@@ -1,7 +1,5 @@
 #include "js_to_cpp_converters.hh"
 
-#include <iostream>
-
 namespace NC {
 
 using NC::QueryArguments;

@@ -4,8 +4,6 @@
 
 #include "delegation.hh"
 
-#include <iostream>
-
 namespace NC {
 
 using NC::StatementCommands;

@@ -2,6 +2,7 @@
 #define ODBCCONNECTION_HH
 
 #include <memory>
+#include <cstring>
 
 #include "nan.h"
 
@@ -11,16 +12,10 @@
 
 #include "UVMonitor.hh"
 
-#include <cstring>
-
 namespace NC {
 
 using NC::UVMonitor;
 
-// TODO(kko): shared ptr's are a bit intrusive in
-// terms of contract
-
-// holder for nandobc connection
 class ODBCConnection final : public Nan::ObjectWrap {
  public:
     static const char* js_class_name;

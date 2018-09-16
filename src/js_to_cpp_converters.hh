@@ -2,7 +2,6 @@
 #define JSTOCPPCONVERTERS_HH
 
 #include <vector>
-
 #include <boost/optional.hpp>
 
 #include "nan.h"

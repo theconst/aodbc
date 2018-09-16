@@ -1,4 +1,4 @@
-#include <nan.h>
+#include "nan.h"
 
 #include "ODBCConnection.hh"
 #include "ODBCStatement.hh"

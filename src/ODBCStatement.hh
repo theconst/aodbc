@@ -2,6 +2,7 @@
 #define ODBCSTATEMENT_HH
 
 #include <memory>
+#include <cstring>
 
 #include "nan.h"
 
@@ -9,17 +10,12 @@
 
 #include "ConnectionAwareStatement.hh"
 
-#include "cstring"
-
 
 namespace NC {
 
 using NC::ConnectionAwareStatement;
 
-// TODO(kko): shared ptr's are a bit intrusive in
-// terms of contract
 
-// holder for nandobc statement
 class ODBCStatement final : public Nan::ObjectWrap {
  public:
     static const char* js_class_name;

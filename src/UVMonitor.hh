@@ -1,8 +1,6 @@
 #ifndef UVMONITOR_HH
 #define UVMONITOR_HH
 
-#include <exception>
-
 #include "uv.h"
 
 namespace NC {

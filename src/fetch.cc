@@ -1,7 +1,7 @@
 #include "fetch.hh"
 
-#include <sql.h>
-#include <sqlext.h>
+#include "sql.h"
+#include "sqlext.h"
 
 #include "nctypes.hh"
 
