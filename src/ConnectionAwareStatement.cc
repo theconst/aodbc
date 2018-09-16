@@ -97,7 +97,7 @@ void ConnectionAwareStatement::Execute(
         const std::vector<nc_variant_t>& bound_parameters,
         nc_long_t batch_size,
         nc_long_t timeout) {
-    return (*connection_monitor)([&](const nanodbc::connection&) {
+    return connection_monitor->Synchronized([&](const nanodbc::connection&) {
         BindParameters(bound_parameters);
         statement.just_execute(batch_size, timeout);
     });
@@ -106,7 +106,7 @@ void ConnectionAwareStatement::Execute(
 void ConnectionAwareStatement::Prepare(
         nc_string_t query_string,
         nc_long_t timeout) {
-    (*connection_monitor)([&](nanodbc::connection& conn) {
+    connection_monitor->Synchronized([&](nanodbc::connection& conn) {
         statement.prepare(conn, query_string, timeout);
     });
 }
@@ -115,7 +115,7 @@ nc_result_t ConnectionAwareStatement::Query(
         const std::vector<nc_variant_t>& bound_parameters,
         nc_long_t batch_size,
         nc_long_t timeout) {
-    return (*connection_monitor)([&](const nanodbc::connection&) {
+    return connection_monitor->Synchronized([&](const nanodbc::connection&) {
         BindParameters(bound_parameters);
         nanodbc::result result { statement.execute(batch_size, timeout) };
         nc_result_t fetched_result = fetch_result_eagerly(&result);
