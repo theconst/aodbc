@@ -74,14 +74,14 @@ describe('ODBC Statement integration tests', function () {
             expect(err).to.not.exist;
             expect(result).to.not.exist;
 
-            statement.query(["F", "L"], (err, result) => {
+            statement.query(['F', 'L'], (err, result) => {
                 expect(err).to.not.exist;
     
                 expect(result).to.exist;
 
                 console.debug(result);
 
-                setTimeout(() => statement.query(["H", "K"], (err, result) => {
+                setTimeout(() => statement.query(['H', 'K'], (err, result) => {
                     expect(err).to.not.exist;
         
                     expect(result).to.exist;
@@ -103,7 +103,7 @@ describe('ODBC Statement integration tests', function () {
             expect(err).to.not.exist;
             expect(result).to.not.exist;
 
-            statement.query(["F", "L"], (err, result) => {
+            statement.query(['F', 'L'], (err, result) => {
                 expect(err).to.not.exist;
     
                 expect(result).to.exist;
@@ -115,6 +115,31 @@ describe('ODBC Statement integration tests', function () {
         });
     });
     
+    it('should close statment and not query thereafter', function(done) {
+        statement.prepare(`
+            Select ID, Name, Company->Name from Sample.Employee 
+            Where Name < ? and Company->Name > ? 
+            Order By Company->Name
+        `, (err) => {
+            expect(err).to.not.exist;
+            statement.query(['H', 'L'], (err, res) => {
+                expect(err).to.not.exist;
+
+                expect(res).to.exist;
+
+                statement.close((err) => {
+                    expect(err).to.not.exist;
+
+                    statement.query(['L', 'Z'], (err) => {
+                        console.debug(err);
+
+                        expect(err).to.exist;
+                        done();
+                    })
+                })
+            });
+        });
+    });
 
     afterEach(function (done) {
         statement.close((err) => {
