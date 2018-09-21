@@ -15,8 +15,9 @@ const int default_timeout = 0;
 const int default_batch_size = 1;
 
 // TODO(kko): add constant pool
-// DO NOT USE WITHOUT HANDLE SCOPE
 nc_long_t get_batch_size(v8::Local<v8::Object> object) {
+    Nan::HandleScope scope {};
+
     auto batch_size_key = Nan::New<v8::String>(batch_size_key_name)
         .ToLocalChecked();
     auto batch_size_prop = Nan::Get(object, batch_size_key).ToLocalChecked();
@@ -24,8 +25,9 @@ nc_long_t get_batch_size(v8::Local<v8::Object> object) {
         .get_value_or(default_batch_size);
 }
 
-// DO NOT USE WITHOUT HANDLE SCOPE
 nc_long_t get_timeout(v8::Local<v8::Object> object) {
+    Nan::HandleScope scope {};
+
     auto timeout_key = Nan::New<v8::String>(timeout_key_name).ToLocalChecked();
     auto timeout_prop = Nan::Get(object, timeout_key).ToLocalChecked();
     return convert_js_type_to_cpp<nc_long_t>(timeout_prop)
