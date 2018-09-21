@@ -46,6 +46,10 @@ template<>
 boost::optional<std::vector<nc_variant_t>> convert_js_type_to_cpp<
                 std::vector<nc_variant_t>>(v8::Local<v8::Value> local);
 
+template<>
+boost::optional<PreparedStatementArguments> convert_js_type_to_cpp<
+        PreparedStatementArguments>(v8::Local<v8::Value> local);
+
 
 }  // namespace NC
 
