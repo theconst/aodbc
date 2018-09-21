@@ -4,6 +4,8 @@
 
 #include "delegation.hh"
 
+#include "StatementCommands.hh"
+
 namespace NC {
 
 using NC::StatementCommands;
@@ -41,7 +43,7 @@ NAN_METHOD(ODBCStatement::JsQuery) {
         ODBCStatement,
         StatementMethodTag<StatementCommands::query>,
         nc_result_t,
-        std::vector<nc_variant_t>
+        PreparedStatementArguments
     >(info);
 }
 
@@ -50,7 +52,7 @@ NAN_METHOD(ODBCStatement::JsExecute) {
         ODBCStatement,
         StatementMethodTag<StatementCommands::execute>,
         nc_null_t,
-        std::vector<nc_variant_t>
+        PreparedStatementArguments
     >(info);
 }
 

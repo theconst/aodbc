@@ -25,6 +25,26 @@ struct QueryArguments {
     virtual ~QueryArguments() = default;
 };
 
+struct PreparedStatementArguments {
+    std::vector<nc_variant_t> bindings;
+    nc_long_t batch_size;
+    nc_long_t timeout;
+
+    template <typename T>
+    explicit PreparedStatementArguments(
+            T&& bindings,
+            nc_long_t batch_size = 1L,
+            nc_long_t timeout = 0L) :
+        bindings(std::forward<std::vector<nc_variant_t>>(bindings)),
+        batch_size(batch_size),
+        timeout(timeout) {
+    }
+
+    PreparedStatementArguments(const PreparedStatementArguments&) = default;
+    PreparedStatementArguments(PreparedStatementArguments&&) = default;
+    virtual ~PreparedStatementArguments() = default;
+};
+
 }  // namespace NC
 
 
