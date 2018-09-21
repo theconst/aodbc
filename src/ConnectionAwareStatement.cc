@@ -24,7 +24,7 @@ class BindingVisitor final : public boost::static_visitor<> {
 
     BindingVisitor(BindingVisitor&&) = delete;
     BindingVisitor(const BindingVisitor&) = delete;
-    virtual ~BindingVisitor() = default;
+    ~BindingVisitor() = default;
 
     void operator()(const nc_null_t& v) const {
         statement_ptr->bind_null(position);
