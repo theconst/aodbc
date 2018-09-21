@@ -30,18 +30,8 @@ class ConnectionAwareStatement final {
     void Execute(const std::vector<nc_variant_t>& bound_parameters,
         nc_long_t batch_size = 1L, nc_long_t timeout = 0L);
 
-    void Execute() {
-        std::vector<nc_variant_t> v {};
-        Execute(v);
-    }
-
     nc_result_t Query(const std::vector<nc_variant_t>& bound_parameters,
         nc_long_t batch_size = 1L, nc_long_t timeout = 0L);
-
-    nc_result_t Query() {
-        std::vector<nc_variant_t> v {};
-        Query(v);
-    }
 
     void Close();
 
