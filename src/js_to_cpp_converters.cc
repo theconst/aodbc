@@ -161,13 +161,11 @@ boost::optional<PreparedStatementArguments> convert_js_type_to_cpp<
         return result;
     }
 
-    if (!local->IsObject()) {
-        return boost::none;
-    }
-    auto object = Nan::To<v8::Object>(local).ToLocalChecked();
-
     Nan::HandleScope scope {};
 
+    auto object = local->IsObject()
+        ? Nan::To<v8::Object>(local).ToLocalChecked()
+        : Nan::New<v8::Object>();
     auto bindings_key =
         Nan::New<v8::String>(bindings_key_name).ToLocalChecked();
     auto bindings_args = Nan::Get(object, bindings_key).ToLocalChecked();

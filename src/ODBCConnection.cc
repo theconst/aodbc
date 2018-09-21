@@ -82,9 +82,9 @@ NAN_METHOD(ODBCConnection::JsConnected) {
 }
 
 NAN_METHOD(ODBCConnection::JsConnect) {
-    switch (info.Length()) {
-    // TODO(kko): encapsulate into object like query
-    case 2 + 1:             // nargs + callback
+    static constexpr int number_of_args_with_timeout = 2 + 1;
+    int len = info.Length();
+    if (len >= number_of_args_with_timeout) {
         return delegate_work<
             ODBCConnection,
             ConnectionMethodTag<ConnectionCommands::connect>,
@@ -92,7 +92,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
             nc_string_t,
             nc_long_t
         >(info);
-    default:
+    } else {
         return delegate_work<
             ODBCConnection,
             ConnectionMethodTag<ConnectionCommands::connect>,
