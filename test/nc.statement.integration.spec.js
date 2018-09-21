@@ -26,7 +26,7 @@ describe('ODBC Statement integration tests', function () {
         done();
     });
 
-    it('should execute prepared statement with no args', function(done) {
+    it('should execute prepared statement with no args 1', function(done) {
        statement.prepare('Select 1 as Q', (err) => {
             expect(err).to.not.exist;
 
@@ -38,6 +38,19 @@ describe('ODBC Statement integration tests', function () {
             })
        });
     });
+
+    it('should execute prepared statement with no args 2', function(done) {
+        statement.prepare('Select 1 as Q', (err) => {
+            expect(err).to.not.exist;
+
+            statement.query({}, (err, res) => {
+                expect(err).to.not.exist;
+                expect(res).to.deep.equal([{'Q': 1}]);
+
+                done();
+            })
+        });
+     });
 
     //TODO(kko): looks like a  bug
     it('should execute prepared statement twice 1', function(done) {
