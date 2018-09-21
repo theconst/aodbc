@@ -115,13 +115,13 @@ template<>
 nc_result_t call_method(
         StatementMethodTag<StatementCommands::query>,
         std::shared_ptr<ConnectionAwareStatement> owner,
-        const std::tuple<std::vector<nc_variant_t>>& args);
+        const std::tuple<PreparedStatementArguments>& args);
 
 template<>
 nc_null_t call_method(
         StatementMethodTag<StatementCommands::execute>,
         std::shared_ptr<ConnectionAwareStatement> owner,
-        const std::tuple<std::vector<nc_variant_t>>& args);
+        const std::tuple<PreparedStatementArguments>& args);
 
 template<>
 nc_null_t call_method(

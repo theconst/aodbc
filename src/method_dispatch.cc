@@ -135,16 +135,18 @@ template<>
 nc_result_t call_method(
         StatementMethodTag<StatementCommands::query>,
         std::shared_ptr<ConnectionAwareStatement> owner,
-        const std::tuple<std::vector<nc_variant_t>>& args) {
-    return owner->Query(std::get<0>(args));
+        const std::tuple<PreparedStatementArguments>& args) {
+    const PreparedStatementArguments& psargs = std::get<0>(args);
+    return owner->Query(psargs.bindings, psargs.batch_size, psargs.timeout);
 }
 
 template<>
 nc_null_t call_method(
         StatementMethodTag<StatementCommands::execute>,
         std::shared_ptr<ConnectionAwareStatement> owner,
-        const std::tuple<std::vector<nc_variant_t>>& args) {
-    owner->Execute(std::get<0>(args));
+        const std::tuple<PreparedStatementArguments>& args) {
+    const PreparedStatementArguments& psargs = std::get<0>(args);
+    owner->Execute(psargs.bindings, psargs.batch_size, psargs.timeout);
     return nc_null_t {};
 }
 
