@@ -24,7 +24,7 @@ class BindingVisitor final : public boost::static_visitor<> {
 
     BindingVisitor(BindingVisitor&&) = delete;
     BindingVisitor(const BindingVisitor&) = delete;
-    virtual ~BindingVisitor() = default;
+    ~BindingVisitor() = default;
 
     void operator()(const nc_null_t& v) const {
         statement_ptr->bind_null(position);
@@ -80,8 +80,8 @@ void ConnectionAwareStatement::CloseCursor() {
     // END OF ORIGINAL CODE
     // Looks like for cache we still need to close cursor
     // SQLFreeStmt will have no effect in this case and SQLCloseCursor will
-    // fire with error, because we know that it is still open.
-#ifdef FREE_STMT_WORKAROUND
+    // not fire with error, because we know that it is still open.
+#ifdef FREE_STMT_WORKAROUND_ON
     if (statement.open()) {
         SQLHANDLE handle = statement.native_statement_handle();
         SQLRETURN rc = SQLCloseCursor(handle);
