@@ -59,15 +59,15 @@ void convert_cpp_type_to_js(
     Nan::HandleScope scope {};
 
     Nan::Set(time_result,
-        Nan::New<v8::String>("hour").ToLocalChecked(),
+        Nan::New<v8::String>("hours").ToLocalChecked(),
         Nan::New<v8::Number>(time.hour));
 
     Nan::Set(time_result,
-        Nan::New<v8::String>("minute").ToLocalChecked(),
+        Nan::New<v8::String>("minutes").ToLocalChecked(),
         Nan::New<v8::Number>(time.min));
 
     Nan::Set(time_result,
-        Nan::New<v8::String>("second").ToLocalChecked(),
+        Nan::New<v8::String>("seconds").ToLocalChecked(),
         Nan::New<v8::Number>(time.sec));
 }
 
@@ -84,6 +84,7 @@ void convert_cpp_type_to_js(
 
     Nan::Set(date_result,
         Nan::New<v8::String>("month").ToLocalChecked(),
+        // TODO(kko): should I index from 0 like in javascript
         Nan::New<v8::Number>(date.month));
 
     Nan::Set(date_result,
