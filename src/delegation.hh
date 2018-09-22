@@ -8,6 +8,7 @@
 #include "js_to_cpp_converters.hh"
 #include "SingleResultWorker.hh"
 
+// This is the most awkward part of the project
 // TODO(kko): carefully roll the loop back
 
 namespace NC {
@@ -85,7 +86,7 @@ try {
 
     auto* worker = new SingleResultWorker<
         typename ContextT::value_type, MethodT, ResultT,
-            std::tuple<Arg0, Arg1>>(
+        std::tuple<Arg0, Arg1>>(
             new Nan::Callback(js_callback),
             ContextT::Unwrap(info.This()),
             std::make_tuple(*arg0, *arg1));
