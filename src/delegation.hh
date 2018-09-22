@@ -39,7 +39,7 @@ try {
 template<typename ContextT, typename MethodT, typename ResultT, typename Arg0>
 NAN_METHOD(delegate_work)
 try {
-    auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
+    auto& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
     if (!arg0) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
     }
@@ -56,7 +56,7 @@ try {
                 std::tuple<Arg0>>(
             new Nan::Callback(js_callback),
             ContextT::Unwrap(info.This()),
-            std::make_tuple(*arg0));
+            std::make_tuple(std::move(*arg0)));
 
     Nan::AsyncQueueWorker(worker);
 } catch (const std::exception& e) {
@@ -67,12 +67,12 @@ template<typename ContextT, typename MethodT, typename ResultT,
     typename Arg0, typename Arg1>
 NAN_METHOD(delegate_work)
 try {
-    auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
+    auto& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
     if (!arg0) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
     }
 
-    auto&& arg1 = convert_js_type_to_cpp<Arg1>(info[1]);
+    auto& arg1 = convert_js_type_to_cpp<Arg1>(info[1]);
     if (!arg1) {
         return Nan::ThrowTypeError("Illegal argument type at position 1");
     }
@@ -89,7 +89,7 @@ try {
         std::tuple<Arg0, Arg1>>(
             new Nan::Callback(js_callback),
             ContextT::Unwrap(info.This()),
-            std::make_tuple(*arg0, *arg1));
+            std::make_tuple(std::move(*arg0), std::move(*arg1)));
 
     Nan::AsyncQueueWorker(worker);
 } catch (const std::exception& e) {
