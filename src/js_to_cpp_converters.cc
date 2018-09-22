@@ -34,12 +34,23 @@ nc_long_t get_timeout(v8::Local<v8::Object> object) {
         .get_value_or(default_timeout);
 }
 
+boost::optional<std::int16_t> get_int16_opt(
+        v8::Local<v8::Object> object,
+        const char* key) {
+    Nan::HandleScope scope {};
+
+    auto key_prop = Nan::New<v8::String>(key).ToLocalChecked();
+
+    return convert_js_type_to_cpp<std::int16_t>(
+        Nan::Get(object, key_prop).ToLocalChecked());
+}
+
 template<typename T>
 boost::optional<T> convert_js_type_to_cpp(v8::Local<v8::Value> value);
 
 template<>
-boost::optional<nc_string_t>
-        convert_js_type_to_cpp<nc_string_t>(v8::Local<v8::Value> local) {
+boost::optional<nc_string_t> convert_js_type_to_cpp(
+        v8::Local<v8::Value> local) {
     if (!local->IsString()) {
         return boost::none;
     }
@@ -49,8 +60,7 @@ boost::optional<nc_string_t>
 }
 
 template<>
-boost::optional<nc_long_t>
-        convert_js_type_to_cpp<nc_long_t>(v8::Local<v8::Value> local) {
+boost::optional<nc_long_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
     if (!local->IsNumber()) {
         return boost::none;
     }
@@ -58,7 +68,19 @@ boost::optional<nc_long_t>
 }
 
 template<>
-boost::optional<QueryArguments> convert_js_type_to_cpp<QueryArguments>(
+boost::optional<std::int16_t> convert_js_type_to_cpp(
+        v8::Local<v8::Value> local) {
+    auto n = convert_js_type_to_cpp<nc_long_t>(local);
+
+    // TODO(kko): make optional util with map function
+    if (n) {
+        return static_cast<std::int16_t>(*n);
+    }
+    return boost::none;
+}
+
+template<>
+boost::optional<QueryArguments> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     boost::optional<QueryArguments> result {};
     if (local->IsString()) {
@@ -109,18 +131,66 @@ boost::optional<nc_number_t>
     return boost::none;
 }
 
+boost::optional<nc_variant_t> convert_js_date_to_cpp(
+        v8::Local<v8::Value> local) {
+    if (!local->IsObject()) {
+        return boost::none;
+    }
+
+    boost::optional<nc_variant_t> result;
+
+    auto object = v8::Local<v8::Object>::Cast(local);
+
+    // TODO(kko): move common constants from cpp_to_js_converters
+    // TODO(kko): remove hardcoded values
+
+    auto day { get_int16_opt(object, "day") };
+    auto month { get_int16_opt(object, "month") };
+    auto year { get_int16_opt(object, "year") };
+    auto seconds { get_int16_opt(object, "seconds") };
+    auto minutes { get_int16_opt(object, "minutes") };
+    auto hours { get_int16_opt(object, "hours") };
+
+    bool is_date = day && month && year;
+    bool is_time = seconds && minutes && hours;
+
+    // TODO(kko) :refactor to prototype
+    if (is_date && is_time) {
+        auto fract { get_int16_opt(object, "fractionalSeconds").value_or(0) };
+        nc_timestamp_t ts = { *year, *month, *day, *hours,
+            *minutes, *seconds, fract };
+        result.emplace(ts);
+    }
+
+    if (is_date) {
+        nc_date_t date = { *year, *month, *day };
+        result.emplace(date);
+    }
+
+    if (is_time) {
+        nc_time_t time = { *hours, *minutes, *seconds };
+        result.emplace(time);
+    }
+
+    return result;
+}
+
 template<>
 boost::optional<nc_variant_t> convert_js_type_to_cpp<nc_variant_t>(
         v8::Local<v8::Value> local) {
     boost::optional<nc_variant_t> result {};
+
+    // TODO(kko): recurse over type list ?
     if (auto number = convert_js_type_to_cpp<nc_number_t>(local)) {
         result.emplace(*number);
     } else if (auto str = convert_js_type_to_cpp<nc_string_t>(local)) {
         result.emplace(std::move(*str));
     } else if (auto blank = convert_js_type_to_cpp<nc_null_t>(local)) {
         result.emplace(*blank);
+    } else if (auto date = convert_js_date_to_cpp(local)) {
+        result.emplace(std::move(*date));
     }
-     // TODO(kko): add support for other types
+
     return result;
 }
 
