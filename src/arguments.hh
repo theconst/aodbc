@@ -106,7 +106,6 @@ class PreparedStatementArguments {
     }
 
     void SetTimeout(const boost::optional<nc_long_t>& t) {
-        assert(t > default_batch_size);
         if (t) {
             nc_long_t val = *t;
             if (val < default_timeout) {
