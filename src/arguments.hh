@@ -15,8 +15,14 @@ class TimeoutArg final {
     static constexpr nc_long_t default_timeout = 0L;
 
     nc_long_t timeout = default_timeout;
+
  public:
-    explicit TimeoutArg(boost::optional<nc_long_t> t) {
+    static const TimeoutArg& DefaultValue() {
+        static TimeoutArg default_value { boost::none };
+        return default_value;
+    }
+
+    explicit TimeoutArg(const boost::optional<nc_long_t>& t) {
          if (t) {
             nc_long_t val = *t;
             if (val < default_timeout) {
@@ -39,7 +45,13 @@ class BatchSizeArg final {
     static constexpr nc_long_t default_batch_size = 1L;
 
     nc_long_t batch_size = default_batch_size;
+
  public:
+    static const BatchSizeArg& DefaultValue() {
+        static BatchSizeArg default_value { boost::none };
+        return default_value;
+    }
+
     explicit BatchSizeArg(const boost::optional<nc_long_t>& bs) {
         if (bs) {
             nc_long_t val = *bs;
@@ -63,8 +75,8 @@ class QueryStringArg final {
     nc_string_t query;
 
  public:
-    explicit QueryStringArg(nc_string_t q)
-        : query(std::move(q)) {
+    template<typename T>
+    explicit QueryStringArg(T&& q) : query(std::forward<T>(q)) {
     }
 
     operator const nc_string_t&() const noexcept {
@@ -80,6 +92,11 @@ class BindingsArg final {
     std::vector<nc_variant_t> bindings;
 
  public:
+    static const BindingsArg& DefaultValue() {
+        static BindingsArg default_value { std::vector<nc_variant_t>(0) };
+        return default_value;
+    }
+
     template <typename T>
     explicit BindingsArg(T&& bindings) :
         bindings(std::forward<std::vector<nc_variant_t>>(bindings)) {

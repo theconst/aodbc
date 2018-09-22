@@ -210,25 +210,23 @@ boost::optional<PreparedStatementArguments> convert_js_type_to_cpp(
 
     auto bindings { convert_js_type_to_cpp<std::vector<nc_variant_t>>(local) };
     if (bindings) {
-        // TODO(kko): more sugar ?
         result.emplace(
-            BindingsArg {std::move(*bindings) },
-            BatchSizeArg { boost::none },
-            TimeoutArg { boost::none });
+            BindingsArg { std::move(*bindings) },
+            BatchSizeArg::DefaultValue(),
+            TimeoutArg::DefaultValue());
         return result;
     }
 
-    std::vector<nc_variant_t> empty_bindings(0);
+    // TODO(kko): it will treat all jiberish as defaults
     if (!local->IsObject()) {
-        // TODO(kko): more sugar ?
-        result.emplace(BindingsArg {empty_bindings},
-             BatchSizeArg { boost::none },
-             TimeoutArg { boost::none });
+        result.emplace(BindingsArg::DefaultValue(),
+            BatchSizeArg::DefaultValue(),
+            TimeoutArg::DefaultValue());
     } else {
         auto object = Nan::To<v8::Object>(local).ToLocalChecked();
-        auto bindings = get_opt<std::vector<nc_variant_t>>(object,
-                bindings_key_name)
-            .value_or(empty_bindings);
+        auto bindings =
+            get_opt<std::vector<nc_variant_t>>(object, bindings_key_name)
+            .value_or(BindingsArg::DefaultValue());
 
         result.emplace(
             BindingsArg { std::move(bindings) },
