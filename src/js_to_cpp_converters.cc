@@ -151,7 +151,6 @@ convert_js_type_to_cpp<std::vector<nc_variant_t>>(
     return definitely_variant;
 }
 
-// TODO(kko): remove copy-pasted code
 template<>
 boost::optional<PreparedStatementArguments> convert_js_type_to_cpp<
         PreparedStatementArguments>(v8::Local<v8::Value> local) {
