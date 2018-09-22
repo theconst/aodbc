@@ -106,7 +106,10 @@ nc_result_t call_method(
     return owner->Synchronized([&](nanodbc::connection& connection) {
         const QueryArguments& qargs = std::get<0>(args);
         nanodbc::result result = nanodbc::execute(
-            connection, qargs.query, qargs.batch_size, qargs.timeout);
+            connection,
+            qargs.GetQuery(),
+            qargs.GetBatchSize(),
+            qargs.GetTimeout());
         return fetch_result_eagerly(&result);
     });
 }
@@ -137,7 +140,10 @@ nc_result_t call_method(
         std::shared_ptr<ConnectionAwareStatement> owner,
         const std::tuple<PreparedStatementArguments>& args) {
     const PreparedStatementArguments& psargs = std::get<0>(args);
-    return owner->Query(psargs.bindings, psargs.batch_size, psargs.timeout);
+    return owner->Query(
+        psargs.GetBindings(),
+        psargs.GetBatchSize(),
+        psargs.GetTimeout());
 }
 
 template<>
@@ -146,7 +152,10 @@ nc_null_t call_method(
         std::shared_ptr<ConnectionAwareStatement> owner,
         const std::tuple<PreparedStatementArguments>& args) {
     const PreparedStatementArguments& psargs = std::get<0>(args);
-    owner->Execute(psargs.bindings, psargs.batch_size, psargs.timeout);
+    owner->Execute(
+        psargs.GetBindings(),
+        psargs.GetBatchSize(),
+        psargs.GetTimeout());
     return nc_null_t {};
 }
 
