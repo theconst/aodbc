@@ -65,8 +65,13 @@ template<>
 boost::optional<QueryArguments> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     boost::optional<QueryArguments> result {};
-    if (local->IsString()) {
-        result.emplace(std::move(*convert_js_type_to_cpp<nc_string_t>(local)));
+        // TODO(kko) : more sugar?
+    if (auto query_string { convert_js_type_to_cpp<nc_string_t>(local) }) {
+        result.emplace(
+            QueryStringArg {
+                std::move(*query_string) },
+            BatchSizeArg { boost::none },
+            TimeoutArg { boost::none });
 
         return result;
     }
@@ -76,17 +81,16 @@ boost::optional<QueryArguments> convert_js_type_to_cpp(
     }
     auto object = Nan::To<v8::Object>(local).ToLocalChecked();
 
-    Nan::HandleScope scope {};
-
     auto maybe_query = get_opt<nc_string_t>(object, query_key_name);
 
     if (!maybe_query) {
         return boost::none;
     }
 
-    result.emplace(std::move(*maybe_query));
-    result->SetTimeout(get_opt<nc_long_t>(object, timeout_key_name));
-    result->SetBatchSize(get_opt<nc_long_t>(object, batch_size_key_name));
+    result.emplace(
+        QueryStringArg { std::move(*maybe_query) },
+        BatchSizeArg { get_opt<nc_long_t>(object, batch_size_key_name) },
+        TimeoutArg { get_opt<nc_long_t>(object, timeout_key_name) });
 
     return result;
 }
@@ -206,22 +210,30 @@ boost::optional<PreparedStatementArguments> convert_js_type_to_cpp(
 
     auto bindings { convert_js_type_to_cpp<std::vector<nc_variant_t>>(local) };
     if (bindings) {
-        result.emplace(std::move(*bindings));
+        // TODO(kko): more sugar ?
+        result.emplace(
+            BindingsArg {std::move(*bindings) },
+            BatchSizeArg { boost::none },
+            TimeoutArg { boost::none });
         return result;
     }
 
     std::vector<nc_variant_t> empty_bindings(0);
     if (!local->IsObject()) {
-        result.emplace(empty_bindings);
+        // TODO(kko): more sugar ?
+        result.emplace(BindingsArg {empty_bindings},
+             BatchSizeArg { boost::none },
+             TimeoutArg { boost::none });
     } else {
         auto object = Nan::To<v8::Object>(local).ToLocalChecked();
         auto bindings = get_opt<std::vector<nc_variant_t>>(object,
                 bindings_key_name)
             .value_or(empty_bindings);
 
-        result.emplace(std::move(bindings));
-        result->SetTimeout(get_opt<nc_long_t>(object, timeout_key_name));
-        result->SetBatchSize(get_opt<nc_long_t>(object, batch_size_key_name));
+        result.emplace(
+            BindingsArg { std::move(bindings) },
+            BatchSizeArg { get_opt<nc_long_t>(object, timeout_key_name) },
+            TimeoutArg { get_opt<nc_long_t>(object, batch_size_key_name) });
     }
 
     return result;

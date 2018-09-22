@@ -23,13 +23,14 @@ try {
     }
 
     auto js_callback = Nan::To<v8::Function>(arg0).ToLocalChecked();
-    Nan::AsyncQueueWorker(
-        new SingleResultWorker<
-            typename ContextT::value_type,
-            MethodT,
-            ResultT>(
-                new Nan::Callback(js_callback),
-                ContextT::Unwrap(info.This())));
+
+    auto* worker = new SingleResultWorker<
+        typename ContextT::value_type, MethodT, ResultT, std::tuple<>>(
+            new Nan::Callback(js_callback),
+            ContextT::Unwrap(info.This()),
+            std::tuple<> {});
+
+    Nan::AsyncQueueWorker(worker);
 } catch (const std::exception& e) {
     Nan::ThrowError(e.what());
 }
@@ -48,15 +49,15 @@ try {
     }
 
     auto js_callback = Nan::To<v8::Function>(arg1).ToLocalChecked();
-    Nan::AsyncQueueWorker(
-        new SingleResultWorker<
-            typename ContextT::value_type,
-            MethodT,
-            ResultT,
-            Arg0>(
-                new Nan::Callback(js_callback),
-                ContextT::Unwrap(info.This()),
-                *arg0));
+
+    auto* worker = new SingleResultWorker<
+        typename ContextT::value_type, MethodT, ResultT,
+                std::tuple<Arg0>>(
+            new Nan::Callback(js_callback),
+            ContextT::Unwrap(info.This()),
+            std::make_tuple(*arg0));
+
+    Nan::AsyncQueueWorker(worker);
 } catch (const std::exception& e) {
     Nan::ThrowError(e.what());
 }
@@ -81,17 +82,15 @@ try {
     }
 
     auto js_callback = Nan::To<v8::Function>(arg2).ToLocalChecked();
-    Nan::AsyncQueueWorker(
-        new SingleResultWorker<
-            typename ContextT::value_type,
-            MethodT,
-            ResultT,
-            Arg0,
-            Arg1>(
-                new Nan::Callback(js_callback),
-                ContextT::Unwrap(info.This()),
-                *arg0,
-                *arg1));
+
+    auto* worker = new SingleResultWorker<
+        typename ContextT::value_type, MethodT, ResultT,
+            std::tuple<Arg0, Arg1>>(
+            new Nan::Callback(js_callback),
+            ContextT::Unwrap(info.This()),
+            std::make_tuple(*arg0, *arg1));
+
+    Nan::AsyncQueueWorker(worker);
 } catch (const std::exception& e) {
     Nan::ThrowError(e.what());
 }

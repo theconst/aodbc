@@ -12,24 +12,24 @@ template <
     typename OwnerT,
     typename MethodT,
     typename ResultT,
-    typename... Args
+    typename ArgsT
 >
 class SingleResultWorker : public Nan::AsyncWorker {
  private:
     static const int number_of_arguments = 2;
 
     std::shared_ptr<OwnerT> owner_ptr;
-    std::tuple<Args...> arguments_tuple;
+    ArgsT arguments_tuple;
     ResultT result;
 
  public:
     explicit SingleResultWorker(
         Nan::Callback* callback,
         std::shared_ptr<OwnerT> owner_ptr,
-        Args... arguments)
+        ArgsT&& arguments)
             : AsyncWorker(callback, "NC::SingleResultWorker"),
               owner_ptr(owner_ptr),
-              arguments_tuple(std::forward<Args>(arguments)...),
+              arguments_tuple(std::forward<ArgsT>(arguments)),
               result() {
     }
 
@@ -42,7 +42,7 @@ class SingleResultWorker : public Nan::AsyncWorker {
                 OwnerT,
                 ResultT,
                 MethodT,
-                std::tuple<Args...>
+                ArgsT
             >(MethodT {}, owner_ptr, arguments_tuple);
         } catch (const nanodbc::database_error& db_err) {
             SetErrorMessage(db_err.what());

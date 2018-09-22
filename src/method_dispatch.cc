@@ -107,9 +107,9 @@ nc_result_t call_method(
         const QueryArguments& qargs = std::get<0>(args);
         nanodbc::result result = nanodbc::execute(
             connection,
-            qargs.GetQuery(),
-            qargs.GetBatchSize(),
-            qargs.GetTimeout());
+            std::get<0>(qargs),
+            std::get<1>(qargs),
+            std::get<2>(qargs));
         return fetch_result_eagerly(&result);
     });
 }
@@ -141,9 +141,9 @@ nc_result_t call_method(
         const std::tuple<PreparedStatementArguments>& args) {
     const PreparedStatementArguments& psargs = std::get<0>(args);
     return owner->Query(
-        psargs.GetBindings(),
-        psargs.GetBatchSize(),
-        psargs.GetTimeout());
+        std::get<0>(psargs),
+        std::get<1>(psargs),
+        std::get<2>(psargs));
 }
 
 template<>
@@ -153,9 +153,9 @@ nc_null_t call_method(
         const std::tuple<PreparedStatementArguments>& args) {
     const PreparedStatementArguments& psargs = std::get<0>(args);
     owner->Execute(
-        psargs.GetBindings(),
-        psargs.GetBatchSize(),
-        psargs.GetTimeout());
+        std::get<0>(psargs),
+        std::get<1>(psargs),
+        std::get<2>(psargs));
     return nc_null_t {};
 }
 

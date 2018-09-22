@@ -10,114 +10,94 @@
 
 namespace NC {
 
-class QueryArguments {
 
-    static constexpr nc_long_t default_batch_size = 1L;
+class TimeoutArg final {
     static constexpr nc_long_t default_timeout = 0L;
 
-    nc_string_t query;
-    nc_long_t batch_size;
-    nc_long_t timeout;
-
+    nc_long_t timeout = default_timeout;
  public:
-    explicit QueryArguments(nc_string_t query) :
-        query(std::move(query)),
-        batch_size(default_batch_size),
-        timeout(default_timeout) {
+    explicit TimeoutArg(boost::optional<nc_long_t> t) {
+         if (t) {
+            nc_long_t val = *t;
+            if (val < default_timeout) {
+                throw std::invalid_argument("Illegal timeout value");
+            }
+            timeout = val;
+        }
     }
 
-    const nc_string_t& GetQuery() const noexcept {
+    operator nc_long_t() const noexcept {
+        return timeout;
+    }
+
+    TimeoutArg(const TimeoutArg&) = default;
+    TimeoutArg(TimeoutArg&&) = default;
+    ~TimeoutArg() = default;
+};
+
+class BatchSizeArg final {
+    static constexpr nc_long_t default_batch_size = 1L;
+
+    nc_long_t batch_size = default_batch_size;
+ public:
+    explicit BatchSizeArg(const boost::optional<nc_long_t>& bs) {
+        if (bs) {
+            nc_long_t val = *bs;
+            if (val < default_batch_size) {
+                throw std::invalid_argument("Illegal batch size value");
+            }
+            batch_size = val;
+        }
+    }
+
+    operator nc_long_t() const noexcept {
+        return batch_size;
+    }
+
+    BatchSizeArg(const BatchSizeArg&) = default;
+    BatchSizeArg(BatchSizeArg&&) = default;
+    ~BatchSizeArg() = default;
+};
+
+class QueryStringArg final {
+    nc_string_t query;
+
+ public:
+    explicit QueryStringArg(nc_string_t q)
+        : query(std::move(q)) {
+    }
+
+    operator const nc_string_t&() const noexcept {
         return query;
     }
 
-    nc_long_t GetBatchSize() const noexcept {
-        return batch_size;
-    }
-
-    nc_long_t GetTimeout() const noexcept {
-        return timeout;
-    }
-
-    void SetBatchSize(const boost::optional<nc_long_t>& bs) {
-        if (bs) {
-            nc_long_t val = *bs;
-            if (val < default_batch_size) {
-                throw std::invalid_argument("Illegal batch size value");
-            }
-            batch_size = val;
-        }
-    }
-
-    void SetTimeout(const boost::optional<nc_long_t>& t) {
-        if (t) {
-            nc_long_t val = *t;
-            if (val < default_timeout) {
-                throw std::invalid_argument("Illegal timeout value");
-            }
-            timeout = val;
-        }
-    }
-
-    QueryArguments(const QueryArguments&) = default;
-    QueryArguments(QueryArguments&&) = default;
-    virtual ~QueryArguments() = default;
+    QueryStringArg(const QueryStringArg&) = default;
+    QueryStringArg(QueryStringArg&&) = default;
+    ~QueryStringArg() = default;
 };
 
-class PreparedStatementArguments {
-
-    // TODO(kko): remove this copy-paste
-    static constexpr nc_long_t default_batch_size = 1L;
-    static constexpr nc_long_t default_timeout = 0L;
-
+class BindingsArg final {
     std::vector<nc_variant_t> bindings;
-    nc_long_t batch_size;
-    nc_long_t timeout;
 
  public:
     template <typename T>
-    explicit PreparedStatementArguments(T&& bindings) :
-        bindings(std::forward<std::vector<nc_variant_t>>(bindings)),
-        batch_size(default_batch_size),
-        timeout(default_timeout) {
+    explicit BindingsArg(T&& bindings) :
+        bindings(std::forward<std::vector<nc_variant_t>>(bindings)) {
     }
 
-    const std::vector<nc_variant_t>& GetBindings() const noexcept {
+    operator const std::vector<nc_variant_t>&() const noexcept {
         return bindings;
     }
 
-    nc_long_t GetBatchSize() const noexcept {
-        return batch_size;
-    }
-
-    nc_long_t GetTimeout() const noexcept {
-        return timeout;
-    }
-
-    // TODO(kko) - compose with some timeout args
-    void SetBatchSize(const boost::optional<nc_long_t>& bs) {
-        if (bs) {
-            nc_long_t val = *bs;
-            if (val < default_batch_size) {
-                throw std::invalid_argument("Illegal batch size value");
-            }
-            batch_size = val;
-        }
-    }
-
-    void SetTimeout(const boost::optional<nc_long_t>& t) {
-        if (t) {
-            nc_long_t val = *t;
-            if (val < default_timeout) {
-                throw std::invalid_argument("Illegal timeout value");
-            }
-            timeout = val;
-        }
-    }
-
-    PreparedStatementArguments(const PreparedStatementArguments&) = default;
-    PreparedStatementArguments(PreparedStatementArguments&&) = default;
-    virtual ~PreparedStatementArguments() = default;
+    BindingsArg(const BindingsArg&) = default;
+    BindingsArg(BindingsArg&&) = default;
+    ~BindingsArg() = default;
 };
+
+using PreparedStatementArguments =
+    std::tuple<BindingsArg, BatchSizeArg, TimeoutArg>;
+using QueryArguments =
+    std::tuple<QueryStringArg, BatchSizeArg, TimeoutArg>;
 
 }  // namespace NC
 
