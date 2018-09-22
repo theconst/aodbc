@@ -19,4 +19,4 @@ enum struct ConnectionCommands {
 }  // namespace NC
 
 
-#endif
+#endif /* CONNECTIONCOMMANDS_HH */

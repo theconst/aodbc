@@ -81,7 +81,7 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
             case SQL_BINARY:
             case SQL_VARBINARY:
             case SQL_LONGVARBINARY:
-            // fallthough is intentional - try to handle
+            // fallthrough is intentional - try to handle
             // data as binary as last resort
             default:
             {
