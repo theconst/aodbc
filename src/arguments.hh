@@ -49,13 +49,12 @@ class QueryArguments {
     }
 
     void SetTimeout(const boost::optional<nc_long_t>& t) {
-        assert(t > default_batch_size);
         if (t) {
             nc_long_t val = *t;
             if (val < default_timeout) {
                 throw std::invalid_argument("Illegal timeout value");
             }
-            batch_size = val;
+            timeout = val;
         }
     }
 
@@ -111,7 +110,7 @@ class PreparedStatementArguments {
             if (val < default_timeout) {
                 throw std::invalid_argument("Illegal timeout value");
             }
-            batch_size = val;
+            timeout = val;
         }
     }
 
