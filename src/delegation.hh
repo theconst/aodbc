@@ -15,7 +15,8 @@ namespace NC {
 using NC::SingleResultWorker;
 
 template<typename ContextT, typename MethodT, typename ResultT>
-NAN_METHOD(delegate_work) {
+NAN_METHOD(delegate_work)
+try {
     v8::Local<v8::Value> arg0 = info[0];
     if (!arg0->IsFunction()) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
@@ -29,10 +30,13 @@ NAN_METHOD(delegate_work) {
             ResultT>(
                 new Nan::Callback(js_callback),
                 ContextT::Unwrap(info.This())));
+} catch (const std::exception& e) {
+    Nan::ThrowError(e.what());
 }
 
 template<typename ContextT, typename MethodT, typename ResultT, typename Arg0>
-NAN_METHOD(delegate_work) {
+NAN_METHOD(delegate_work)
+try {
     auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
     if (!arg0) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
@@ -53,11 +57,14 @@ NAN_METHOD(delegate_work) {
                 new Nan::Callback(js_callback),
                 ContextT::Unwrap(info.This()),
                 *arg0));
+} catch (const std::exception& e) {
+    Nan::ThrowError(e.what());
 }
 
 template<typename ContextT, typename MethodT, typename ResultT,
     typename Arg0, typename Arg1>
-NAN_METHOD(delegate_work) {
+NAN_METHOD(delegate_work)
+try {
     auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
     if (!arg0) {
         return Nan::ThrowTypeError("Illegal argument type at position 0");
@@ -85,6 +92,8 @@ NAN_METHOD(delegate_work) {
                 ContextT::Unwrap(info.This()),
                 *arg0,
                 *arg1));
+} catch (const std::exception& e) {
+    Nan::ThrowError(e.what());
 }
 
 }  // namespace NC
