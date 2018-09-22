@@ -14,39 +14,34 @@ const char* timeout_key_name = "timeout";
 const int default_timeout = 0;
 const int default_batch_size = 1;
 
-// TODO(kko): add constant pool
-nc_long_t get_batch_size(v8::Local<v8::Object> object) {
+const int default_frational_seconds = 0;
+
+template <typename T>
+inline boost::optional<T> get_opt(
+        v8::Local<v8::Object> object, const char* key) {
     Nan::HandleScope scope {};
 
-    auto batch_size_key = Nan::New<v8::String>(batch_size_key_name)
-        .ToLocalChecked();
-    auto batch_size_prop = Nan::Get(object, batch_size_key).ToLocalChecked();
-    return convert_js_type_to_cpp<nc_long_t>(batch_size_prop)
+    // TODO(kko): add constant pool
+    auto key_prop = Nan::New<v8::String>(key).ToLocalChecked();
+
+    auto maybe_prop = Nan::Get(object, key_prop);
+
+    if (maybe_prop.IsEmpty()) {
+        return boost::none;
+    }
+
+    return convert_js_type_to_cpp<T>(maybe_prop.ToLocalChecked());
+}
+
+inline nc_long_t get_batch_size(v8::Local<v8::Object> object) {
+    return get_opt<nc_long_t>(object, batch_size_key_name)
         .get_value_or(default_batch_size);
 }
 
-nc_long_t get_timeout(v8::Local<v8::Object> object) {
-    Nan::HandleScope scope {};
-
-    auto timeout_key = Nan::New<v8::String>(timeout_key_name).ToLocalChecked();
-    auto timeout_prop = Nan::Get(object, timeout_key).ToLocalChecked();
-    return convert_js_type_to_cpp<nc_long_t>(timeout_prop)
+inline nc_long_t get_timeout(v8::Local<v8::Object> object) {
+    return get_opt<nc_long_t>(object, timeout_key_name)
         .get_value_or(default_timeout);
 }
-
-boost::optional<std::int16_t> get_int16_opt(
-        v8::Local<v8::Object> object,
-        const char* key) {
-    Nan::HandleScope scope {};
-
-    auto key_prop = Nan::New<v8::String>(key).ToLocalChecked();
-
-    return convert_js_type_to_cpp<std::int16_t>(
-        Nan::Get(object, key_prop).ToLocalChecked());
-}
-
-template<typename T>
-boost::optional<T> convert_js_type_to_cpp(v8::Local<v8::Value> value);
 
 template<>
 boost::optional<nc_string_t> convert_js_type_to_cpp(
@@ -96,9 +91,7 @@ boost::optional<QueryArguments> convert_js_type_to_cpp(
 
     Nan::HandleScope scope {};
 
-    auto query_key = Nan::New<v8::String>(query_key_name).ToLocalChecked();
-    auto query_prop = Nan::Get(object, query_key).ToLocalChecked();
-    auto maybe_query = convert_js_type_to_cpp<nc_string_t>(query_prop);
+    auto maybe_query = get_opt<nc_string_t>(object, query_key_name);
 
     if (!maybe_query) {
         return boost::none;
@@ -123,8 +116,8 @@ boost::optional<nc_null_t>
 }
 
 template<>
-boost::optional<nc_number_t>
-        convert_js_type_to_cpp<nc_number_t>(v8::Local<v8::Value> local) {
+boost::optional<nc_number_t> convert_js_type_to_cpp(
+        v8::Local<v8::Value> local) {
     if (local->IsNumber()) {
         return nc_number_t {local->NumberValue()};
     }
@@ -144,19 +137,19 @@ boost::optional<nc_variant_t> convert_js_date_to_cpp(
     // TODO(kko): move common constants from cpp_to_js_converters
     // TODO(kko): remove hardcoded values
 
-    auto day { get_int16_opt(object, "day") };
-    auto month { get_int16_opt(object, "month") };
-    auto year { get_int16_opt(object, "year") };
-    auto seconds { get_int16_opt(object, "seconds") };
-    auto minutes { get_int16_opt(object, "minutes") };
-    auto hours { get_int16_opt(object, "hours") };
+    auto day { get_opt<std::int16_t>(object, "day") };
+    auto month { get_opt<std::int16_t>(object, "month") };
+    auto year { get_opt<std::int16_t>(object, "year") };
+    auto seconds { get_opt<std::int16_t>(object, "seconds") };
+    auto minutes { get_opt<std::int16_t>(object, "minutes") };
+    auto hours { get_opt<std::int16_t>(object, "hours") };
 
     bool is_date = day && month && year;
     bool is_time = seconds && minutes && hours;
 
-    // TODO(kko) :refactor to prototype
     if (is_date && is_time) {
-        auto fract { get_int16_opt(object, "fractionalSeconds").value_or(0) };
+        auto fract { get_opt<std::int16_t>(object, "fractionalSeconds")
+            .value_or(default_fractional_seconds) };
         nc_timestamp_t ts = { *year, *month, *day, *hours,
             *minutes, *seconds, fract };
         result.emplace(ts);
@@ -176,7 +169,7 @@ boost::optional<nc_variant_t> convert_js_date_to_cpp(
 }
 
 template<>
-boost::optional<nc_variant_t> convert_js_type_to_cpp<nc_variant_t>(
+boost::optional<nc_variant_t> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     boost::optional<nc_variant_t> result {};
 
@@ -195,8 +188,7 @@ boost::optional<nc_variant_t> convert_js_type_to_cpp<nc_variant_t>(
 }
 
 template<>
-boost::optional<std::vector<nc_variant_t>>
-convert_js_type_to_cpp<std::vector<nc_variant_t>>(
+boost::optional<std::vector<nc_variant_t>> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     if (!local->IsArray()) {
         return boost::none;
@@ -222,32 +214,30 @@ convert_js_type_to_cpp<std::vector<nc_variant_t>>(
 }
 
 template<>
-boost::optional<PreparedStatementArguments> convert_js_type_to_cpp<
-        PreparedStatementArguments>(v8::Local<v8::Value> local) {
+boost::optional<PreparedStatementArguments> convert_js_type_to_cpp(
+        v8::Local<v8::Value> local) {
     boost::optional<PreparedStatementArguments> result {};
-    if (local->IsArray()) {
-        result.emplace(std::move(
-            *convert_js_type_to_cpp<std::vector<nc_variant_t>>(local)));
 
+    auto bindings { convert_js_type_to_cpp<std::vector<nc_variant_t>>(local) };
+    if (bindings) {
+        result.emplace(std::move(*bindings));
         return result;
     }
 
-    Nan::HandleScope scope {};
+    std::vector<nc_variant_t> empty_bindings(0);
+    if (!local->IsObject()) {
+        result.emplace(empty_bindings);
+    } else {
+        auto object = Nan::To<v8::Object>(local).ToLocalChecked();
+        auto bindings = get_opt<std::vector<nc_variant_t>>(object,
+                bindings_key_name)
+            .value_or(empty_bindings);
 
-    auto object = local->IsObject()
-        ? Nan::To<v8::Object>(local).ToLocalChecked()
-        : Nan::New<v8::Object>();
-    auto bindings_key =
-        Nan::New<v8::String>(bindings_key_name).ToLocalChecked();
-    auto bindings_args = Nan::Get(object, bindings_key).ToLocalChecked();
-    auto bindings =
-        convert_js_type_to_cpp<std::vector<nc_variant_t>>(bindings_args)
-        .value_or(std::vector<nc_variant_t>(0));
-
-    result.emplace(
-        std::move(bindings),
-        get_batch_size(object),
-        get_timeout(object));
+        result.emplace(
+            std::move(bindings),
+            get_batch_size(object),
+            get_timeout(object));
+    }
 
     return result;
 }
