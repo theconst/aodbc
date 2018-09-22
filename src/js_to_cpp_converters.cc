@@ -11,10 +11,7 @@ const char* query_key_name = "query";
 const char* batch_size_key_name = "batchSize";
 const char* timeout_key_name = "timeout";
 
-const int default_timeout = 0;
-const int default_batch_size = 1;
-
-const int default_frational_seconds = 0;
+const std::int16_t default_fractional_seconds = 0;
 
 template <typename T>
 inline boost::optional<T> get_opt(
@@ -31,16 +28,6 @@ inline boost::optional<T> get_opt(
     }
 
     return convert_js_type_to_cpp<T>(maybe_prop.ToLocalChecked());
-}
-
-inline nc_long_t get_batch_size(v8::Local<v8::Object> object) {
-    return get_opt<nc_long_t>(object, batch_size_key_name)
-        .get_value_or(default_batch_size);
-}
-
-inline nc_long_t get_timeout(v8::Local<v8::Object> object) {
-    return get_opt<nc_long_t>(object, timeout_key_name)
-        .get_value_or(default_timeout);
 }
 
 template<>
@@ -97,10 +84,9 @@ boost::optional<QueryArguments> convert_js_type_to_cpp(
         return boost::none;
     }
 
-    result.emplace(
-        std::move(*maybe_query),
-        get_batch_size(object),
-        get_timeout(object));
+    result.emplace(std::move(*maybe_query));
+    result->SetTimeout(get_opt<nc_long_t>(object, timeout_key_name));
+    result->SetBatchSize(get_opt<nc_long_t>(object, batch_size_key_name));
 
     return result;
 }
@@ -233,10 +219,9 @@ boost::optional<PreparedStatementArguments> convert_js_type_to_cpp(
                 bindings_key_name)
             .value_or(empty_bindings);
 
-        result.emplace(
-            std::move(bindings),
-            get_batch_size(object),
-            get_timeout(object));
+        result.emplace(std::move(bindings));
+        result->SetTimeout(get_opt<nc_long_t>(object, timeout_key_name));
+        result->SetBatchSize(get_opt<nc_long_t>(object, batch_size_key_name));
     }
 
     return result;
