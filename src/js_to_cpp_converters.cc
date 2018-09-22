@@ -65,13 +65,11 @@ template<>
 boost::optional<QueryArguments> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     boost::optional<QueryArguments> result {};
-        // TODO(kko) : more sugar?
     if (auto query_string { convert_js_type_to_cpp<nc_string_t>(local) }) {
         result.emplace(
-            QueryStringArg {
-                std::move(*query_string) },
-            BatchSizeArg { boost::none },
-            TimeoutArg { boost::none });
+            QueryStringArg { std::move(*query_string) },
+            BatchSizeArg::DefaultValue(),
+            TimeoutArg::DefaultValue());
 
         return result;
     }
