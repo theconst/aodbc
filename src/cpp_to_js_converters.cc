@@ -101,6 +101,9 @@ void convert_cpp_type_to_js(
         DateTag<DateTypes::date>{});
     convert_cpp_type_to_js(timestamp_result, timestamp,
         DateTag<DateTypes::time>{});
+    Nan::Set(timestamp_result,
+        Nan::New<v8::String>("fractionalSeconds").ToLocalChecked(),
+        Nan::New<v8::Number>(timestamp.fract));
 }
 
 void convert_cpp_type_to_js(
