@@ -25,7 +25,7 @@ int fetch_row(nc_row_t* row, nanodbc::result* result) {
         const nc_string_t& column_name = result->column_name(col_no);
 
         if (result->is_null(column_name)) {
-            nc_variant_t blank = boost::blank();
+            nc_variant_t&& blank = boost::blank();
             row->emplace_back(column_name, blank);
 
             continue;
@@ -39,13 +39,13 @@ int fetch_row(nc_row_t* row, nanodbc::result* result) {
         case SQL_SMALLINT:
         case SQL_BIT:       // TODO(kko): check if this works
         {
-            nc_variant_t intcol { result->get<int>(col_no) };
+            nc_variant_t&& intcol { result->get<int>(col_no) };
             row->emplace_back(column_name, intcol);
         }
             break;
         case SQL_FLOAT:
         {
-            nc_variant_t floatcol { result->get<float>(col_no) };
+            nc_variant_t&& floatcol { result->get<float>(col_no) };
             row->emplace_back(column_name, floatcol);
         }
             break;
@@ -55,7 +55,7 @@ int fetch_row(nc_row_t* row, nanodbc::result* result) {
         case SQL_DOUBLE:
         case SQL_BIGINT:  // TODO(kko): check if this works
         {
-            nc_variant_t doublecol { result->get<double>(col_no) };
+            nc_variant_t&& doublecol { result->get<double>(col_no) };
             row->emplace_back(column_name, doublecol);
         }
             break;
