@@ -15,7 +15,8 @@
   },
   "scripts": {
     "clean": "node-gyp clean",
-    "compile": "node-gyp rebuild",
+    "compile": "node-gyp rebuild --release",
+    "compile:debug": "node-gyp rebuild --debug",
     "start": "node samples/nc-crud.js",
     "test": "mocha test/**spec.js --reporter spec",
     "test:unit": "mocha test/**unit.spec.js --reporter spec",
