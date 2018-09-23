@@ -4,96 +4,62 @@
 
 #include "nan.h"
 
+#include <stdexcept>
+#include <sstream>
+
 #include "arguments.hh"
 #include "js_to_cpp_converters.hh"
 #include "SingleResultWorker.hh"
-
-// This is the most awkward part of the project
-// TODO(kko): carefully roll the loop back
 
 namespace NC {
 
 using NC::SingleResultWorker;
 
-template<typename ContextT, typename MethodT, typename ResultT>
-NAN_METHOD(delegate_work)
-try {
-    v8::Local<v8::Value> arg0 = info[0];
-    if (!arg0->IsFunction()) {
-        return Nan::ThrowTypeError("Illegal argument type at position 0");
+template <std::size_t position, typename T>
+inline std::tuple<T> convert_or_else_throw(Nan::NAN_METHOD_ARGS_TYPE info) {
+    auto&& maybe_value = convert_js_type_to_cpp<T>(info[position]);
+    if (!maybe_value) {
+        std::string msg {"Illegal argument type at position "};
+        msg += std::to_string(position);
+        throw std::invalid_argument(msg);
     }
-
-    auto js_callback = Nan::To<v8::Function>(arg0).ToLocalChecked();
-
-    auto* worker = new SingleResultWorker<
-        typename ContextT::value_type, MethodT, ResultT, std::tuple<>>(
-            new Nan::Callback(js_callback),
-            ContextT::Unwrap(info.This()),
-            std::tuple<> {});
-
-    Nan::AsyncQueueWorker(worker);
-} catch (const std::exception& e) {
-    Nan::ThrowError(e.what());
+    return std::make_tuple(std::move(*maybe_value));
 }
 
-template<typename ContextT, typename MethodT, typename ResultT, typename Arg0>
-NAN_METHOD(delegate_work)
-try {
-    auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
-    if (!arg0) {
-        return Nan::ThrowTypeError("Illegal argument type at position 0");
-    }
-
-    v8::Local<v8::Value> arg1 = info[1];
-    if (!arg1->IsFunction()) {
-        return Nan::ThrowTypeError("Last argument at 1 should be callback");
-    }
-
-    auto js_callback = Nan::To<v8::Function>(arg1).ToLocalChecked();
-
-    auto* worker = new SingleResultWorker<
-        typename ContextT::value_type, MethodT, ResultT,
-                std::tuple<Arg0>>(
-            new Nan::Callback(js_callback),
-            ContextT::Unwrap(info.This()),
-            std::make_tuple(std::move(*arg0)));
-
-    Nan::AsyncQueueWorker(worker);
-} catch (const std::exception& e) {
-    Nan::ThrowError(e.what());
+template <std::size_t size>
+inline std::tuple<> convert_args(Nan::NAN_METHOD_ARGS_TYPE info) {
+    return std::tuple<> {};
 }
 
-template<typename ContextT, typename MethodT, typename ResultT,
-    typename Arg0, typename Arg1>
+template <std::size_t size, typename Arg0, typename... Args>
+inline std::tuple<Arg0, Args...> convert_args(Nan::NAN_METHOD_ARGS_TYPE info) {
+    constexpr std::size_t index = size - sizeof...(Args) - 1;
+    return std::tuple_cat(
+        convert_or_else_throw<index, Arg0>(info),
+        convert_args<size, Args...>(info));
+}
+
+template<typename ContextT, typename MethodT,
+    typename ResultT, typename... Args>
 NAN_METHOD(delegate_work)
 try {
-    auto&& arg0 = convert_js_type_to_cpp<Arg0>(info[0]);
-    if (!arg0) {
-        return Nan::ThrowTypeError("Illegal argument type at position 0");
+    constexpr std::size_t args_size = sizeof...(Args);
+    v8::Local<v8::Value> cb = info[args_size];
+    if (!cb->IsFunction()) {
+        return Nan::ThrowTypeError("Last argument should be callback");
     }
 
-    auto&& arg1 = convert_js_type_to_cpp<Arg1>(info[1]);
-    if (!arg1) {
-        return Nan::ThrowTypeError("Illegal argument type at position 1");
-    }
-
-    v8::Local<v8::Value> arg2 = info[2];
-    if (!arg2->IsFunction()) {
-        return Nan::ThrowTypeError("Last argument at 2 should be callback");
-    }
-
-    auto js_callback = Nan::To<v8::Function>(arg2).ToLocalChecked();
+    auto js_callback = Nan::To<v8::Function>(cb).ToLocalChecked();
 
     auto* worker = new SingleResultWorker<
-        typename ContextT::value_type, MethodT, ResultT,
-        std::tuple<Arg0, Arg1>>(
+        typename ContextT::value_type, MethodT, ResultT, std::tuple<Args...>>(
             new Nan::Callback(js_callback),
             ContextT::Unwrap(info.This()),
-            std::make_tuple(std::move(*arg0), std::move(*arg1)));
+            convert_args<args_size, Args...>(info));
 
     Nan::AsyncQueueWorker(worker);
 } catch (const std::exception& e) {
-    Nan::ThrowError(e.what());
+    return Nan::ThrowError(e.what());
 }
 
 }  // namespace NC
