@@ -65,7 +65,8 @@ NAN_METHOD(ODBCStatement::JsPrepare) {
     >(info);
 }
 
-NAN_METHOD(ODBCStatement::JsNew) {
+NAN_METHOD(ODBCStatement::JsNew)
+try {
     if (!info.IsConstructCall()) {
         return Nan::ThrowError(
             Nan::New("ODBC Statement should be called with new")
@@ -84,6 +85,8 @@ NAN_METHOD(ODBCStatement::JsNew) {
     odbc_statement = new ODBCStatement(ODBCConnection::Unwrap(obj0));
     odbc_statement->Wrap(info.Holder());
     info.GetReturnValue().Set(info.Holder());
+} catch (const std::exception& e) {
+    return Nan::ThrowError(e.what());
 }
 
 NAN_METHOD(ODBCStatement::JsClose) {

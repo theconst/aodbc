@@ -49,7 +49,8 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
 }
 
 
-NAN_METHOD(ODBCConnection::JsNew) {
+NAN_METHOD(ODBCConnection::JsNew)
+try {
     if (!info.IsConstructCall()) {
         return Nan::ThrowError(
             Nan::New("ODBC Connection should be called with new")
@@ -71,6 +72,8 @@ NAN_METHOD(ODBCConnection::JsNew) {
     odbc_connection->Wrap(info.Holder());
 
     info.GetReturnValue().Set(info.Holder());
+} catch (std::exception e) {
+    return Nan::ThrowError(e.what());
 }
 
 NAN_METHOD(ODBCConnection::JsConnected) {
