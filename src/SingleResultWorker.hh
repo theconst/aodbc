@@ -38,12 +38,8 @@ class SingleResultWorker : public Nan::AsyncWorker {
 
     void Execute() override {
         try {
-            result = call_method<
-                OwnerT,
-                ResultT,
-                MethodT,
-                ArgsT
-            >(MethodT {}, owner_ptr, arguments_tuple);
+            result = call_method<OwnerT, ResultT, MethodT, ArgsT>(
+                MethodT {}, owner_ptr, arguments_tuple);
         } catch (const nanodbc::database_error& db_err) {
             SetErrorMessage(db_err.what());
         } catch (const std::exception& e) {

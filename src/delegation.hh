@@ -58,8 +58,8 @@ try {
     auto js_callback = Nan::To<v8::Function>(cb).ToLocalChecked();
 
     std::unique_ptr<Nan::Callback> nan_cb { new Nan::Callback(js_callback) };
-    std::shared_ptr<CVT> context { ContextT::Unwrap(info.This()) };
     std::tuple<Args...> args { convert_args<args_size, Args...>(info) };
+    std::shared_ptr<CVT> context { ContextT::Unwrap(info.This()) };
 
     std::unique_ptr<SRW> worker {
         new SRW(nan_cb.get(), context, std::move(args)) };
