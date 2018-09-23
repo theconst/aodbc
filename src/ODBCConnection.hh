@@ -4,6 +4,8 @@
 #include <memory>
 #include <cstring>
 
+#include <exception>
+
 #include "nan.h"
 
 #include "nanodbc.h"
@@ -33,7 +35,8 @@ class ODBCConnection final : public Nan::ObjectWrap {
     static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
         char* constructor_name = *Nan::Utf8String(self->GetConstructorName());
         if (0 != std::strcmp(constructor_name, js_class_name)) {
-            Nan::ThrowTypeError("Illegal object type");
+            throw std::runtime_error(
+                "Argument should be of type ODBCConnection");
         }
 
         ODBCConnection* odbc_connection =
