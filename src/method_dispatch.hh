@@ -103,7 +103,7 @@ template<>
 nc_null_t call_method(
         ConnectionMethodTag<ConnectionCommands::execute>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        const std::tuple<nc_string_t>& args);
+        const std::tuple<QueryArguments>& args);
 
 template<>
 nc_null_t call_method(

@@ -101,7 +101,7 @@ To launch the application in Docker container, follow the following steps:
 
 - [x] Add support for setting fetch size
 - [ ] Add tracing
-- [ ] Generalize delegation code
+- [x] Generalize delegation code
 - [ ] Increase C++ test coverage
 - [x] Automate build for linux
 - [x] Add support for prepared statements

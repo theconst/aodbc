@@ -165,7 +165,7 @@ NAN_METHOD(ODBCConnection::JsExecute) {
         ODBCConnection,
         ConnectionMethodTag<ConnectionCommands::execute>,
         nc_null_t,
-        nc_string_t
+        QueryArguments
     >(info);
 }
 

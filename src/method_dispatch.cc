@@ -118,9 +118,13 @@ template<>
 nc_null_t call_method(
         ConnectionMethodTag<ConnectionCommands::execute>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        const std::tuple<nc_string_t>& args) {
+        const std::tuple<QueryArguments>& args) {
     owner->Synchronized([&](nanodbc::connection& connection) {
-        nanodbc::just_execute(connection, std::get<0>(args));
+        const QueryArguments& qargs = std::get<0>(args);
+        nanodbc::just_execute(connection,
+            std::get<0>(qargs),
+            std::get<1>(qargs),
+            std::get<2>(qargs));
     });
     return nc_null_t {};
 }
