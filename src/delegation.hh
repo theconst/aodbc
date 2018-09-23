@@ -43,9 +43,10 @@ template<typename ContextT, typename MethodT,
     typename ResultT, typename... Args>
 NAN_METHOD(delegate_work)
 try {
-    using C = typename ContextT::value_type;
+    using CVT = typename ContextT::value_type;
     using M = MethodT;
     using R = ResultT;
+    using SRW = SingleResultWorker<CVT, M, R, std::tuple<Args...>>;
 
     constexpr std::size_t args_size = sizeof...(Args);
 
@@ -56,12 +57,20 @@ try {
 
     auto js_callback = Nan::To<v8::Function>(cb).ToLocalChecked();
 
-    auto* worker = new SingleResultWorker<C, M, R, std::tuple<Args...>>(
-        new Nan::Callback(js_callback),
-        ContextT::Unwrap(info.This()),
-        convert_args<args_size, Args...>(info));
+    std::unique_ptr<Nan::Callback> nan_cb { new Nan::Callback(js_callback) };
+    std::shared_ptr<CVT> context { ContextT::Unwrap(info.This()) };
+    std::tuple<Args...> args { convert_args<args_size, Args...>(info) };
 
-    Nan::AsyncQueueWorker(worker);
+    std::unique_ptr<SRW> worker {
+        new SRW(nan_cb.get(), context, std::move(args)) };
+
+    Nan::AsyncQueueWorker(worker.get());
+
+    // resources will be freed by async worker when callback finishes
+    // see AsyncWorker::~AsyncWorker()
+    (void) nan_cb.release();
+    // see AsyncExecuteComplete and AsyncWorker::Destroy()
+    (void) worker.release();
 } catch (const std::exception& e) {
     return Nan::ThrowError(e.what());
 }
