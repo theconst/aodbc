@@ -33,24 +33,12 @@
       "target_name": "copy_nc",
       "type":"none",
       "dependencies" : [ "nc" ],
-      "configurations": {
-        "Debug" : {
-          "copies": [
-            {
-                "destination": "<(module_root_dir)/node_modules",
-                "files": ["<(module_root_dir)/build/Debug/nc.node"]
-            }
-          ],
-        },
-        "Release" : {
-          "copies": [
-            {
-                "destination": "<(module_root_dir)/node_modules",
-                "files": ["<(module_root_dir)/build/Release/nc.node"]
-            }
-          ],
-        },
-      },
+      "copies": [
+        {
+          "destination": "<(module_root_dir)/node_modules",
+          "files": ["<(module_root_dir)/build/Release/nc.node"]
+        }
+      ],
     }
   ]
 }
