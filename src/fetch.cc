@@ -19,7 +19,7 @@ nc_result_t fetch_result_eagerly(nanodbc::result* result) {
     return sql_result;
 }
 
-int fetch_row(nc_row_t* row, nanodbc::result* result) {
+inline int fetch_row(nc_row_t* row, nanodbc::result* result) {
     auto col_no = 0;
     for (; col_no < result->columns(); ++col_no) {
         const nc_string_t& column_name = result->column_name(col_no);
