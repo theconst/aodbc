@@ -43,7 +43,12 @@ template<typename ContextT, typename MethodT,
     typename ResultT, typename... Args>
 NAN_METHOD(delegate_work)
 try {
+    using C = typename ContextT::value_type;
+    using M = MethodT;
+    using R = ResultT;
+
     constexpr std::size_t args_size = sizeof...(Args);
+
     v8::Local<v8::Value> cb = info[args_size];
     if (!cb->IsFunction()) {
         return Nan::ThrowTypeError("Last argument should be callback");
@@ -51,11 +56,10 @@ try {
 
     auto js_callback = Nan::To<v8::Function>(cb).ToLocalChecked();
 
-    auto* worker = new SingleResultWorker<
-        typename ContextT::value_type, MethodT, ResultT, std::tuple<Args...>>(
-            new Nan::Callback(js_callback),
-            ContextT::Unwrap(info.This()),
-            convert_args<args_size, Args...>(info));
+    auto* worker = new SingleResultWorker<C, M, R, std::tuple<Args...>>(
+        new Nan::Callback(js_callback),
+        ContextT::Unwrap(info.This()),
+        convert_args<args_size, Args...>(info));
 
     Nan::AsyncQueueWorker(worker);
 } catch (const std::exception& e) {
