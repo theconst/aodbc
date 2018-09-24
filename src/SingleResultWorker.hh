@@ -12,10 +12,11 @@ template <
     typename OwnerT,
     typename MethodT,
     typename ResultT,
-    typename ArgsT
+    typename... Args
 >
 class SingleResultWorker : public Nan::AsyncWorker {
- private:
+    using ArgsT = std::tuple<Args...>;
+
     static const int number_of_arguments = 2;
 
     std::shared_ptr<OwnerT> owner_ptr;
@@ -23,10 +24,11 @@ class SingleResultWorker : public Nan::AsyncWorker {
     ResultT result;
 
  public:
+    template <typename T>
     explicit SingleResultWorker(
         Nan::Callback* callback,
         std::shared_ptr<OwnerT> owner_ptr,
-        ArgsT&& arguments)
+        T arguments)
             : AsyncWorker(callback, "NC::SingleResultWorker"),
               owner_ptr(owner_ptr),
               arguments_tuple(std::forward<ArgsT>(arguments)),

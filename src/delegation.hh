@@ -46,7 +46,7 @@ try {
     using CVT = typename ContextT::value_type;
     using M = MethodT;
     using R = ResultT;
-    using SRW = SingleResultWorker<CVT, M, R, std::tuple<Args...>>;
+    using SRW = SingleResultWorker<CVT, M, R, Args...>;
 
     constexpr std::size_t args_size = sizeof...(Args);
 
