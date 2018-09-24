@@ -10,6 +10,11 @@ enum struct StatementCommands {
     close
 };
 
+template<StatementCommands tag>
+struct StatementMethodTag {
+    static constexpr StatementCommands value = tag;
+};
+
 }
 
 #endif  /* STATEMENTCOMMANDS_HH */

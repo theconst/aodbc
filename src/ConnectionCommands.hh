@@ -16,6 +16,11 @@ enum struct ConnectionCommands {
     execute
 };
 
+template<ConnectionCommands tag>
+struct ConnectionMethodTag {
+    static constexpr ConnectionCommands value = tag;
+};
+
 }  // namespace NC
 
 
