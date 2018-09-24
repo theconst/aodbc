@@ -176,7 +176,7 @@ boost::optional<nc_variant_t> convert_js_type_to_cpp(
 }
 
 template<>
-boost::optional<std::vector<nc_variant_t>> convert_js_type_to_cpp(
+boost::optional<nc_bindings_t> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     if (!local->IsArray()) {
         return boost::none;
@@ -185,7 +185,7 @@ boost::optional<std::vector<nc_variant_t>> convert_js_type_to_cpp(
     auto array = v8::Local<v8::Array>::Cast(local);
     int len = array->Length();
 
-    std::vector<nc_variant_t> result {};
+    nc_bindings_t result {};
     result.reserve(len);
 
     for (int i = 0; i < len; ++i) {
@@ -196,7 +196,7 @@ boost::optional<std::vector<nc_variant_t>> convert_js_type_to_cpp(
         }
         result.emplace_back(std::move(*bound_arg));
     }
-    boost::optional<std::vector<nc_variant_t>> definitely_variant {};
+    boost::optional<nc_bindings_t> definitely_variant {};
     definitely_variant.emplace(std::move(result));
     return definitely_variant;
 }
@@ -206,7 +206,7 @@ boost::optional<PreparedStatementArguments> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     boost::optional<PreparedStatementArguments> result {};
 
-    auto bindings { convert_js_type_to_cpp<std::vector<nc_variant_t>>(local) };
+    auto bindings { convert_js_type_to_cpp<nc_bindings_t>(local) };
     if (bindings) {
         result.emplace(
             BindingsArg { std::move(*bindings) },
@@ -223,7 +223,7 @@ boost::optional<PreparedStatementArguments> convert_js_type_to_cpp(
     } else {
         auto object = Nan::To<v8::Object>(local).ToLocalChecked();
         auto bindings =
-            get_opt<std::vector<nc_variant_t>>(object, bindings_key_name)
+            get_opt<nc_bindings_t>(object, bindings_key_name)
             .value_or(BindingsArg::DefaultValue());
 
         result.emplace(

@@ -43,7 +43,7 @@ template<>
 boost::optional<nc_variant_t> convert_js_type_to_cpp(v8::Local<v8::Value>);
 
 template<>
-boost::optional<std::vector<nc_variant_t>> convert_js_type_to_cpp(
+boost::optional<nc_bindings_t> convert_js_type_to_cpp(
         v8::Local<v8::Value>);
 
 template<>

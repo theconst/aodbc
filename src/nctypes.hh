@@ -53,6 +53,8 @@ typedef std::pair<nc_string_t, nc_variant_t> nc_column_t;
 typedef std::vector<nc_column_t> nc_row_t;
 typedef std::vector<nc_row_t> nc_result_t;
 
+typedef std::vector<nc_variant_t> nc_bindings_t;
+
 }  // namespace NC
 
 #endif /* NCTYPES_HH */

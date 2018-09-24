@@ -4,6 +4,7 @@
 #include "nctypes.hh"
 
 #include <stdexcept>
+#include <tuple>
 
 #include "boost/optional.hpp"
 
@@ -89,20 +90,20 @@ class QueryStringArg final {
 };
 
 class BindingsArg final {
-    std::vector<nc_variant_t> bindings;
+    nc_bindings_t bindings;
 
  public:
     static const BindingsArg& DefaultValue() {
-        static BindingsArg default_value { std::vector<nc_variant_t>(0) };
+        static BindingsArg default_value { nc_bindings_t(0) };
         return default_value;
     }
 
     template <typename T>
     explicit BindingsArg(T&& bindings) :
-        bindings(std::forward<std::vector<nc_variant_t>>(bindings)) {
+        bindings(std::forward<nc_bindings_t>(bindings)) {
     }
 
-    operator const std::vector<nc_variant_t>&() const noexcept {
+    operator const nc_bindings_t&() const noexcept {
         return bindings;
     }
 

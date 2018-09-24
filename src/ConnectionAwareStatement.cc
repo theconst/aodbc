@@ -5,7 +5,7 @@
 #include <utility>
 #include <cstddef>
 
-#include <sql.h>
+#include "sql.h"
 
 namespace NC {
 
@@ -47,7 +47,7 @@ ConnectionAwareStatement::ConnectionAwareStatement(
 }
 
 void ConnectionAwareStatement::BindParameters(
-        const std::vector<nc_variant_t>& bound_parameters) {
+        const nc_bindings_t& bound_parameters) {
     for (std::size_t pos = 0u; pos < bound_parameters.size(); ++pos) {
         BindingVisitor visitor {&statement, pos};
         boost::apply_visitor(visitor, bound_parameters[pos]);
@@ -97,7 +97,7 @@ void ConnectionAwareStatement::CloseCursor() {
 }
 
 void ConnectionAwareStatement::Execute(
-        const std::vector<nc_variant_t>& bound_parameters,
+        const nc_bindings_t& bound_parameters,
         nc_long_t batch_size,
         nc_long_t timeout) {
     return connection_monitor->Synchronized([&](const nanodbc::connection&) {
@@ -115,7 +115,7 @@ void ConnectionAwareStatement::Prepare(
 }
 
 nc_result_t ConnectionAwareStatement::Query(
-        const std::vector<nc_variant_t>& bound_parameters,
+        const nc_bindings_t& bound_parameters,
         nc_long_t batch_size,
         nc_long_t timeout) {
     return connection_monitor->Synchronized([&](const nanodbc::connection&) {
