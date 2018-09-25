@@ -1,24 +1,16 @@
 #include "js_to_cpp_converters.hh"
 
+#include "JsKeys.hh"
+
 namespace NC {
 
 using NC::QueryArguments;
-
-const char* bindings_key_name = "bindings";
-
-const char* query_key_name = "query";
-
-const char* batch_size_key_name = "batchSize";
-const char* timeout_key_name = "timeout";
-
-const std::int16_t default_fractional_seconds = 0;
 
 template <typename T>
 inline boost::optional<T> get_opt(
         v8::Local<v8::Object> object, const char* key) {
     Nan::HandleScope scope {};
 
-    // TODO(kko): add constant pool
     auto key_prop = Nan::New<v8::String>(key).ToLocalChecked();
 
     auto maybe_prop = Nan::Get(object, key_prop);
@@ -49,16 +41,22 @@ boost::optional<nc_long_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
     return boost::make_optional(local->IntegerValue());
 }
 
-template<>
-boost::optional<std::int16_t> convert_js_type_to_cpp(
-        v8::Local<v8::Value> local) {
-    auto n = convert_js_type_to_cpp<nc_long_t>(local);
 
-    // TODO(kko): make optional util with map function
-    if (n) {
-        return static_cast<std::int16_t>(*n);
+// TODO(kko): remove copy - paste
+template<>
+boost::optional<int16_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
+    if (!local->IsNumber()) {
+        return boost::none;
     }
-    return boost::none;
+    return boost::make_optional(static_cast<int16_t>(local->IntegerValue()));
+}
+
+template<>
+boost::optional<int32_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
+    if (!local->IsNumber()) {
+        return boost::none;
+    }
+    return boost::make_optional(static_cast<int32_t>(local->IntegerValue()));
 }
 
 template<>
@@ -79,7 +77,7 @@ boost::optional<QueryArguments> convert_js_type_to_cpp(
     }
     auto object = Nan::To<v8::Object>(local).ToLocalChecked();
 
-    auto maybe_query = get_opt<nc_string_t>(object, query_key_name);
+    auto maybe_query = get_opt<nc_string_t>(object, ArgumentKeys::query);
 
     if (!maybe_query) {
         return boost::none;
@@ -87,8 +85,8 @@ boost::optional<QueryArguments> convert_js_type_to_cpp(
 
     result.emplace(
         QueryStringArg { std::move(*maybe_query) },
-        BatchSizeArg { get_opt<nc_long_t>(object, batch_size_key_name) },
-        TimeoutArg { get_opt<nc_long_t>(object, timeout_key_name) });
+        BatchSizeArg { get_opt<nc_long_t>(object, ArgumentKeys::batch_size) },
+        TimeoutArg { get_opt<nc_long_t>(object, ArgumentKeys::timeout) });
 
     return result;
 }
@@ -122,21 +120,20 @@ boost::optional<nc_variant_t> convert_js_date_to_cpp(
 
     auto object = v8::Local<v8::Object>::Cast(local);
 
-    // TODO(kko): move common constants from cpp_to_js_converters
-    // TODO(kko): remove hardcoded values
-
-    auto day { get_opt<std::int16_t>(object, "day") };
-    auto month { get_opt<std::int16_t>(object, "month") };
-    auto year { get_opt<std::int16_t>(object, "year") };
-    auto seconds { get_opt<std::int16_t>(object, "seconds") };
-    auto minutes { get_opt<std::int16_t>(object, "minutes") };
-    auto hours { get_opt<std::int16_t>(object, "hours") };
+    auto day { get_opt<int16_t>(object, DateKeys::day) };
+    auto month { get_opt<int16_t>(object, DateKeys::month) };
+    auto year { get_opt<int16_t>(object, DateKeys::year) };
+    auto seconds { get_opt<int16_t>(object, DateKeys::seconds) };
+    auto minutes { get_opt<int16_t>(object, DateKeys::minutes) };
+    auto hours { get_opt<int16_t>(object, DateKeys::hours) };
 
     bool is_date = day && month && year;
     bool is_time = seconds && minutes && hours;
 
     if (is_date && is_time) {
-        auto fract { get_opt<std::int16_t>(object, "fractionalSeconds")
+        constexpr int32_t default_fractional_seconds = 0;
+        auto fract {
+            get_opt<int32_t>(object, DateKeys::fractionalSeconds)
             .value_or(default_fractional_seconds) };
         nc_timestamp_t ts = { *year, *month, *day, *hours,
             *minutes, *seconds, fract };
@@ -206,31 +203,31 @@ boost::optional<PreparedStatementArguments> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     boost::optional<PreparedStatementArguments> result {};
 
-    auto bindings { convert_js_type_to_cpp<nc_bindings_t>(local) };
-    if (bindings) {
+    if (auto bindings { convert_js_type_to_cpp<nc_bindings_t>(local) }) {
         result.emplace(
             BindingsArg { std::move(*bindings) },
             BatchSizeArg::DefaultValue(),
             TimeoutArg::DefaultValue());
+
         return result;
     }
 
-    // TODO(kko): it will treat all jiberish as defaults
     if (!local->IsObject()) {
         result.emplace(BindingsArg::DefaultValue(),
             BatchSizeArg::DefaultValue(),
             TimeoutArg::DefaultValue());
-    } else {
-        auto object = Nan::To<v8::Object>(local).ToLocalChecked();
-        auto bindings =
-            get_opt<nc_bindings_t>(object, bindings_key_name)
+
+        return result;
+    }
+
+    auto object = Nan::To<v8::Object>(local).ToLocalChecked();
+    auto bindings = get_opt<nc_bindings_t>(object, ArgumentKeys::bindings)
             .value_or(BindingsArg::DefaultValue());
 
-        result.emplace(
-            BindingsArg { std::move(bindings) },
-            BatchSizeArg { get_opt<nc_long_t>(object, timeout_key_name) },
-            TimeoutArg { get_opt<nc_long_t>(object, batch_size_key_name) });
-    }
+    result.emplace(
+        BindingsArg { std::move(bindings) },
+        BatchSizeArg { get_opt<nc_long_t>(object, ArgumentKeys::timeout) },
+        TimeoutArg { get_opt<nc_long_t>(object, ArgumentKeys::batch_size) });
 
     return result;
 }

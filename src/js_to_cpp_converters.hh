@@ -31,10 +31,13 @@ template<>
 boost::optional<nc_number_t> convert_js_type_to_cpp(v8::Local<v8::Value>);
 
 template<>
-boost::optional<std::int16_t> convert_js_type_to_cpp(v8::Local<v8::Value>);
+boost::optional<nc_long_t> convert_js_type_to_cpp(v8::Local<v8::Value>);
 
 template<>
-boost::optional<nc_long_t> convert_js_type_to_cpp(v8::Local<v8::Value>);
+boost::optional<int16_t> convert_js_type_to_cpp(v8::Local<v8::Value>);
+
+template<>
+boost::optional<int32_t> convert_js_type_to_cpp(v8::Local<v8::Value>);
 
 template<>
 boost::optional<QueryArguments> convert_js_type_to_cpp(v8::Local<v8::Value>);
