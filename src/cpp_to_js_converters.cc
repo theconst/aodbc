@@ -2,6 +2,8 @@
 
 #include "nan.h"
 
+#include "JsKeys.hh"
+
 namespace NC {
 
 void convert_cpp_type_to_js(
@@ -59,15 +61,15 @@ void convert_cpp_type_to_js(
     Nan::HandleScope scope {};
 
     Nan::Set(time_result,
-        Nan::New<v8::String>("hours").ToLocalChecked(),
+        Nan::New<v8::String>(DateKeys::hours).ToLocalChecked(),
         Nan::New<v8::Number>(time.hour));
 
     Nan::Set(time_result,
-        Nan::New<v8::String>("minutes").ToLocalChecked(),
+        Nan::New<v8::String>(DateKeys::minutes).ToLocalChecked(),
         Nan::New<v8::Number>(time.min));
 
     Nan::Set(time_result,
-        Nan::New<v8::String>("seconds").ToLocalChecked(),
+        Nan::New<v8::String>(DateKeys::seconds).ToLocalChecked(),
         Nan::New<v8::Number>(time.sec));
 }
 
@@ -79,16 +81,16 @@ void convert_cpp_type_to_js(
     Nan::HandleScope scope {};
 
     Nan::Set(date_result,
-        Nan::New<v8::String>("day").ToLocalChecked(),
+        Nan::New<v8::String>(DateKeys::day).ToLocalChecked(),
         Nan::New<v8::Number>(date.day));
 
     Nan::Set(date_result,
-        Nan::New<v8::String>("month").ToLocalChecked(),
+        Nan::New<v8::String>(DateKeys::month).ToLocalChecked(),
         // TODO(kko): should I index from 0 like in javascript
         Nan::New<v8::Number>(date.month));
 
     Nan::Set(date_result,
-        Nan::New<v8::String>("year").ToLocalChecked(),
+        Nan::New<v8::String>(DateKeys::year).ToLocalChecked(),
         Nan::New<v8::Number>(date.year));
 }
 
@@ -102,7 +104,7 @@ void convert_cpp_type_to_js(
     convert_cpp_type_to_js(timestamp_result, timestamp,
         DateTag<DateTypes::time>{});
     Nan::Set(timestamp_result,
-        Nan::New<v8::String>("fractionalSeconds").ToLocalChecked(),
+        Nan::New<v8::String>(DateKeys::fractionalSeconds).ToLocalChecked(),
         Nan::New<v8::Number>(timestamp.fract));
 }
 
