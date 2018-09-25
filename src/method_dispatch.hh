@@ -112,7 +112,6 @@ inline nc_result_t call_method(
     return owner->Synchronized([&](nanodbc::connection& connection) {
         const QueryArguments& qargs = std::get<0>(args);
 
-        // TODO(kko): write generic tuple to function call expansion
         nanodbc::result result = nanodbc::execute(
             connection,
             std::get<0>(qargs),
