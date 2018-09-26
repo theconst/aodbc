@@ -113,24 +113,32 @@ class BindingsArg final {
 };
 
 class PreparedStatementArguments {
-    std::tuple<BindingsArg, BatchSizeArg, TimeoutArg> wrapee;
+    BindingsArg bindings;
+    BatchSizeArg batch_size;
+    TimeoutArg timeout;
 
  public:
-    template<typename... Args>
-    explicit PreparedStatementArguments(Args&&... args)
-        : wrapee(std::forward<Args>(args)...) {
+
+    // TODO(kko) should I really make them behave like tuples??
+    PreparedStatementArguments(
+            BindingsArg ba,
+            BatchSizeArg bs,
+            TimeoutArg t)
+        : bindings(std::move(ba)),
+          batch_size(std::move(bs)),
+          timeout(std::move(t))  {
     }
 
     const BindingsArg& GetBindings() const noexcept {
-        return std::get<0>(wrapee);
+        return bindings;
     }
 
     const BatchSizeArg& GetBatchSize() const noexcept {
-        return std::get<1>(wrapee);
+        return batch_size;
     }
 
     const TimeoutArg& GetTimeout() const noexcept {
-        return std::get<2>(wrapee);
+        return timeout;
     }
 
     PreparedStatementArguments(const PreparedStatementArguments&) = default;
@@ -140,24 +148,30 @@ class PreparedStatementArguments {
 
 
 class QueryArguments {
-    std::tuple<QueryStringArg, BatchSizeArg, TimeoutArg> wrapee;
+    QueryStringArg query_string;
+    BatchSizeArg batch_size;
+    TimeoutArg timeout;
 
  public:
-    template<typename... Args>
-    explicit QueryArguments(Args&&... args)
-        : wrapee(std::forward<Args>(args)...) {
+    QueryArguments(
+            QueryStringArg qs,
+            BatchSizeArg bs,
+            TimeoutArg t)
+        : query_string(std::move(qs)),
+          batch_size(std::move(bs)),
+          timeout(std::move(t))  {
     }
 
     const QueryStringArg& GetQuery() const noexcept {
-        return std::get<0>(wrapee);
+        return query_string;
     }
 
     const BatchSizeArg& GetBatchSize() const noexcept {
-        return std::get<1>(wrapee);
+        return batch_size;
     }
 
     const TimeoutArg& GetTimeout() const noexcept {
-        return std::get<2>(wrapee);
+        return timeout;
     }
 
     QueryArguments(const QueryArguments&) = default;
