@@ -1,5 +1,7 @@
 #include "js_to_cpp_converters.hh"
 
+#include <limits>
+
 #include "JsKeys.hh"
 
 namespace NC {
@@ -42,21 +44,27 @@ boost::optional<nc_long_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
 }
 
 
-// TODO(kko): remove copy - paste
 template<>
 boost::optional<int16_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    if (!local->IsNumber()) {
+    if (!local->IsInt32()) {
         return boost::none;
     }
-    return boost::make_optional(static_cast<int16_t>(local->IntegerValue()));
+    auto value { local->Int32Value() };
+    if (value >= std::numeric_limits<int16_t>::max()) {
+        return boost::none;
+    }
+    if (value <= std::numeric_limits<int16_t>::min()) {
+        return boost::none;
+    }
+    return boost::make_optional(static_cast<int16_t>(value));
 }
 
 template<>
 boost::optional<int32_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    if (!local->IsNumber()) {
+    if (!local->IsInt32()) {
         return boost::none;
     }
-    return boost::make_optional(static_cast<int32_t>(local->IntegerValue()));
+    return boost::make_optional(local->Int32Value());
 }
 
 template<>
@@ -163,7 +171,6 @@ boost::optional<nc_variant_t> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     boost::optional<nc_variant_t> result {};
 
-    // TODO(kko): recurse over type list ?
     if (auto number = convert_js_type_to_cpp<nc_number_t>(local)) {
         result.emplace(*number);
     } else if (auto str = convert_js_type_to_cpp<nc_string_t>(local)) {
