@@ -78,7 +78,7 @@ inline nc_string_t call_method(
 inline nc_null_t call_method(
         ConnectionMethodTag<ConnectionCommands::connect>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
-        const std::tuple<nc_string_t, nc_long_t>& args) {
+        const std::tuple<nc_string_t, TimeoutArg>& args) {
     owner->Synchronized([&](nanodbc::connection& connection) {
         connection.connect(std::get<0>(args), std::get<1>(args));
     });
@@ -112,11 +112,10 @@ inline nc_result_t call_method(
     return owner->Synchronized([&](nanodbc::connection& connection) {
         const QueryArguments& qargs = std::get<0>(args);
 
-        nanodbc::result result = nanodbc::execute(
-            connection,
-            std::get<0>(qargs),
-            std::get<1>(qargs),
-            std::get<2>(qargs));
+        nanodbc::result result = nanodbc::execute(connection,
+            qargs.GetQuery(),
+            qargs.GetBatchSize(),
+            qargs.GetTimeout());
         return fetch_result_eagerly(&result);
     });
 }
@@ -127,10 +126,8 @@ inline nc_null_t call_method(
         const std::tuple<QueryArguments>& args) {
     owner->Synchronized([&](nanodbc::connection& connection) {
         const QueryArguments& qargs = std::get<0>(args);
-        nanodbc::just_execute(connection,
-            std::get<0>(qargs),
-            std::get<1>(qargs),
-            std::get<2>(qargs));
+        nanodbc::just_execute(connection, qargs.GetQuery(),
+            qargs.GetBatchSize(), qargs.GetTimeout());
     });
     return nc_null_t {};
 }
@@ -148,8 +145,8 @@ inline nc_result_t call_method(
         std::shared_ptr<ConnectionAwareStatement> owner,
         const std::tuple<PreparedStatementArguments>& args) {
     const PreparedStatementArguments& psargs = std::get<0>(args);
-    return owner->Query(std::get<0>(psargs), std::get<1>(psargs),
-        std::get<2>(psargs));
+    return owner->Query(psargs.GetBindings(), psargs.GetBatchSize(),
+            psargs.GetTimeout());
 }
 
 inline nc_null_t call_method(
@@ -157,8 +154,8 @@ inline nc_null_t call_method(
         std::shared_ptr<ConnectionAwareStatement> owner,
         const std::tuple<PreparedStatementArguments>& args) {
     const PreparedStatementArguments& psargs = std::get<0>(args);
-    owner->Execute(std::get<0>(psargs), std::get<1>(psargs),
-        std::get<2>(psargs));
+    owner->Execute(psargs.GetBindings(), psargs.GetBatchSize(),
+        psargs.GetTimeout());
     return nc_null_t {};
 }
 

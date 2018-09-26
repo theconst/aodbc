@@ -112,10 +112,59 @@ class BindingsArg final {
     ~BindingsArg() = default;
 };
 
-using PreparedStatementArguments =
-    std::tuple<BindingsArg, BatchSizeArg, TimeoutArg>;
-using QueryArguments =
-    std::tuple<QueryStringArg, BatchSizeArg, TimeoutArg>;
+class PreparedStatementArguments {
+    std::tuple<BindingsArg, BatchSizeArg, TimeoutArg> wrapee;
+
+ public:
+    template<typename... Args>
+    explicit PreparedStatementArguments(Args&&... args)
+        : wrapee(std::forward<Args>(args)...) {
+    }
+
+    const BindingsArg& GetBindings() const noexcept {
+        return std::get<0>(wrapee);
+    }
+
+    const BatchSizeArg& GetBatchSize() const noexcept {
+        return std::get<1>(wrapee);
+    }
+
+    const TimeoutArg& GetTimeout() const noexcept {
+        return std::get<2>(wrapee);
+    }
+
+    PreparedStatementArguments(const PreparedStatementArguments&) = default;
+    PreparedStatementArguments(PreparedStatementArguments&&) = default;
+    ~PreparedStatementArguments() = default;
+};
+
+
+class QueryArguments {
+    std::tuple<QueryStringArg, BatchSizeArg, TimeoutArg> wrapee;
+
+ public:
+    template<typename... Args>
+    explicit QueryArguments(Args&&... args)
+        : wrapee(std::forward<Args>(args)...) {
+    }
+
+    const QueryStringArg& GetQuery() const noexcept {
+        return std::get<0>(wrapee);
+    }
+
+    const BatchSizeArg& GetBatchSize() const noexcept {
+        return std::get<1>(wrapee);
+    }
+
+    const TimeoutArg& GetTimeout() const noexcept {
+        return std::get<2>(wrapee);
+    }
+
+    QueryArguments(const QueryArguments&) = default;
+    QueryArguments(QueryArguments&&) = default;
+    ~QueryArguments() = default;
+};
+
 
 }  // namespace NC
 

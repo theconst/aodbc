@@ -85,6 +85,7 @@ NAN_METHOD(ODBCConnection::JsConnected) {
 }
 
 NAN_METHOD(ODBCConnection::JsConnect) {
+    // TODO(kko): make Either<T1, T2>
     static constexpr int number_of_args_with_timeout = 2 + 1;
     int len = info.Length();
     if (len >= number_of_args_with_timeout) {
@@ -93,7 +94,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
             ConnectionMethodTag<ConnectionCommands::connect>,
             nc_null_t,
             nc_string_t,
-            nc_long_t
+            TimeoutArg
         >(info);
     } else {
         return delegate_work<

@@ -40,6 +40,9 @@ template<>
 boost::optional<int32_t> convert_js_type_to_cpp(v8::Local<v8::Value>);
 
 template<>
+boost::optional<TimeoutArg> convert_js_type_to_cpp(v8::Local<v8::Value>);
+
+template<>
 boost::optional<QueryArguments> convert_js_type_to_cpp(v8::Local<v8::Value>);
 
 template<>

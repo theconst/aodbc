@@ -102,6 +102,11 @@ boost::optional<nc_null_t>
 }
 
 template<>
+boost::optional<TimeoutArg> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
+    return TimeoutArg { convert_js_type_to_cpp<nc_long_t>(local) };
+}
+
+template<>
 boost::optional<nc_number_t> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
     if (local->IsNumber()) {
