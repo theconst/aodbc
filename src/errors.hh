@@ -27,6 +27,8 @@ try {
     return Nan::ThrowRangeError(re.what());
 } catch (const std::exception& e) {
     return Nan::ThrowError(e.what());
+} catch (...) {
+    return Nan::ThrowError("[Fatal] Uncaught exception in the main thread");
 }
 
 }  // namespace NC
