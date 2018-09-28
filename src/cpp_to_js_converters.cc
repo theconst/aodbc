@@ -2,7 +2,7 @@
 
 #include "nan.h"
 
-#include "JsKeys.hh"
+#include "js_keys.hh"
 
 namespace NC {
 
