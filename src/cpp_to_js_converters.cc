@@ -1,10 +1,14 @@
 #include "cpp_to_js_converters.hh"
 
+#include <cstdint>
+
 #include "nan.h"
 
 #include "js_keys.hh"
 
 namespace NC {
+
+namespace {
 
 void convert_cpp_type_to_js(
     v8::Local<v8::Object> result,
@@ -126,20 +130,19 @@ void convert_cpp_type_to_js(
     convert_cpp_type_to_js(result, date, DateTag<DateTypes::datetime>{});
 }
 
-template<>
-v8::Local<v8::Value> convert_cpp_type_to_js<nanodbc::string>(
-        const nc_string_t& arg) {
+}  // namespace
+
+v8::Local<v8::Value> convert_cpp_type_to_js(const nc_string_t& arg) {
     Nan::EscapableHandleScope scope {};
     return scope.Escape(Nan::New<v8::String>(arg).ToLocalChecked());
 }
 
-template<>
 v8::Local<v8::Value> convert_cpp_type_to_js(const nc_result_t& sql_result) {
     Nan::EscapableHandleScope scope {};
     SQLColumnVisitor visitor {};
 
     auto js_result = Nan::New<v8::Array>(sql_result.size());
-    int c = 0;
+    uint32_t c = 0U;
     for (const auto& row : sql_result) {
         v8::Local<v8::Object> result_row = Nan::New<v8::Object>();
         for (const auto& column : row) {
@@ -153,14 +156,12 @@ v8::Local<v8::Value> convert_cpp_type_to_js(const nc_result_t& sql_result) {
     return scope.Escape(js_result);
 }
 
-template<>
-v8::Local<v8::Value> convert_cpp_type_to_js(const bool& boolean_value) {
+v8::Local<v8::Value> convert_cpp_type_to_js(bool value) {
     Nan::EscapableHandleScope scope {};
-    return scope.Escape(Nan::New<v8::Boolean>(boolean_value));
+    return scope.Escape(Nan::New<v8::Boolean>(value));
 }
 
-template<>
-v8::Local<v8::Value> convert_cpp_type_to_js(const nc_null_t&) {
+v8::Local<v8::Value> convert_cpp_type_to_js(nc_null_t) {
     Nan::EscapableHandleScope scope {};
     return scope.Escape(Nan::Null());
 }

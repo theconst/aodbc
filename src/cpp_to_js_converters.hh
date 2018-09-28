@@ -7,22 +7,10 @@
 
 namespace NC {
 
-template<typename T>
-v8::Local<v8::Value> convert_cpp_type_to_js(const T&);
-
-
-template<>
-v8::Local<v8::Value> convert_cpp_type_to_js<nc_string_t>(
-    const nc_string_t& arg);
-
-template<>
-v8::Local<v8::Value> convert_cpp_type_to_js(const nc_result_t& sql_result);
-
-template<>
-v8::Local<v8::Value> convert_cpp_type_to_js(const bool& boolean_value);
-
-template<>
-v8::Local<v8::Value> convert_cpp_type_to_js(const nc_null_t&);
+v8::Local<v8::Value> convert_cpp_type_to_js(const nc_string_t&);
+v8::Local<v8::Value> convert_cpp_type_to_js(const nc_result_t&);
+v8::Local<v8::Value> convert_cpp_type_to_js(bool);
+v8::Local<v8::Value> convert_cpp_type_to_js(nc_null_t);
 
 }  // namespace NC
 
