@@ -36,8 +36,7 @@ class ODBCStatement final : public Nan::ObjectWrap {
     static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
         char* constructor_name = *Nan::Utf8String(self->GetConstructorName());
         if (0 != std::strcmp(constructor_name, js_class_name)) {
-            throw std::runtime_error(
-                "Argument should be of type ODBCStatement");
+            throw Error("Argument should be of type ODBCStatement");
         }
 
         auto* odbc_statement = Nan::ObjectWrap::Unwrap<ODBCStatement>(self);

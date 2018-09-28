@@ -1,9 +1,8 @@
 #include "ODBCStatement.hh"
 
+#include "errors.hh"
 #include "ConnectionAwareStatement.hh"
-
 #include "delegation.hh"
-
 #include "StatementCommands.hh"
 
 namespace NC {
@@ -68,15 +67,13 @@ NAN_METHOD(ODBCStatement::JsPrepare) {
 NAN_METHOD(ODBCStatement::JsNew)
 try {
     if (!info.IsConstructCall()) {
-        return Nan::ThrowError(
-            Nan::New("ODBC Statement should be called with new")
-            .ToLocalChecked());
+        throw Error("ODBC Statement should be called with new");
     }
 
     v8::Local<v8::Value> arg0 { info[0] };
 
     if (!arg0->IsObject()) {
-        return Nan::ThrowError("Error: connection should be object");
+        throw Error("Error: connection should be object");
     }
 
     v8::Local<v8::Object> obj0 { arg0->ToObject() };
@@ -85,8 +82,8 @@ try {
     odbc_statement = new ODBCStatement(ODBCConnection::Unwrap(obj0));
     odbc_statement->Wrap(info.Holder());
     info.GetReturnValue().Set(info.Holder());
-} catch (const std::exception& e) {
-    return Nan::ThrowError(e.what());
+} catch (...) {
+    handle_error();
 }
 
 NAN_METHOD(ODBCStatement::JsClose) {

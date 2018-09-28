@@ -3,20 +3,20 @@
 
 #include <memory>
 #include <cstring>
-
 #include <exception>
 
 #include "nan.h"
-
 #include "nanodbc.h"
 
+#include "errors.hh"
 #include "nctypes.hh"
-
 #include "UVMonitor.hh"
 
 namespace NC {
 
 using NC::UVMonitor;
+
+using NC::Error;
 
 class ODBCConnection final : public Nan::ObjectWrap {
  public:
@@ -35,8 +35,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
         char* constructor_name = *Nan::Utf8String(self->GetConstructorName());
         if (0 != std::strcmp(constructor_name, js_class_name)) {
-            throw std::runtime_error(
-                "Argument should be of type ODBCConnection");
+            throw Error("Argument should be of type ODBCConnection");
         }
 
         ODBCConnection* odbc_connection =

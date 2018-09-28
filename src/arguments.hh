@@ -8,12 +8,14 @@
 
 #include "boost/optional.hpp"
 
+#include "errors.hh"
 
 namespace NC {
 
+using NC::RangeError;
 
 class TimeoutArg final {
-    static constexpr nc_long_t default_timeout = 0L;
+    static constexpr const nc_long_t default_timeout = 0L;
 
     nc_long_t timeout = default_timeout;
 
@@ -27,7 +29,7 @@ class TimeoutArg final {
          if (t) {
             nc_long_t val = *t;
             if (val < default_timeout) {
-                throw std::invalid_argument("Illegal timeout value");
+                throw RangeError("Illegal timeout value");
             }
             timeout = val;
         }
@@ -57,7 +59,7 @@ class BatchSizeArg final {
         if (bs) {
             nc_long_t val = *bs;
             if (val < default_batch_size) {
-                throw std::invalid_argument("Illegal batch size value");
+                throw RangeError("Illegal batch size value");
             }
             batch_size = val;
         }
@@ -118,8 +120,6 @@ class PreparedStatementArguments {
     TimeoutArg timeout;
 
  public:
-
-    // TODO(kko) should I really make them behave like tuples??
     PreparedStatementArguments(
             BindingsArg ba,
             BatchSizeArg bs,

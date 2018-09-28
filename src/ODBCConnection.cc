@@ -52,9 +52,7 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
 NAN_METHOD(ODBCConnection::JsNew)
 try {
     if (!info.IsConstructCall()) {
-        return Nan::ThrowError(
-            Nan::New("ODBC Connection should be called with new")
-            .ToLocalChecked());
+        throw Error("ODBC Connection should be called with new");
     }
 
     v8::Local<v8::Value> connection_string_js = info[0];
@@ -66,14 +64,14 @@ try {
     } else if (connection_string_js->IsUndefined()) {
        odbc_connection = new ODBCConnection();
     } else {
-       return Nan::ThrowTypeError("Argument should be of type string");
+       throw TypeError("Argument should be of type string");
     }
 
     odbc_connection->Wrap(info.Holder());
 
     info.GetReturnValue().Set(info.Holder());
-} catch (std::exception e) {
-    return Nan::ThrowError(e.what());
+} catch (...) {
+    handle_error();
 }
 
 NAN_METHOD(ODBCConnection::JsConnected) {

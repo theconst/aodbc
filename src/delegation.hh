@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <sstream>
 
+#include "errors.hh"
 #include "arguments.hh"
 #include "js_to_cpp_converters.hh"
 #include "SingleResultWorker.hh"
@@ -15,13 +16,15 @@ namespace NC {
 
 using NC::SingleResultWorker;
 
+using NC::TypeError;
+
 template <std::size_t position, typename T>
 inline std::tuple<T> convert_or_else_throw(Nan::NAN_METHOD_ARGS_TYPE info) {
     auto&& maybe_value = convert_js_type_to_cpp<T>(info[position]);
     if (!maybe_value) {
         std::string msg {"Illegal argument type at position "};
         msg += std::to_string(position);
-        throw std::invalid_argument(msg);
+        throw TypeError(msg);
     }
     return std::make_tuple(std::move(*maybe_value));
 }
@@ -52,7 +55,7 @@ try {
 
     v8::Local<v8::Value> cb = info[args_size];
     if (!cb->IsFunction()) {
-        return Nan::ThrowTypeError("Last argument should be callback");
+        throw TypeError("Last argument should be a callback");
     }
 
     auto js_callback = Nan::To<v8::Function>(cb).ToLocalChecked();
@@ -71,8 +74,8 @@ try {
     (void) nan_cb.release();
     // see AsyncExecuteComplete and AsyncWorker::Destroy()
     (void) worker.release();
-} catch (const std::exception& e) {
-    return Nan::ThrowError(e.what());
+} catch(...) {
+    handle_error();
 }
 
 }  // namespace NC

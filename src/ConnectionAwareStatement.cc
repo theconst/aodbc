@@ -1,11 +1,11 @@
 #include "ConnectionAwareStatement.hh"
 
-#include "fetch.hh"
-
 #include <utility>
 #include <cstddef>
 
 #include "sql.h"
+
+#include "fetch.hh"
 
 namespace NC {
 

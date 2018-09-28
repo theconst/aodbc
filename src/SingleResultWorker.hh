@@ -17,7 +17,9 @@ template <
 class SingleResultWorker : public Nan::AsyncWorker {
     using ArgsT = std::tuple<Args...>;
 
-    static const int number_of_arguments = 2;
+    // number of arguments in standard nodejs callback
+    // (error + return value)
+    static constexpr const int number_of_arguments = 2;
 
     std::shared_ptr<OwnerT> owner_ptr;
     ArgsT arguments_tuple;
@@ -38,14 +40,14 @@ class SingleResultWorker : public Nan::AsyncWorker {
     SingleResultWorker(const SingleResultWorker&) = delete;
     SingleResultWorker(SingleResultWorker&&) = delete;
 
-    void Execute() override {
-        try {
-            result = call_method(MethodT {}, owner_ptr, arguments_tuple);
-        } catch (const nanodbc::database_error& db_err) {
-            SetErrorMessage(db_err.what());
-        } catch (const std::exception& e) {
-            SetErrorMessage(e.what());
-        }
+    void Execute() override
+    try {
+        result = call_method(MethodT {}, owner_ptr, arguments_tuple);
+    } catch (const std::exception& e) {
+        SetErrorMessage(e.what());
+    } catch (...) {
+        // TODO(kko): provide something more sane than just tag
+        SetErrorMessage("[Fatal] unhandled error inside worker thread");
     }
 
     void HandleOKCallback() override {
