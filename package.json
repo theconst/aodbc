@@ -1,12 +1,10 @@
 {
-  "name": "NC",
+  "name": "nanodbc.js",
   "version": "1.0.0",
   "description": "NC - javascript library for ODBC access to Intersystems Cache",
   "main": "src/js/main/index.js",
   "dependencies": {
-    "bluebird": "^3.5.1",
-    "nan": "^2.10.0",
-    "squel": "^5.12.2"
+    "nan": "^2.10.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
@@ -22,7 +20,7 @@
     "test:unit": "mocha test/**unit.spec.js --reporter spec",
     "test:integration": "mocha test/**integration.spec.js --reporter spec",
     "test:integration:statement": "mocha test/*statement.integration.spec.js --reporter spec",
-    "test:stress": "node samples/nc-stress-test.js --max_old_space_size=100"
+    "test:stress": "node test/nc.stress.test.js --max_old_space_size=100"
   },
   "repository": {
     "type": "git",

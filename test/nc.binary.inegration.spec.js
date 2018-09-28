@@ -1,11 +1,13 @@
 'use strict';
 
+const config = require('./config.json');
+
 const expect = require('chai').expect;
 
 //TODO(kko): with introduction of execute I can migrate to tests with full fixture
 
 describe('ODBC Connection integration tests', function() {
-  const INTEGRATION_TEST_DSN = 'DSN=CacheWinHost';
+  const INTEGRATION_TEST_DSN = config["dsn"];
 
   this.timeout(60000);
 

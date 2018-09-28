@@ -1,10 +1,12 @@
 'use strict';
 
+const config = require('./config');
+
 const expect = require('chai').expect;
 
 describe('ODBC Connection integration tests', function () {
     
-    const INTEGRATION_TEST_DSN = 'DSN=CacheWinHost';
+    const INTEGRATION_TEST_DSN = config["dsn"];
 
     this.timeout(60000);
 

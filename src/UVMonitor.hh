@@ -44,7 +44,7 @@ class UVMonitor {
 
     template<typename F>
     auto Synchronized(F func) -> decltype(func(object)) {
-        UVMutexLock lock{mutex_handle};
+        UVMutexLock lock { mutex_handle };
         return func(object);
     }
 
