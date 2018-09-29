@@ -32,6 +32,11 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
         return scope.Escape(Nan::New<v8::Number>(doubleValue));
     }
 
+    v8::Local<v8::Value> operator()(const nc_long_t& longValue) const {
+        Nan::EscapableHandleScope scope {};
+        return scope.Escape(Nan::New<v8::Number>(longValue));
+    }
+
     v8::Local<v8::Value> operator()(const nc_string_t& str) const {
         Nan::EscapableHandleScope scope {};
         return scope.Escape(
@@ -41,11 +46,11 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
     v8::Local<v8::Value> operator()(const nc_binary_t& binary) const {
         Nan::EscapableHandleScope scope {};
 
-        size_t raw_size = binary.size() * sizeof(nc_binary_t::value_type);
+        std::size_t raw_size = binary.size() * sizeof(nc_binary_t::value_type);
 
         // node::Encode copies the buffer and hands it off to GC
         return scope.Escape(
-            Nan::Encode(binary.data(), raw_size, Nan::Encoding::BUFFER));
+            Nan::Encode(binary.data(), raw_size, Nan::Encoding::BINARY));
     }
 
     template <typename T>

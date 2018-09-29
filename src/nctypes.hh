@@ -35,12 +35,13 @@ typedef nanodbc::timestamp nc_timestamp_t;
 
 typedef double nc_number_t;
 
-typedef long nc_long_t;  // NOLINT(runtime/int)
+typedef int64_t nc_long_t;  // NOLINT(runtime/int)
 
 typedef short nc_short_t;  // NOLINT(runtime/int)
 
 typedef boost::variant<
     nc_null_t,
+    nc_long_t,
     nc_number_t,
     nc_string_t,
     nc_date_t,

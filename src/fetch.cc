@@ -14,20 +14,16 @@ inline nc_variant_t get_value_at(nanodbc::result* result, int col_no) {
 
     int datatype { result->column_datatype(col_no) };
     switch (datatype) {
-    case SQL_TINYINT:  // less than 16-bit
+    case SQL_TINYINT:
     case SQL_SMALLINT:
     case SQL_BIT:
-        return result->get<int>(col_no);
-
-    case SQL_INTEGER:  // 32-bit integer
+    case SQL_INTEGER:
         return result->get<nc_long_t>(col_no);
 
     case SQL_FLOAT:
-        return result->get<float>(col_no);
-
     case SQL_REAL:
     case SQL_DOUBLE:
-        return result->get<double>(col_no);
+        return result->get<nc_number_t>(col_no);
 
     case SQL_NUMERIC:   // higher-precision values stored as string
     case SQL_DECIMAL:
