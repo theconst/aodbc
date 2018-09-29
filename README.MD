@@ -38,7 +38,7 @@ To launch the application in Docker container, follow the following steps:
 - [ ] Increase C++ test coverage
 - [x] Automate build for linux
 - [x] Add support for prepared statements
-    - [ ] Add support for dates in prepared statements 
+    - [x] Add support for dates in prepared statements 
 - [ ] Add support for transactions
 - [x] Add support for binary type
 - [ ] Add support for Windows
