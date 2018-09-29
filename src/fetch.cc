@@ -25,7 +25,8 @@ inline nc_variant_t get_value_at(nanodbc::result* result, int col_no) {
     case SQL_DOUBLE:
         return result->get<nc_number_t>(col_no);
 
-    case SQL_NUMERIC:   // higher-precision values stored as string
+    case SQL_CHAR:
+    case SQL_NUMERIC:
     case SQL_DECIMAL:
     case SQL_BIGINT:
         return result->get<nc_string_t>(col_no);
