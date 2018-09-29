@@ -1,3 +1,4 @@
 {
-    "dsn" : "DSN=CacheWinHost"
+    "dsn" : "DSN=CacheWinHost",
+    "timeout" : 120000
 }
