@@ -11,8 +11,6 @@ This library aims to provide a simple access to ODBC data sources for node js fo
 
 **<span style="color:red"> WARNING </span>** - Work in progress.
 
-See "samples" directory for examples.
-
 See test specs for a comprehensive example
 
 # Launch steps
@@ -28,7 +26,7 @@ To launch the application in Docker container, follow the following steps:
     `docker run -t --network host nc:latest &`
     - For Windows, follow the instructions on https://stackoverflow.com/questions/40746453/how-to-connect-to-docker-host-from-container-on-windows-10-docker-for-windows or if you happen to launch Caché in docker, connect the two via bridge network.
 6. `docker exec -it <docker_image_id> /bin/bash`
-7. `./samples/nc-crud.js` will run the sample of the library
+7. `npm t` will run the test for the library
 
 # TODO List
 
