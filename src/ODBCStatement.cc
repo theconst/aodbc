@@ -76,12 +76,13 @@ try {
         throw Error("Error: connection should be object");
     }
 
-    v8::Local<v8::Object> obj0 { arg0->ToObject() };
-
-    ODBCStatement* odbc_statement {};
-    odbc_statement = new ODBCStatement(ODBCConnection::Unwrap(obj0));
+    auto connection = ODBCConnection::Unwrap(arg0->ToObject());
+    std::unique_ptr<ODBCStatement> odbc_statement {
+        new ODBCStatement(connection) };
     odbc_statement->Wrap(info.Holder());
     info.GetReturnValue().Set(info.Holder());
+
+    (void) odbc_statement.release();
 } catch (...) {
     handle_error();
 }

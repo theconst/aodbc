@@ -33,9 +33,8 @@ class ODBCConnection final : public Nan::ObjectWrap {
     virtual ~ODBCConnection() = default;
 
     static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
-        char* constructor_name = *Nan::Utf8String(self->GetConstructorName());
-        if (0 != std::strcmp(constructor_name, js_class_name)) {
-            throw Error("Argument should be of type ODBCConnection");
+        if (!Nan::New(js_constructor)->HasInstance(self)) {
+            throw Error("Argument should be derived from ODBCConnection");
         }
 
         ODBCConnection* odbc_connection =
