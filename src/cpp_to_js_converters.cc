@@ -1,6 +1,7 @@
 #include "cpp_to_js_converters.hh"
 
 #include <cstdint>
+#include <ctime>
 
 #include "nan.h"
 
@@ -10,15 +11,57 @@ namespace NC {
 
 namespace {
 
-void convert_cpp_type_to_js(
-    v8::Local<v8::Object> result,
-    const nc_date_t& date);
-void convert_cpp_type_to_js(
-    v8::Local<v8::Object> result,
-    const nc_time_t& date);
-void convert_cpp_type_to_js(
-    v8::Local<v8::Object> result,
-    const nc_timestamp_t& date);
+typedef struct std::tm TM;
+
+template<typename T>
+struct TimeConverter {
+    static void Convert(TM* time_result, const T& time) {
+        time_result->tm_hour = time.hour;
+        time_result->tm_min = time.min;
+        time_result->tm_sec = time.sec;
+
+        time_result->tm_isdst = -1;
+    }
+};
+
+template<typename T>
+struct DateConverter {
+    static void Convert(TM* date_result, const T& date) {
+        static constexpr const int16_t start_year = 1900;
+        static constexpr const int16_t start_month = 1;
+
+        date_result->tm_mday = date.day;
+        date_result->tm_mon = date.month - start_month;
+        date_result->tm_year = date.year - start_year;
+    }
+};
+
+inline void convert_cpp_type_to_js(TM* res, const nc_date_t& date) {
+    DateConverter<nc_date_t>::Convert(res, date);
+}
+
+inline void convert_cpp_type_to_js(TM* res, const nc_time_t& time) {
+    TimeConverter<nc_time_t>::Convert(res, time);
+}
+
+inline void convert_cpp_type_to_js(TM* res, const nc_timestamp_t& ts) {
+    DateConverter<nc_timestamp_t>::Convert(res, ts);
+    TimeConverter<nc_timestamp_t>::Convert(res, ts);
+}
+
+template <typename T>
+struct Fraction {
+    static inline int16_t Get(const T&) {
+        return 0;
+    }
+};
+
+template<>
+struct Fraction<nc_timestamp_t> {
+    static inline int16_t Get(const nc_timestamp_t& ts) {
+        return ts.fract;
+    }
+};
 
 struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
 
@@ -53,87 +96,23 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
             Nan::Encode(binary.data(), raw_size, Nan::Encoding::BINARY));
     }
 
-    template <typename T>
+    template<typename T>
     v8::Local<v8::Value> operator()(const T& t) const {
+        static constexpr const int millis_in_seconds = 1000;
+
+        TM time {};
+        convert_cpp_type_to_js(&time, t);
+
+        std::time_t ts = std::mktime(&time);
+        nc_number_t millis = ts * millis_in_seconds;
+        nc_number_t total = millis + Fraction<T>::Get(t);
+
         Nan::EscapableHandleScope scope {};
-        v8::Local<v8::Object> result = Nan::New<v8::Object>();
-        convert_cpp_type_to_js(result, t);
+        auto result { Nan::New<v8::Date>(total).ToLocalChecked() };
         return scope.Escape(result);
     }
 };
 
-template<typename T>
-void convert_cpp_type_to_js(
-        v8::Local<v8::Object> time_result,
-        const T& time,
-        DateTag<DateTypes::time>) {
-    Nan::HandleScope scope {};
-
-    Nan::Set(time_result,
-        Nan::New<v8::String>(DateKeys::hours).ToLocalChecked(),
-        Nan::New<v8::Number>(time.hour));
-
-    Nan::Set(time_result,
-        Nan::New<v8::String>(DateKeys::minutes).ToLocalChecked(),
-        Nan::New<v8::Number>(time.min));
-
-    Nan::Set(time_result,
-        Nan::New<v8::String>(DateKeys::seconds).ToLocalChecked(),
-        Nan::New<v8::Number>(time.sec));
-}
-
-template<typename T>
-void convert_cpp_type_to_js(
-        v8::Local<v8::Object> date_result,
-        const T& date,
-        DateTag<DateTypes::date>) {
-    Nan::HandleScope scope {};
-
-    Nan::Set(date_result,
-        Nan::New<v8::String>(DateKeys::day).ToLocalChecked(),
-        Nan::New<v8::Number>(date.day));
-
-    Nan::Set(date_result,
-        Nan::New<v8::String>(DateKeys::month).ToLocalChecked(),
-        // TODO(kko): should I index from 0 like in javascript
-        Nan::New<v8::Number>(date.month));
-
-    Nan::Set(date_result,
-        Nan::New<v8::String>(DateKeys::year).ToLocalChecked(),
-        Nan::New<v8::Number>(date.year));
-}
-
-template<typename T>
-void convert_cpp_type_to_js(
-        v8::Local<v8::Object> timestamp_result,
-        const T& timestamp,
-        DateTag<DateTypes::datetime>) {
-    convert_cpp_type_to_js(timestamp_result, timestamp,
-        DateTag<DateTypes::date>{});
-    convert_cpp_type_to_js(timestamp_result, timestamp,
-        DateTag<DateTypes::time>{});
-    Nan::Set(timestamp_result,
-        Nan::New<v8::String>(DateKeys::fractionalSeconds).ToLocalChecked(),
-        Nan::New<v8::Number>(timestamp.fract));
-}
-
-void convert_cpp_type_to_js(
-        v8::Local<v8::Object> result,
-        const nc_date_t& date) {
-    convert_cpp_type_to_js(result, date, DateTag<DateTypes::date>{});
-}
-
-void convert_cpp_type_to_js(
-        v8::Local<v8::Object> result,
-        const nc_time_t& date) {
-    convert_cpp_type_to_js(result, date, DateTag<DateTypes::time>{});
-}
-
-void convert_cpp_type_to_js(
-        v8::Local<v8::Object> result,
-        const nc_timestamp_t& date) {
-    convert_cpp_type_to_js(result, date, DateTag<DateTypes::datetime>{});
-}
 
 }  // namespace
 
