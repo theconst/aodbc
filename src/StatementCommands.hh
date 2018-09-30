@@ -7,7 +7,8 @@ enum struct StatementCommands {
     prepare,
     execute,
     query,
-    close
+    close,
+    is_open
 };
 
 template<StatementCommands tag>
@@ -15,6 +16,6 @@ struct StatementMethodTag {
     static constexpr StatementCommands value = tag;
 };
 
-}
+}  // namespace NC
 
 #endif  /* STATEMENTCOMMANDS_HH */

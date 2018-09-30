@@ -25,7 +25,19 @@ describe('ODBC Statement integration tests', function () {
     it('should create prepared statement', function(done) {
         expect(statement).to.exist;
 
-        done();
+        statement.isOpen((err, res) => {
+            expect(err).to.not.exist;
+            expect(res).to.be.false;
+
+            statement.prepare('select 1 as P', err => {
+                statement.isOpen((err, res) => {
+                    expect(err).to.not.exist;
+                    expect(res).to.be.true;
+
+                    done();
+                });
+            });
+        });
     });
 
     it('should execute prepared statement with no args 1', function(done) {

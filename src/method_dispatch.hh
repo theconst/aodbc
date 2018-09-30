@@ -167,6 +167,13 @@ inline nc_null_t call_method(
     return nc_null_t {};
 }
 
+inline bool call_method(
+        StatementMethodTag<StatementCommands::is_open>,
+        std::shared_ptr<ConnectionAwareStatement> owner,
+        const std::tuple<>&) {
+    return owner->IsOpen();
+}
+
 }  // namespace NC
 
 #endif  /* METHODDISPATCH_HH */

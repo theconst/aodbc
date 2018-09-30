@@ -31,6 +31,7 @@ NAN_MODULE_INIT(ODBCStatement::Init) {
     Nan::SetPrototypeMethod(tpl, "execute", JsExecute);
     Nan::SetPrototypeMethod(tpl, "prepare", JsPrepare);
     Nan::SetPrototypeMethod(tpl, "close", JsClose);
+    Nan::SetPrototypeMethod(tpl, "isOpen", JsOpen);
 
     Nan::Set(target,
         Nan::New(js_class_name).ToLocalChecked(),
@@ -94,5 +95,14 @@ NAN_METHOD(ODBCStatement::JsClose) {
         nc_null_t
     >(info);
 }
+
+NAN_METHOD(ODBCStatement::JsOpen) {
+    return delegate_work<
+        ODBCStatement,
+        StatementMethodTag<StatementCommands::is_open>,
+        bool
+    >(info);
+}
+
 
 }  // namespace NC

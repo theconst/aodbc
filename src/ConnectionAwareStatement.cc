@@ -133,4 +133,10 @@ void ConnectionAwareStatement::Close() {
     });
 }
 
+bool ConnectionAwareStatement::IsOpen() {
+    return connection_monitor->Synchronized([&](const nanodbc::connection) {
+        return statement.open();
+    });
+}
+
 }  // namespace NC

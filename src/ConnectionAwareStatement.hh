@@ -32,6 +32,8 @@ class ConnectionAwareStatement final {
     nc_result_t Query(const nc_bindings_t& bound_parameters,
         nc_long_t batch_size = 1L, nc_long_t timeout = 0L);
 
+    bool IsOpen();
+
     void Close();
 
     ConnectionAwareStatement(const ConnectionAwareStatement&) = delete;
