@@ -45,7 +45,9 @@ describe('ODBC Statement integration tests', function () {
         statement.prepare('Select 1 as Q', (err) => {
             expect(err).to.not.exist;
 
-            statement.query({}, (err, res) => {
+            statement.query({
+                batchSize: 2,
+            }, (err, res) => {
                 expect(err).to.not.exist;
                 expect(res).to.deep.equal([{'Q': 1}]);
 

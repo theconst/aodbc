@@ -372,29 +372,9 @@ describe('should convert date and time', function() {
                     // TODO(kko): add support for native dates
                     // we can use db-specific functions to convert to strings, if we need to
                     'name': 'Alice',
-                    'last_visit': {
-                        day: 1,
-                        month: 9,
-                        year: 2003,
-                        hours: 1,
-                        minutes: 0,
-                        seconds: 0,
-                        fractionalSeconds: 0
-                    },
-                    'last_visit2': {
-                        day: 1,
-                        month: 9,
-                        year: 2003,
-                        hours: 22,
-                        minutes: 0,
-                        seconds: 0,
-                        fractionalSeconds: 0
-                    },
-                    'birthday': {
-                        day: 2,
-                        month: 1,
-                        year: 1995,
-                    },
+                    'last_visit': new Date(2003, 8, 1, 1, 0, 0),
+                    'last_visit2': new Date(2003, 8, 1, 22, 0, 0),
+                    'birthday': new Date(1995, 0, 2),
                 },
             ]);
         });
