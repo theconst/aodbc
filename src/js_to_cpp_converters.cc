@@ -37,21 +37,19 @@ boost::optional<nc_string_t> convert_js_type_to_cpp(
 
 template<>
 boost::optional<nc_long_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    auto maybe_value { Nan::To<nc_long_t>(local) };
-    if (maybe_value.IsNothing()) {
+    if (!local->IsNumber()) {
         return boost::none;
     }
-    return boost::make_optional(maybe_value.FromJust());
+    return boost::make_optional(Nan::To<nc_long_t>(local).FromJust());
 }
 
 
 template<>
 boost::optional<int16_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    auto maybe_value { Nan::To<int32_t>(local) };
-    if (maybe_value.IsNothing()) {
+    if (!local->IsNumber()) {
         return boost::none;
     }
-    auto value { maybe_value.FromJust() };
+    auto value { Nan::To<int32_t>(local).FromJust() };
     if (value >= std::numeric_limits<int16_t>::max()) {
         return boost::none;
     }
@@ -63,11 +61,11 @@ boost::optional<int16_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
 
 template<>
 boost::optional<int32_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    auto maybe_value { Nan::To<int32_t>(local) };
-    if (maybe_value.IsNothing()) {
+    // strict checks are used to prevent implicit conversions
+    if (!local->IsNumber()) {
         return boost::none;
     }
-    return boost::make_optional(maybe_value.FromJust());
+    return boost::make_optional(Nan::To<int32_t>(local).FromJust());
 }
 
 template<>
@@ -120,11 +118,10 @@ boost::optional<TimeoutArg> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
 template<>
 boost::optional<nc_number_t> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
-    auto maybe_number { Nan::To<nc_number_t>(local) };
-    if (maybe_number.IsJust()) {
-        return nc_number_t { maybe_number.FromJust() };
+    if (!local->IsNumber()) {
+        return boost::none;
     }
-    return boost::none;
+    return nc_number_t { Nan::To<nc_number_t>(local).FromJust() };
 }
 
 
