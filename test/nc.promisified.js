@@ -1,3 +1,5 @@
+'use strict'
+
 const nc = require("nc");
 const {promisifyAll} = require('bluebird');
 const squel = require("squel");
