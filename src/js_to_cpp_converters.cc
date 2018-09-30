@@ -37,19 +37,21 @@ boost::optional<nc_string_t> convert_js_type_to_cpp(
 
 template<>
 boost::optional<nc_long_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    if (!local->IsNumber()) {
+    auto maybe_value { Nan::To<nc_long_t>(local) };
+    if (maybe_value.IsNothing()) {
         return boost::none;
     }
-    return boost::make_optional(local->IntegerValue());
+    return boost::make_optional(maybe_value.FromJust());
 }
 
 
 template<>
 boost::optional<int16_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    if (!local->IsInt32()) {
+    auto maybe_value { Nan::To<int32_t>(local) };
+    if (maybe_value.IsNothing()) {
         return boost::none;
     }
-    auto value { local->Int32Value() };
+    auto value { maybe_value.FromJust() };
     if (value >= std::numeric_limits<int16_t>::max()) {
         return boost::none;
     }
@@ -61,10 +63,11 @@ boost::optional<int16_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
 
 template<>
 boost::optional<int32_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    if (!local->IsInt32()) {
+    auto maybe_value { Nan::To<int32_t>(local) };
+    if (maybe_value.IsNothing()) {
         return boost::none;
     }
-    return boost::make_optional(local->Int32Value());
+    return boost::make_optional(maybe_value.FromJust());
 }
 
 template<>
@@ -79,11 +82,11 @@ boost::optional<QueryArguments> convert_js_type_to_cpp(
 
         return result;
     }
-
-    if (!local->IsObject()) {
+    auto maybe_object { Nan::To<v8::Object>(local) };
+    if (maybe_object.IsEmpty()) {
         return boost::none;
     }
-    auto object = Nan::To<v8::Object>(local).ToLocalChecked();
+    auto object = maybe_object.ToLocalChecked();
 
     auto maybe_query = get_opt<nc_string_t>(object, ArgumentKeys::query);
 
@@ -117,21 +120,26 @@ boost::optional<TimeoutArg> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
 template<>
 boost::optional<nc_number_t> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
-    if (local->IsNumber()) {
-        return nc_number_t {local->NumberValue()};
+    auto maybe_number { Nan::To<nc_number_t>(local) };
+    if (maybe_number.IsJust()) {
+        return nc_number_t { maybe_number.FromJust() };
     }
     return boost::none;
 }
 
+
+// use string or the object to execute queries
+// TODO(kko): remove this feature
 boost::optional<nc_variant_t> convert_js_date_to_cpp(
         v8::Local<v8::Value> local) {
-    if (!local->IsObject()) {
+    auto maybe_object { Nan::To<v8::Object>(local) };
+    if (maybe_object.IsEmpty()) {
         return boost::none;
     }
 
     boost::optional<nc_variant_t> result;
 
-    auto object = v8::Local<v8::Object>::Cast(local);
+    auto object { maybe_object.ToLocalChecked() };
 
     auto day { get_opt<int16_t>(object, DateKeys::day) };
     auto month { get_opt<int16_t>(object, DateKeys::month) };
@@ -224,7 +232,9 @@ boost::optional<PreparedStatementArguments> convert_js_type_to_cpp(
         return result;
     }
 
-    if (!local->IsObject()) {
+    auto maybe_object { Nan::To<v8::Object>(local) };
+
+    if (maybe_object.IsEmpty()) {
         result.emplace(BindingsArg::DefaultValue(),
             BatchSizeArg::DefaultValue(),
             TimeoutArg::DefaultValue());
@@ -232,14 +242,14 @@ boost::optional<PreparedStatementArguments> convert_js_type_to_cpp(
         return result;
     }
 
-    auto object = Nan::To<v8::Object>(local).ToLocalChecked();
+    auto object { maybe_object.ToLocalChecked() };
     auto bindings = get_opt<nc_bindings_t>(object, ArgumentKeys::bindings)
             .value_or(BindingsArg::DefaultValue());
 
     result.emplace(
         BindingsArg { std::move(bindings) },
-        BatchSizeArg { get_opt<nc_long_t>(object, ArgumentKeys::timeout) },
-        TimeoutArg { get_opt<nc_long_t>(object, ArgumentKeys::batch_size) });
+        BatchSizeArg { get_opt<nc_long_t>(object, ArgumentKeys::batch_size) },
+        TimeoutArg { get_opt<nc_long_t>(object, ArgumentKeys::timeout) });
 
     return result;
 }
