@@ -1,5 +1,5 @@
 {
-  "name": "nanodbc.js",
+  "name": "nanodbc",
   "version": "1.0.0",
   "description": "NC - javascript library for ODBC access to Intersystems Cache",
   "main": "src/js/main/index.js",
