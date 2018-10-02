@@ -37,8 +37,13 @@ class UVMonitor {
 
     UVMonitor(UVMonitor &&other) = delete;
 
-    template <typename F>
+    template<typename F>
     auto operator()(F func) -> decltype(func(object)) {
+        return Synchronized(func);
+    }
+
+    template<typename F>
+    auto operator()(F func) -> decltype(func()) {
         return Synchronized(func);
     }
 
@@ -46,6 +51,12 @@ class UVMonitor {
     auto Synchronized(F func) -> decltype(func(object)) {
         UVMutexLock lock { mutex_handle };
         return func(object);
+    }
+
+    template<typename F>
+    auto Synchronized(F func) -> decltype(func()) {
+        UVMutexLock lock { mutex_handle };
+        return func();
     }
 
     virtual ~UVMonitor() {
