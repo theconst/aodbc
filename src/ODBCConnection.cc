@@ -1,5 +1,6 @@
 #include "ODBCConnection.hh"
 
+#include <memory>
 #include <utility>
 
 #include "delegation.hh"
@@ -55,21 +56,12 @@ try {
         throw Error("ODBC Connection should be called with new");
     }
 
-    v8::Local<v8::Value> connection_string_js = info[0];
-
-    ODBCConnection* odbc_connection {};
-    if (connection_string_js->IsString()) {
-       odbc_connection = new ODBCConnection(
-           *Nan::Utf8String(connection_string_js));
-    } else if (connection_string_js->IsUndefined()) {
-       odbc_connection = new ODBCConnection();
-    } else {
-       throw TypeError("Argument should be of type string");
-    }
-
+    std::unique_ptr<ODBCConnection> odbc_connection { new ODBCConnection() };
     odbc_connection->Wrap(info.Holder());
 
     info.GetReturnValue().Set(info.Holder());
+
+    (void) odbc_connection.release();
 } catch (...) {
     handle_error();
 }
