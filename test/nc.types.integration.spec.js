@@ -13,18 +13,18 @@ const log = require('./logger');
 const INTEGRATION_TEST_DSN = config["dsn"];
 const TIMEOUT = config["timeout"];
 
-describe('should convert big integer data type', function() {
+describe('BIGINT spec', function() {
     this.timeout(TIMEOUT);
-    const connection = nc.createConnection(INTEGRATION_TEST_DSN);
     const table = 'Sample.BigIntegerTestTable';
+    const connection = nc.createConnection();
     
     before(function() {
-        return connection.executePromise(`
-            CREATE TABLE ${table}(
-                id CHAR(10),
-                val BIGINT
-            )
-        `);
+        return connection.connectPromise(INTEGRATION_TEST_DSN)
+            .then(() => connection.executePromise(
+                `CREATE TABLE ${table}(
+                    id CHAR(10),
+                    val BIGINT
+                )`));
     });
 
     it('should convert big integer datatype', function() {
@@ -39,7 +39,7 @@ describe('should convert big integer data type', function() {
             // only negative quadrillions are supported (no negative quintillionss)
             `INSERT INTO ${table}(id, val) VALUES ('ZMINA', -999999999999999999)`,
             `INSERT INTO ${table}(id, val) VALUES ('ZZZZ', NULL)`,
-        ].map(v => connection.executePromise(v))).then(() => 
+        ]).map(v => connection.executePromise(v)).then(() => 
             connection.queryPromise({
                 query: `SELECT * FROM ${table} ORDER BY id`,
                 batchSize: 6,
@@ -84,19 +84,20 @@ describe('should convert big integer data type', function() {
 });
 
 
-describe('should convert big integer data type', function() {
+describe('BINARY spec', function() {
     this.timeout(TIMEOUT);
-    const connection = nc.createConnection(INTEGRATION_TEST_DSN);
+    const connection = nc.createConnection();
     const table = 'Sample.BinaryTestTable';
     
     before(function() {
-        return connection.executePromise(`
+        return connection.connectPromise(INTEGRATION_TEST_DSN)
+        .then(() => connection.executePromise(`
             CREATE TABLE ${table}(
                 name CHAR(10),
                 photo BINARY(5),
                 CONSTRAINT BIPK PRIMARY KEY(name)
             )
-        `);
+        `));
     });
 
     it('should convert binary datatype', function() {
@@ -132,19 +133,20 @@ describe('should convert big integer data type', function() {
 });
 
 
-describe('Should convert bit datatype', function() {
+describe('BIT spec', function() {
     this.timeout(TIMEOUT);
-    const connection = nc.createConnection(INTEGRATION_TEST_DSN);
+    const connection = nc.createConnection();
     const table = 'Sample.BitTestTable';
 
     before(function() {
-        return connection.executePromise(`
+        return connection.connectPromise(INTEGRATION_TEST_DSN)
+        .then(() => connection.executePromise(`
             CREATE TABLE ${table}(
                 record CHAR(30),
                 valid BIT,
                 CONSTRAINT RECORDPK PRIMARY KEY(record)
             )
-        `);
+        `));
     });
     
 
@@ -177,7 +179,7 @@ describe('Should convert bit datatype', function() {
 
     after(function() {
         return connection.executePromise(`DROP TABLE ${table}`);
-    })
+    });
 });
 
 [
@@ -190,16 +192,17 @@ describe('Should convert bit datatype', function() {
 
 describe(`should convert ${alias} datatype`, function() {
     const table = `Sample.CharacterTestTable${i}`;
-    const connection = nc.createConnection(INTEGRATION_TEST_DSN);
+    const connection = nc.createConnection();
 
     before(function() {
-        return connection.executePromise(`
+        return connection.connectPromise(INTEGRATION_TEST_DSN)
+        .then(() => connection.executePromise(`
             CREATE TABLE ${table}(
                 name CHAR(10),
                 info ${alias},
                 CONSTRAINT CHPK PRIMARY KEY(name)
             )
-        `);
+        `));
     });
 
     it('should successfully convert values', function() {
@@ -264,16 +267,17 @@ describe(`should convert ${alias} datatype`, function() {
 
     describe(`should convert ${alias} datatype`, function() {
         const table = `Sample.CharacterTestTable${i}`;
-        const connection = nc.createConnection(INTEGRATION_TEST_DSN);
+        const connection = nc.createConnection();
     
         before(function() {
-            return connection.executePromise(`
+            return connection.connectPromise(INTEGRATION_TEST_DSN)
+            .then(() => connection.executePromise(`
                 CREATE TABLE ${table}(
                     name CHAR(10),
                     info ${alias},
                     CONSTRAINT CHPK PRIMARY KEY(name)
                 )
-            `);
+            `));
         });
     
         it('should successfully convert values', function() {
@@ -336,11 +340,12 @@ describe(`should convert ${alias} datatype`, function() {
 
 
 describe('should convert date and time', function() {
-    const connection = nc.createConnection(INTEGRATION_TEST_DSN);
+    const connection = nc.createConnection();
     const table = 'Sample.DateTestTable';
     
     before(function() {
-        return connection.executePromise(`
+        return connection.connectPromise(INTEGRATION_TEST_DSN)
+        .then(() => connection.executePromise(`
             CREATE TABLE ${table}(
                 name CHAR(10),
                 last_visit DATETIME,
@@ -348,7 +353,7 @@ describe('should convert date and time', function() {
                 birthday DATE,
                 CONSTRAINT BIPK PRIMARY KEY(name)
             )
-        `);
+        `));
     });
 
     it('should convert dates and times datatype', function() {
@@ -388,11 +393,12 @@ describe('should convert date and time', function() {
 
 describe('should convert integers', function() {
     this.timeout(TIMEOUT);
-    const connection = nc.createConnection(INTEGRATION_TEST_DSN);
+    const connection = nc.createConnection();
     const table = 'Sample.IntegerTable';
     
     before(function() {
-        return connection.executePromise(`
+        return connection.connectPromise(INTEGRATION_TEST_DSN)
+        .then(() => connection.executePromise(`
             CREATE TABLE ${table}(
                 id INT,
                 tint TINYINT,
@@ -401,7 +407,7 @@ describe('should convert integers', function() {
                 numric NUMERIC(8),
                 CONSTRAINT IDPK PRIMARY KEY(id)
             )
-        `);
+        `));
     });
 
     it('should convert integers in range', function() {

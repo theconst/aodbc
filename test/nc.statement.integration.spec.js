@@ -4,21 +4,23 @@ const config = require('./config');
 
 const expect = require('chai').expect;
 
+const nc = require('nc');
+
 describe('ODBC Statement integration tests', function () {
     
     const INTEGRATION_TEST_DSN = config["dsn"];
 
     this.timeout(60000);
 
-    let nc;
     let connection;
     let statement; //SUT
 
-    beforeEach(function () {
-        nc = require('nc');
-        connection = new nc.ODBCConnection(INTEGRATION_TEST_DSN);
-
-        statement = new nc.ODBCStatement(connection);
+    beforeEach(function (done) {
+        connection = new nc.ODBCConnection();
+        connection.connect(INTEGRATION_TEST_DSN, () => {
+            statement = new nc.ODBCStatement(connection);
+            done(); 
+        });
     });
     
     

@@ -8,8 +8,8 @@ squel.useFlavour('mysql');
 
 class PromisifiedNC {
 
-    static createConnection(connectionString) {
-        return promisifyAll(new nc.ODBCConnection(connectionString), {
+    static createConnection() {
+        return promisifyAll(new nc.ODBCConnection(), {
             suffix: "Promise",
         });
     }
