@@ -10,7 +10,6 @@
 #include "fetch.hh"
 
 #include "ConnectionAwareStatement.hh"
-#include "Environment.hh"
 #include "ConnectionCommands.hh"
 #include "StatementCommands.hh"
 
@@ -19,7 +18,6 @@ namespace NC {
 
 using NC::QueryArguments;
 
-using NC::Environment;
 using NC::ConnectionCommands;
 using NC::StatementCommands;
 
@@ -81,11 +79,10 @@ inline nc_null_t call_method(
         ConnectionMethodTag<ConnectionCommands::connect>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<nc_string_t, TimeoutArg>& args) {
-    Environment::Get()([&] {
-        owner->Synchronized([&](nanodbc::connection& connection) {
-            connection.connect(std::get<0>(args), std::get<1>(args));
-        });
+    owner->Synchronized([&](nanodbc::connection& connection) {
+        connection.connect(std::get<0>(args), std::get<1>(args));
     });
+
     return nc_null_t {};
 }
 
