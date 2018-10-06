@@ -48,8 +48,8 @@ async function loop(no, connectionWorker, i) {
             )
         `);
         log.info('Table created');
+        log.info('Starting loop...');
         await Promise.all(connections.map((c, i) => loop(i, c, 0)));
-        log.info('Loop started');
 
         // cleranup manually
         // await first.executePromise(`DELETE TABLE ${table};`);

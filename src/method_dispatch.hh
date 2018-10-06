@@ -44,7 +44,7 @@ inline nc_string_t call_method(
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<>&) {
     return owner->Synchronized([&](nanodbc::connection& connection) {
-       return connection.dbms_version();
+        return connection.dbms_version();
     });
 }
 

@@ -100,7 +100,7 @@ void ConnectionAwareStatement::Execute(
         const nc_bindings_t& bound_parameters,
         nc_long_t batch_size,
         nc_long_t timeout) {
-    return connection_monitor->Synchronized([&](const nanodbc::connection&) {
+    return connection_monitor->Synchronized([&] {
         BindParameters(bound_parameters);
         statement.just_execute(batch_size, timeout);
     });
@@ -118,7 +118,7 @@ nc_result_t ConnectionAwareStatement::Query(
         const nc_bindings_t& bound_parameters,
         nc_long_t batch_size,
         nc_long_t timeout) {
-    return connection_monitor->Synchronized([&](const nanodbc::connection&) {
+    return connection_monitor->Synchronized([&] {
         BindParameters(bound_parameters);
         nanodbc::result result { statement.execute(batch_size, timeout) };
         nc_result_t fetched_result = fetch_result_eagerly(&result);
@@ -128,13 +128,13 @@ nc_result_t ConnectionAwareStatement::Query(
 }
 
 void ConnectionAwareStatement::Close() {
-    connection_monitor->Synchronized([&](const nanodbc::connection&) {
+    connection_monitor->Synchronized([&] {
         statement.close();
     });
 }
 
 bool ConnectionAwareStatement::IsOpen() {
-    return connection_monitor->Synchronized([&](const nanodbc::connection) {
+    return connection_monitor->Synchronized([&] {
         return statement.open();
     });
 }
