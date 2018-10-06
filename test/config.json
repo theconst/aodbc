@@ -1,5 +1,7 @@
 {
     "dsn" : "DSN=CacheWinHost",
     "timeout" : 120000,
-    "iterations": 10000
+    "iterations": 1000,
+    "connectionsCount": 10,
+    "connectorsCount": 4
 }

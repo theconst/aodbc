@@ -1,15 +1,15 @@
 'use strict'
 
-const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, prettyPrint } = format;
+const {createLogger, format, transports} = require('winston');
+const {timestamp, printf, combine} = format;
 
-module.exports =  createLogger({
-    level: 'trace',
+module.exports = createLogger({
+    level: 'debug',
     format: combine(
         timestamp(),
-        format.splat(),
-        format.simple(),
-        prettyPrint()
+        printf(m => `[${m.timestamp}] ${m.message}`)
     ),
-    transports: [new transports.Console()],
-})
+    transports: [
+      new transports.Console({}),
+    ],
+});

@@ -1,52 +1,63 @@
 #!/usr/bin/env node
 'use strict'
 
-const nc = require('nc-promisified');
-
-const {Promise} = require('bluebird');
-
+const nc = require('./nc.promisified');
+const { Promise } = require('bluebird');
 const log = require('./logger');
+const uuid = require('uuid/v4');
+const config = require('./config');
 
-const uuid = require('uuid');
+const table = 'Sample.StressTestTable';
 
-const config = require('config');
-
-async function loop(connectionWorker, i) {
+async function loop(no, connectionWorker, i) {
     if (i > config['iterations']) {
         return "finished";
     }
-    uuid.
+    const result = (await Promise.all([
+        connectionWorker.executePromise(`
+            INSERT INTO ${table}(id, payload) VALUES ('${uuid()}', 'Worker#${no}')
+        `).catch(e => log.error(`[${no}] Unable to insert ${e.message}`)),
+        // disable query cache
+        connectionWorker.queryPromise({
+            query: `SELECT '${uuid()}', id, payload FROM ${table}`,
+            batchSize: 100,
+        }).catch(e => log.error(`[${no}] Unable to query: ${e.message}`)),
+    ]))[1].length;
+
+    setTimeout(() => log.info(`[${no}] Selected=${result}`), 0);
+
+    return loop(no, connectionWorker, i + 1);
 }
 
 // awaiting on non-promise works in node >7.10
 (async () => {
-    const connections = await Promise.all(
-        new Array(25).fill(null)
-            .map(() => nc.createConnection())
-            .map(connection => connection.connectPromise(config['dsn'])));
+    log.info('Starting stess-test');
+    const connections = new Array(config['connectionsCount'])
+        .fill(null)
+        .map(() => nc.createConnection());
+
+    await Promise.all(connections.map(c => c.connectPromise(config['dsn'])));
 
     const first = connections[0];
-    
     try {
         await first.executePromise(`
-            CREATE TABLE Sample.StressTestTable(
-                id CHAR(30),
-                payload TEXT,
+            CREATE TABLE ${table}(
+                id CHAR(40),
+                payload VARCHAR(100),
                 CONSTRAINT RECORDPK PRIMARY KEY(id)
             )
         `);
+        log.info('Table created');
+        await Promise.all(connections.map((c, i) => loop(i, c, 0)));
+        log.info('Loop started');
 
-        first.m
-
+        // cleranup manually
+        // await first.executePromise(`DELETE TABLE ${table};`);
+        // log.info('Cleaned up...');
+    } catch (e) {
+        log.error(e);
     } finally {
-        try {
-            await first.executePromise(`
-                DELETE TABLE Sample.StressTestTable;
-            `);
-        } catch (e) {
-            console.error(e);
-        }
-        await Promise.all(connection.map(x => x.disconnectPromise()));
+        await Promise.all(connections.map(c => c.disconnectPromise()));
     }
-
+    log.info('Finished stress-test');
 })();
