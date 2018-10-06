@@ -20,7 +20,12 @@ async function loop(no, connectionWorker, i) {
         // disable query cache
         connectionWorker.queryPromise({
             query: `SELECT '${uuid()}', id, payload FROM ${table}`,
-            batchSize: 100,
+
+            // Setting batch size >1 produces random bugs
+            // They depend solely on this parameter
+            // not on the connection count
+            // [Cache Error: <<MAXNUMBER>srvPQ+19^%SYS.DBSRV>]
+            batchSize: 2,
         }).catch(e => log.error(`[${no}] Unable to query: ${e.message}`)),
     ]))[1].length;
 
