@@ -18,6 +18,18 @@ describe('ODBC Connection integration tests', function () {
         connection = new nc.ODBCConnection();
         connection.connect(INTEGRATION_TEST_DSN, () => done());
     });
+
+    it('should connect with dsn, username, password', function(done) {
+        new nc.ODBCConnection().connect(INTEGRATION_TEST_DSN, '_SYSTEM', 'SYS', (err) => {
+            connection.isConnected((err, isConnected) => {
+                console.log(err);
+                expect(err).to.be.null;
+                expect(isConnected).to.be.true;
+
+                done();
+            });
+        });
+    });
     
     
     it('should return connected for new instance', function (done) {

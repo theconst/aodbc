@@ -76,9 +76,30 @@ NAN_METHOD(ODBCConnection::JsConnected) {
 
 NAN_METHOD(ODBCConnection::JsConnect) {
     // TODO(kko): make Either<T1, T2>
-    static constexpr int number_of_args_with_timeout = 2 + 1;
-    int len = info.Length();
-    if (len >= number_of_args_with_timeout) {
+    static constexpr int dsn_timeout_size = 2 + 1;
+    static constexpr int dsn_username_password_args_size = 3 + 1;
+    static constexpr int dsn_username_passord_timeout_args_size = 4 + 1;
+    switch (info.Length()) {
+    case dsn_username_passord_timeout_args_size:
+        return delegate_work<
+            ODBCConnection,
+            ConnectionMethodTag<ConnectionCommands::connect>,
+            nc_null_t,
+            nc_string_t,
+            nc_string_t,
+            nc_string_t,
+            TimeoutArg
+        >(info);
+    case dsn_username_password_args_size:
+        return delegate_work<
+            ODBCConnection,
+            ConnectionMethodTag<ConnectionCommands::connect>,
+            nc_null_t,
+            nc_string_t,
+            nc_string_t,
+            nc_string_t
+        >(info);
+    case dsn_timeout_size:
         return delegate_work<
             ODBCConnection,
             ConnectionMethodTag<ConnectionCommands::connect>,
@@ -86,7 +107,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
             nc_string_t,
             TimeoutArg
         >(info);
-    } else {
+    default:
         return delegate_work<
             ODBCConnection,
             ConnectionMethodTag<ConnectionCommands::connect>,

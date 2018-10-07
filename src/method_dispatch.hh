@@ -97,6 +97,28 @@ inline nc_null_t call_method(
 }
 
 inline nc_null_t call_method(
+        ConnectionMethodTag<ConnectionCommands::connect>,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
+        std::tuple<nc_string_t, nc_string_t, nc_string_t> args) {
+    owner->Synchronized([&](nanodbc::connection& connection) {
+        connection.connect(std::get<0>(args),
+            std::get<1>(args), std::get<2>(args));
+    });
+    return nc_null_t {};
+}
+
+inline nc_null_t call_method(
+        ConnectionMethodTag<ConnectionCommands::connect>,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
+        std::tuple<nc_string_t, nc_string_t, nc_string_t, TimeoutArg> args) {
+    owner->Synchronized([&](nanodbc::connection& connection) {
+        connection.connect(std::get<0>(args),
+            std::get<1>(args), std::get<2>(args), std::get<3>(args));
+    });
+    return nc_null_t {};
+}
+
+inline nc_null_t call_method(
         ConnectionMethodTag<ConnectionCommands::disconnect>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
         const std::tuple<>&) {
