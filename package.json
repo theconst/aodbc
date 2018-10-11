@@ -25,6 +25,7 @@
     "test:integration": "mocha test/**integration.spec.js --reporter spec --full-trace --timeout 5000",
     "test:integration:statement": "mocha test/*statement.integration.spec.js --reporter spec --full-trace --timeout 5000",
     "test:integration:types": "mocha test/*types.integration.spec.js --reporter spec --full-trace --timeout 5000",
+    "test:integration:transaction": "mocha test/*transaction.integration.spec.js --reporter spec --full-trace --timeout 5000",
     "test:stress": "node test/nc.stress.test.js --max_old_space_size=100"
   },
   "repository": {
