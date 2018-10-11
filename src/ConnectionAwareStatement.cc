@@ -6,6 +6,7 @@
 #include "sql.h"
 
 #include "fetch.hh"
+#include "odbcutil.hh"
 
 namespace NC {
 
@@ -24,7 +25,7 @@ class BindingVisitor final : public boost::static_visitor<> {
 
     BindingVisitor(BindingVisitor&&) = delete;
     BindingVisitor(const BindingVisitor&) = delete;
-    ~BindingVisitor() = default;
+    virtual ~BindingVisitor() = default;
 
     void operator()(const nc_null_t& v) const {
         statement_ptr->bind_null(position);
@@ -54,11 +55,8 @@ void ConnectionAwareStatement::BindParameters(
     }
 }
 
-inline bool success(SQLRETURN rc) {
-    return rc == SQL_SUCCESS || rc == SQL_SUCCESS_WITH_INFO;
-}
-
 void ConnectionAwareStatement::CloseCursor() {
+    using NC::success;
 // ORIGINAL CODE FROM nanodbc:
 // if (statement.open())
 // {

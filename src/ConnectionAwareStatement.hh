@@ -38,7 +38,7 @@ class ConnectionAwareStatement final {
 
     ConnectionAwareStatement(const ConnectionAwareStatement&) = delete;
     ConnectionAwareStatement(ConnectionAwareStatement&&) = delete;
-    ~ConnectionAwareStatement() = default;
+    virtual ~ConnectionAwareStatement() = default;
 
  private:
     void BindParameters(const nc_bindings_t& bound_parameters);

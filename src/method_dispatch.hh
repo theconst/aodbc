@@ -9,9 +9,16 @@
 
 #include "fetch.hh"
 
+#include "sql.h"
+#include "sqlext.h"
+
 #include "ConnectionAwareStatement.hh"
+#include "ConnectionAwareTransaction.hh"
 #include "ConnectionCommands.hh"
 #include "StatementCommands.hh"
+#include "TransactionCommands.hh"
+
+#include "odbcutil.hh"
 
 
 namespace NC {
@@ -128,6 +135,30 @@ inline nc_null_t call_method(
     return nc_null_t {};
 }
 
+inline nc_null_t call_method(
+        ConnectionMethodTag<ConnectionCommands::set_auto_commit>,
+        std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
+        const std::tuple<bool>& args) {
+    using NC::success;
+
+    auto enable = std::get<0>(args);
+    owner->Synchronized([&](nanodbc::connection& connection) {
+        auto* handle = connection.native_dbc_handle();
+        auto retcode = SQLSetConnectAttr(
+            handle,
+            SQL_ATTR_AUTOCOMMIT,
+            // they just check for null, i guess
+            (SQLPOINTER) (enable ? SQL_AUTOCOMMIT_ON : SQL_AUTOCOMMIT_OFF),
+            SQL_NTS);
+
+        if (!success(retcode)) {
+            throw Error("Unable to set auto commit mode");
+        }
+    });
+
+    return nc_null_t {};
+}
+
 inline nc_result_t call_method(
         ConnectionMethodTag<ConnectionCommands::query>,
         std::shared_ptr<UVMonitor<nanodbc::connection>> owner,
@@ -195,6 +226,32 @@ inline bool call_method(
         std::shared_ptr<ConnectionAwareStatement> owner,
         const std::tuple<>&) {
     return owner->IsOpen();
+}
+
+inline nc_null_t call_method(
+        TransactionMethodTag<TransactionCommands::begin>,
+        std::shared_ptr<ConnectionAwareTransaction> owner,
+        const std::tuple<>&) {
+    owner->Begin();
+    return nc_null_t {};
+}
+
+inline nc_null_t call_method(
+        TransactionMethodTag<TransactionCommands::commit>,
+        std::shared_ptr<ConnectionAwareTransaction> owner,
+        const std::tuple<>&) {
+    owner->Commit();
+
+    return nc_null_t {};
+}
+
+inline nc_null_t call_method(
+        TransactionMethodTag<TransactionCommands::rollback>,
+        std::shared_ptr<ConnectionAwareTransaction> owner,
+        const std::tuple<>&) {
+    owner->Rollback();
+
+    return nc_null_t {};
 }
 
 }  // namespace NC

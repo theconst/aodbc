@@ -100,6 +100,14 @@ boost::optional<QueryArguments> convert_js_type_to_cpp(
     return result;
 }
 
+template<>
+boost::optional<bool> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
+    if (local->IsBoolean()) {
+        return Nan::To<bool>(local).FromJust();
+    }
+    return boost::none;
+}
+
 
 template<>
 boost::optional<nc_null_t>

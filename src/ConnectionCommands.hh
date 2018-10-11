@@ -13,7 +13,8 @@ enum struct ConnectionCommands {
     connect,
     disconnect,
     query,
-    execute
+    execute,
+    set_auto_commit
 };
 
 template<ConnectionCommands tag>

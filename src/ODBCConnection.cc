@@ -43,6 +43,7 @@ NAN_MODULE_INIT(ODBCConnection::Init) {
     Nan::SetPrototypeMethod(tpl, "databaseName", JsDatabaseName);
     Nan::SetPrototypeMethod(tpl, "query", JsQuery);
     Nan::SetPrototypeMethod(tpl, "execute", JsExecute);
+    Nan::SetPrototypeMethod(tpl, "setAutoCommit", JsSetAutoCommit);
 
     Nan::Set(target,
         Nan::New(js_class_name).ToLocalChecked(),
@@ -181,6 +182,15 @@ NAN_METHOD(ODBCConnection::JsExecute) {
         ConnectionMethodTag<ConnectionCommands::execute>,
         nc_null_t,
         QueryArguments
+    >(info);
+}
+
+NAN_METHOD(ODBCConnection::JsSetAutoCommit) {
+    return delegate_work<
+        ODBCConnection,
+        ConnectionMethodTag<ConnectionCommands::set_auto_commit>,
+        nc_null_t,
+        bool
     >(info);
 }
 
