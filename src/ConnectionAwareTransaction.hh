@@ -26,14 +26,15 @@ class ConnectionAwareTransaction final {
         }
     }
 
-    void DoFinish(bool success) {
+    template<bool committed>
+    void DoFinish() {
         connection->Synchronized([&] {
             CheckTransaction();
 
             // free transaction at the end of the block
             std::unique_ptr<nanodbc::transaction> finihed_tx {
                 std::move(transaction) };
-            if (success) {
+            if (committed) {
                 finihed_tx->commit();
             } else {
                 finihed_tx->rollback();
@@ -59,11 +60,11 @@ class ConnectionAwareTransaction final {
     }
 
     void Commit() {
-        DoFinish(true);
+        DoFinish<true>();
     }
 
     void Rollback() {
-        DoFinish(false);
+        DoFinish<false>();
     }
 
 };
