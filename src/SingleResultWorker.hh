@@ -3,14 +3,13 @@
 
 #include "nan.h"
 
-#include "method_dispatch.hh"
 #include "cpp_to_js_converters.hh"
 
 namespace NC {
 
 template <
     typename OwnerT,
-    typename MethodT,
+    typename CommandT,
     typename ResultT,
     typename... Args
 >
@@ -42,7 +41,7 @@ class SingleResultWorker : public Nan::AsyncWorker {
 
     void Execute() override
     try {
-        result = call_method(MethodT {}, owner_ptr, arguments_tuple);
+        result = CommandT::Execute(owner_ptr.get(), arguments_tuple);
     } catch (const std::exception& e) {
         SetErrorMessage(e.what());
     } catch (...) {

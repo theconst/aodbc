@@ -41,7 +41,7 @@ NAN_MODULE_INIT(ODBCStatement::Init) {
 NAN_METHOD(ODBCStatement::JsQuery) {
     return delegate_work<
         ODBCStatement,
-        StatementMethodTag<StatementCommands::query>,
+        StatementCommand<StatementCommands::query>,
         nc_result_t,
         PreparedStatementArguments
     >(info);
@@ -50,7 +50,7 @@ NAN_METHOD(ODBCStatement::JsQuery) {
 NAN_METHOD(ODBCStatement::JsExecute) {
     return delegate_work<
         ODBCStatement,
-        StatementMethodTag<StatementCommands::execute>,
+        StatementCommand<StatementCommands::execute>,
         nc_null_t,
         PreparedStatementArguments
     >(info);
@@ -59,7 +59,7 @@ NAN_METHOD(ODBCStatement::JsExecute) {
 NAN_METHOD(ODBCStatement::JsPrepare) {
     return delegate_work<
         ODBCStatement,
-        StatementMethodTag<StatementCommands::prepare>,
+        StatementCommand<StatementCommands::prepare>,
         nc_null_t,
         nc_string_t
     >(info);
@@ -91,7 +91,7 @@ try {
 NAN_METHOD(ODBCStatement::JsClose) {
     return delegate_work<
         ODBCStatement,
-        StatementMethodTag<StatementCommands::close>,
+        StatementCommand<StatementCommands::close>,
         nc_null_t
     >(info);
 }
@@ -99,7 +99,7 @@ NAN_METHOD(ODBCStatement::JsClose) {
 NAN_METHOD(ODBCStatement::JsOpen) {
     return delegate_work<
         ODBCStatement,
-        StatementMethodTag<StatementCommands::is_open>,
+        StatementCommand<StatementCommands::is_open>,
         bool
     >(info);
 }

@@ -40,7 +40,7 @@ NAN_MODULE_INIT(ODBCTransaction::Init) {
 NAN_METHOD(ODBCTransaction::JsBegin) {
     return delegate_work<
         ODBCTransaction,
-        TransactionMethodTag<TransactionCommands::begin>,
+        TransactionCommand<TransactionCommands::begin>,
         nc_null_t
     >(info);
 }
@@ -48,7 +48,7 @@ NAN_METHOD(ODBCTransaction::JsBegin) {
 NAN_METHOD(ODBCTransaction::JsCommit) {
     return delegate_work<
         ODBCTransaction,
-        TransactionMethodTag<TransactionCommands::commit>,
+        TransactionCommand<TransactionCommands::commit>,
         nc_null_t
     >(info);
 }
@@ -56,7 +56,7 @@ NAN_METHOD(ODBCTransaction::JsCommit) {
 NAN_METHOD(ODBCTransaction::JsRollback) {
     return delegate_work<
         ODBCTransaction,
-        TransactionMethodTag<TransactionCommands::rollback>,
+        TransactionCommand<TransactionCommands::rollback>,
         nc_null_t
     >(info);
 }

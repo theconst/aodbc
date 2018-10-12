@@ -4,10 +4,11 @@
 #include <utility>
 
 #include "delegation.hh"
+#include "ConnectionCommands.hh"
 
 namespace NC {
 
-using NC::ConnectionMethodTag;
+using NC::ConnectionCommand;
 using NC::ConnectionCommands;
 
 using NC::QueryArguments;
@@ -70,7 +71,7 @@ try {
 NAN_METHOD(ODBCConnection::JsConnected) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::is_connected>,
+        ConnectionCommand<ConnectionCommands::is_connected>,
         bool
     >(info);
 }
@@ -84,7 +85,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
     case dsn_username_passord_timeout_args_size:
         return delegate_work<
             ODBCConnection,
-            ConnectionMethodTag<ConnectionCommands::connect>,
+            ConnectionCommand<ConnectionCommands::connect>,
             nc_null_t,
             nc_string_t,
             nc_string_t,
@@ -94,7 +95,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
     case dsn_username_password_args_size:
         return delegate_work<
             ODBCConnection,
-            ConnectionMethodTag<ConnectionCommands::connect>,
+            ConnectionCommand<ConnectionCommands::connect>,
             nc_null_t,
             nc_string_t,
             nc_string_t,
@@ -103,7 +104,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
     case dsn_timeout_size:
         return delegate_work<
             ODBCConnection,
-            ConnectionMethodTag<ConnectionCommands::connect>,
+            ConnectionCommand<ConnectionCommands::connect>,
             nc_null_t,
             nc_string_t,
             TimeoutArg
@@ -111,7 +112,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
     default:
         return delegate_work<
             ODBCConnection,
-            ConnectionMethodTag<ConnectionCommands::connect>,
+            ConnectionCommand<ConnectionCommands::connect>,
             nc_null_t,
             nc_string_t
         >(info);
@@ -121,7 +122,7 @@ NAN_METHOD(ODBCConnection::JsConnect) {
 NAN_METHOD(ODBCConnection::JsDisconnect) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::disconnect>,
+        ConnectionCommand<ConnectionCommands::disconnect>,
         nc_null_t
     >(info);
 }
@@ -129,7 +130,7 @@ NAN_METHOD(ODBCConnection::JsDisconnect) {
 NAN_METHOD(ODBCConnection::JsDBMSName) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::dbms_name>,
+        ConnectionCommand<ConnectionCommands::dbms_name>,
         nc_string_t
     >(info);
 }
@@ -137,7 +138,7 @@ NAN_METHOD(ODBCConnection::JsDBMSName) {
 NAN_METHOD(ODBCConnection::JsDBMSVersion) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::dbms_version>,
+        ConnectionCommand<ConnectionCommands::dbms_version>,
         nc_string_t
     >(info);
 };
@@ -146,7 +147,7 @@ NAN_METHOD(ODBCConnection::JsDBMSVersion) {
 NAN_METHOD(ODBCConnection::JsDriverName) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::driver_name>,
+        ConnectionCommand<ConnectionCommands::driver_name>,
         nc_string_t
     >(info);
 }
@@ -154,7 +155,7 @@ NAN_METHOD(ODBCConnection::JsDriverName) {
 NAN_METHOD(ODBCConnection::JsCatalogName) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::catalog_name>,
+        ConnectionCommand<ConnectionCommands::catalog_name>,
         nc_string_t
     >(info);
 }
@@ -162,7 +163,7 @@ NAN_METHOD(ODBCConnection::JsCatalogName) {
 NAN_METHOD(ODBCConnection::JsDatabaseName) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::database_name>,
+        ConnectionCommand<ConnectionCommands::database_name>,
         nc_string_t
     >(info);
 }
@@ -170,7 +171,7 @@ NAN_METHOD(ODBCConnection::JsDatabaseName) {
 NAN_METHOD(ODBCConnection::JsQuery) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::query>,
+        ConnectionCommand<ConnectionCommands::query>,
         nc_result_t,
         QueryArguments
     >(info);
@@ -179,7 +180,7 @@ NAN_METHOD(ODBCConnection::JsQuery) {
 NAN_METHOD(ODBCConnection::JsExecute) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::execute>,
+        ConnectionCommand<ConnectionCommands::execute>,
         nc_null_t,
         QueryArguments
     >(info);
@@ -188,7 +189,7 @@ NAN_METHOD(ODBCConnection::JsExecute) {
 NAN_METHOD(ODBCConnection::JsSetAutoCommit) {
     return delegate_work<
         ODBCConnection,
-        ConnectionMethodTag<ConnectionCommands::set_auto_commit>,
+        ConnectionCommand<ConnectionCommands::set_auto_commit>,
         nc_null_t,
         bool
     >(info);
