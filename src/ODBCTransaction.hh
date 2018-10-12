@@ -4,22 +4,20 @@
 #include <memory>
 #include <cstring>
 
-#include "nan.h"
+#include <nan.h>
 
 #include "ODBCConnection.hh"
-
 #include "ConnectionAwareTransaction.hh"
-
+#include "SafeUnwrap.hh"
 
 namespace NC {
 
 using NC::ConnectionAwareTransaction;
+using NC::SafeUnwrap;
 
 
 class ODBCTransaction final : public Nan::ObjectWrap {
  public:
-    static const char* js_class_name;
-
     using value_type = ConnectionAwareTransaction;
 
     static NAN_MODULE_INIT(Init);
@@ -34,15 +32,12 @@ class ODBCTransaction final : public Nan::ObjectWrap {
     virtual ~ODBCTransaction() = default;
 
     static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
-        if (!Nan::New(js_constructor)->HasInstance(self)) {
-            throw Error("Argument should be derived from ODBCTransaction");
-        }
-
-        auto* odbc_transaction = Nan::ObjectWrap::Unwrap<ODBCTransaction>(self);
-        return odbc_transaction->transaction;
+        return SafeUnwrap<ODBCTransaction>::Unwrap(self)->transaction;
     }
 
  private:
+    friend class SafeUnwrap<ODBCTransaction>;
+    static const char* js_class_name;
     static Nan::Persistent<v8::FunctionTemplate> js_constructor;
 
     static NAN_METHOD(JsNew);

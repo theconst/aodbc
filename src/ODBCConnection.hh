@@ -8,23 +8,27 @@
 #include "nan.h"
 #include "nanodbc.h"
 
-#include "errors.hh"
 #include "nctypes.hh"
 #include "UVMonitor.hh"
+#include "SafeUnwrap.hh"
 
 namespace NC {
 
 using NC::UVMonitor;
-
+using NC::SafeUnwrap;
 using NC::Error;
 
 class ODBCConnection final : public Nan::ObjectWrap {
  public:
-    static const char* js_class_name;
-
     using value_type = UVMonitor<nanodbc::connection>;
 
     static NAN_MODULE_INIT(Init);
+
+    static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
+        return SafeUnwrap<ODBCConnection>::Unwrap(self)->connection;
+    }
+
+    ODBCConnection();
 
     ODBCConnection(const ODBCConnection&) = delete;
 
@@ -32,17 +36,11 @@ class ODBCConnection final : public Nan::ObjectWrap {
 
     virtual ~ODBCConnection() = default;
 
-    static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
-        if (!Nan::New(js_constructor)->HasInstance(self)) {
-            throw Error("Argument should be derived from ODBCConnection");
-        }
-
-        ODBCConnection* odbc_connection =
-            Nan::ObjectWrap::Unwrap<ODBCConnection>(self);
-        return odbc_connection->connection;
-    }
-
  private:
+    friend class SafeUnwrap<ODBCConnection>;
+    static const char* js_class_name;
+    static Nan::Persistent<v8::FunctionTemplate> js_constructor;
+
     static NAN_METHOD(JsNew);
     static NAN_METHOD(JsConnected);
     static NAN_METHOD(JsConnect);
@@ -55,11 +53,6 @@ class ODBCConnection final : public Nan::ObjectWrap {
     static NAN_METHOD(JsQuery);
     static NAN_METHOD(JsExecute);
     static NAN_METHOD(JsSetAutoCommit);
-
-    static Nan::Persistent<v8::FunctionTemplate> js_constructor;
-
-    ODBCConnection();
-    explicit ODBCConnection(nc_string_t conn_string);
 
     std::shared_ptr<UVMonitor<nanodbc::connection>> connection;
 };

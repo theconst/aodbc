@@ -4,25 +4,28 @@
 #include <memory>
 #include <cstring>
 
-#include "nan.h"
+#include <nan.h>
 
 #include "ODBCConnection.hh"
-
 #include "ConnectionAwareStatement.hh"
+#include "SafeUnwrap.hh"
 
 
 namespace NC {
 
 using NC::ConnectionAwareStatement;
+using NC::SafeUnwrap;
 
 
 class ODBCStatement final : public Nan::ObjectWrap {
  public:
-    static const char* js_class_name;
-
     using value_type = ConnectionAwareStatement;
 
     static NAN_MODULE_INIT(Init);
+
+    static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
+        return SafeUnwrap<ODBCStatement>::Unwrap(self)->statement;
+    }
 
     explicit ODBCStatement(
         std::shared_ptr<UVMonitor<nanodbc::connection>> connection);
@@ -33,16 +36,9 @@ class ODBCStatement final : public Nan::ObjectWrap {
 
     virtual ~ODBCStatement() = default;
 
-    static std::shared_ptr<value_type> Unwrap(v8::Local<v8::Object> self) {
-        if (!Nan::New(js_constructor)->HasInstance(self)) {
-            throw Error("Argument should be derived from ODBCStatement");
-        }
-
-        auto* odbc_statement = Nan::ObjectWrap::Unwrap<ODBCStatement>(self);
-        return odbc_statement->statement;
-    }
-
  private:
+    friend class SafeUnwrap<ODBCStatement>;
+    static const char* js_class_name;
     static Nan::Persistent<v8::FunctionTemplate> js_constructor;
 
     static NAN_METHOD(JsNew);
