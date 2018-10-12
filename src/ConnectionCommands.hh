@@ -134,7 +134,6 @@ struct ConnectionCommand<ConnectionCommands::connect> {
 
 template<>
 struct ConnectionCommand<ConnectionCommands::disconnect> {
-
     static nc_null_t Execute(UVMonitor<nanodbc::connection>* owner,
             const std::tuple<>&) {
         owner->Synchronized([&](nanodbc::connection& connection) {
@@ -146,7 +145,6 @@ struct ConnectionCommand<ConnectionCommands::disconnect> {
 
 template<>
 struct ConnectionCommand<ConnectionCommands::set_auto_commit> {
-
     static nc_null_t Execute(
             UVMonitor<nanodbc::connection>* owner,
             const std::tuple<bool>& args) {
@@ -162,7 +160,8 @@ struct ConnectionCommand<ConnectionCommands::set_auto_commit> {
                 SQL_NTS);
 
             if (!success(retcode)) {
-                throw Error("Unable to set auto commit mode");
+                 throw nanodbc::database_error(handle, SQL_HANDLE_DBC,
+                    std::string("Unable to set auto commit mode"));
             }
         });
         return nc_null_t {};

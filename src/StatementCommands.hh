@@ -22,7 +22,6 @@ struct StatementCommand {
 
 template<>
 struct StatementCommand<StatementCommands::prepare> {
-
     static nc_null_t Execute(ConnectionAwareStatement* owner,
           const std::tuple<nc_string_t>& args) {
         owner->Prepare(std::get<0>(args));
@@ -32,7 +31,6 @@ struct StatementCommand<StatementCommands::prepare> {
 
 template<>
 struct StatementCommand<StatementCommands::query> {
-
     static nc_result_t Execute(ConnectionAwareStatement* owner,
             const std::tuple<PreparedStatementArguments>& args) {
         const PreparedStatementArguments& psargs = std::get<0>(args);
