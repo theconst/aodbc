@@ -32,12 +32,12 @@ class ConnectionAwareTransaction final {
             CheckTransaction();
 
             // free transaction at the end of the block
-            std::unique_ptr<nanodbc::transaction> finihed_tx {
+            std::unique_ptr<nanodbc::transaction> finished_tx {
                 std::move(transaction) };
             if (committed) {
-                finihed_tx->commit();
+                finished_tx->commit();
             } else {
-                finihed_tx->rollback();
+                finished_tx->rollback();
             }
         });
     }
