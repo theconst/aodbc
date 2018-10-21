@@ -26,10 +26,10 @@ class TimeoutArg final {
     }
 
     explicit TimeoutArg(const boost::optional<nc_long_t>& t) {
-         if (t) {
+        if (t) {
             nc_long_t val = *t;
             if (val < default_timeout) {
-                throw RangeError("Illegal timeout value");
+                throw RangeError("Illegal timeout value. Should be > 0");
             }
             timeout = val;
         }
@@ -59,7 +59,7 @@ class BatchSizeArg final {
         if (bs) {
             nc_long_t val = *bs;
             if (val < default_batch_size) {
-                throw RangeError("Illegal batch size value");
+                throw RangeError("Illegal batch size value. Should be > 1");
             }
             batch_size = val;
         }
