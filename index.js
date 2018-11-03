@@ -1,6 +1,6 @@
 /**
- * Entry point of the nanodbc library
+ * Entry point of the nc.js library
  */
 'use strict'
 
-module.exports = require('nc');
+module.exports = require("bindings")("nc.node");

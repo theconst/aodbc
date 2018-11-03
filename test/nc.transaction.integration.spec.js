@@ -4,7 +4,7 @@ const config = require('./config');
 
 const expect = require('chai').expect;
 
-const nc = require('nc');
+const nc = require("bindings")("nc.node");
 
 describe('ODBC Transaction integration tests', function () {
     
