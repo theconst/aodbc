@@ -4,6 +4,15 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 # Name of the project (will be the name of the plugin)
 project(nc)
 
+# Suppress warnings for MSVC
+if (MSVC)
+    # See also https://github.com/nodejs/node/pull/15570
+    add_compile_options(/wd4251) # disabled by node
+    add_compile_options(/wd4275) # disabled by node
+endif()
+
+
+
 ###### Boost dependency ######
 
 # Include BoostLib module
@@ -14,12 +23,17 @@ SET(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${boostlib_cmake_path}")
 include(BoostLib)
 
 # Locate/Download Boost (semver)
-require_boost_libs(">= 1.62.0" "variant" "optional")
+require_boost_libs(">= 1.62.0" "variant; optional")
 include_directories(${Boost_INCLUDE_DIRS})
 
 ###############################
 
 ###### Nanodbc dependency ######
+
+message("-- Refreshing nanodbc submodule")
+execute_process(COMMAND git submodule update --init -- nanodbc
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+execute_process(COMMAND git submodule status)
 
 # Build as static lib, this will allow uniformity across platforms
 # Executable is still below 1MB, which far than OK for js world

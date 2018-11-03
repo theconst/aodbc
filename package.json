@@ -22,7 +22,7 @@
     "clean": "cmake-js clean",
     "compile": "cmake-js rebuild --release",
     "compile:debug": "cmake-js rebuild --debug",
-    "install": "cmake-js build",
+    "install": "cmake-js rebuild",
     "start": "node samples/nc-crud.js",
     "test": "mocha test/**spec.js --reporter spec --full-trace --timeout 5000",
     "test:unit": "mocha test/**unit.spec.js --reporter spec --full-trace --timeout 5000",
