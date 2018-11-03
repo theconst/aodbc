@@ -4,29 +4,44 @@
 Nanodbc is a proven wrapper for ODBC API. For more details see:
 https://nanodbc.github.io/nanodbc/
 
-This library aims to provide a simple access to ODBC data sources for node js for different drivers.
+This library aims to provide a simple access to ODBC data sources for node.js.
 
+The library is primarily targeted at https://www.intersystems.com/products/cache/#what-sets-it-apart
+but may be suitable for other databases as well.
 
 # Current status
 
-**<span style="color:red"> WARNING </span>** - Work in progress.
+The library has alpha quality.
+Integration tests are written for Cache database samples.
 
-See test specs for a comprehensive example
+# Usage
 
-# Build steps
+See test specs for a usage example.
 
 ## Prerequisites
 
 1. Git 2.x.x
+1. MSVC Build tools (Windows), GCC 6.x.x + Make (UNIX)
 1. Cmake >= 3.2
 1. nodejs (tested versions are 8.x.x and 10.x.x)
 1. UnixODBC (on Linux)
 1. Configured ODBC datasource for the database
 
-## Linux
+## Build steps
 
+General build steps:
 
+1. git clone `https://github.com/theconst/aodbc`
+1. npm install
 
+If the above steps do not work (or custom build options are required):
+
+1. git clone `https://github.com/theconst/aodbc`
+1. npm install
+1. npm install -g cmake-js
+1. cmake-js rebuild -a `<target arch>` -G `<generator to use>`
+
+After installing and building the module, you can use it as a submodule.
 
 # Docker build
 To launch the application in Docker container, follow the following steps:
@@ -52,4 +67,5 @@ To launch the application in Docker container, follow the following steps:
 - [x] Add support for transactions
 - [x] Add support for binary type
 - [x] Add support for Windows
+- [ ] Rewrite tests to be database-agnostic
 - [ ] Fix issued with tar module (low priority)
