@@ -81,7 +81,7 @@ void ConnectionAwareStatement::CloseCursor() {
 // END OF ORIGINAL CODE
 // Looks like for some databases we still need to close cursor
 // SQLFreeStmt will have no effect in this case and SQLCloseCursor will
-// not fire with error, because we know that it is still open.
+// not fire with an error, because we know that it is still open.
 #ifdef FREE_STMT_WORKAROUND_ON
     if (statement.open()) {
         SQLHANDLE handle = statement.native_statement_handle();

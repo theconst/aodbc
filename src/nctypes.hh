@@ -8,7 +8,7 @@
 #include "v8.h"
 #include "nan.h"
 
-#include "nanodbc.h"
+#include "nanodbc/nanodbc.h"
 
 namespace NC {
 

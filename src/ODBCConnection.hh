@@ -6,7 +6,7 @@
 #include <exception>
 
 #include "nan.h"
-#include "nanodbc.h"
+#include "nanodbc/nanodbc.h"
 
 #include "nctypes.hh"
 #include "UVMonitor.hh"

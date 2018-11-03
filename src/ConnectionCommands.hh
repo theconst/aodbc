@@ -1,7 +1,7 @@
 #ifndef CONNECTIONCOMMANDS_HH
 #define CONNECTIONCOMMANDS_HH
 
-#include "nanodbc.h"
+#include "nanodbc/nanodbc.h"
 
 #include <sql.h>
 #include <sqlext.h>
