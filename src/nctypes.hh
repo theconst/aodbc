@@ -1,6 +1,8 @@
 #ifndef NCTYPES_HH
 #define NCTYPES_HH
 
+// include withoud std namespace
+#include <stdint.h>
 #include <vector>
 #include "boost/variant.hpp"
 #include "boost/blank.hpp"
@@ -21,7 +23,7 @@ struct DateTag {
     const DateTypes value = t;
 };
 
-typedef std::vector<u_int8_t> nc_binary_t;
+typedef std::vector<uint8_t> nc_binary_t;
 
 typedef boost::blank nc_null_t;
 
@@ -35,7 +37,7 @@ typedef nanodbc::timestamp nc_timestamp_t;
 
 typedef double nc_number_t;
 
-typedef int64_t nc_long_t;  // NOLINT(runtime/int)
+typedef long nc_long_t;  // NOLINT(runtime/int)
 
 typedef short nc_short_t;  // NOLINT(runtime/int)
 

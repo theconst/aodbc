@@ -1,6 +1,8 @@
 #include "js_to_cpp_converters.hh"
 
+#include <stdint.h>
 #include <limits>
+#include <type_traits>
 
 #include "js_keys.hh"
 
@@ -24,6 +26,22 @@ inline boost::optional<T> get_opt(
     return convert_js_type_to_cpp<T>(maybe_prop.ToLocalChecked());
 }
 
+template <typename REPR, typename DST>
+inline boost::optional<DST> checked_numeric_cast(v8::Local<v8::Value> local) {
+    if (!local->IsNumber()) {
+        return boost::none;
+    }
+    auto value { Nan::To<REPR>(local).FromJust() };
+    // bypass macro expanstion in MSVC
+    if (value > (std::numeric_limits<DST>::max)()) {
+        return boost::none;
+    }
+    if (value < (std::numeric_limits<DST>::min)()) {
+        return boost::none;
+    }
+    return boost::make_optional(static_cast<DST>(Nan::To<REPR>(local).FromJust()));
+}
+
 template<>
 boost::optional<nc_string_t> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
@@ -37,26 +55,13 @@ boost::optional<nc_string_t> convert_js_type_to_cpp(
 
 template<>
 boost::optional<nc_long_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    if (!local->IsNumber()) {
-        return boost::none;
-    }
-    return boost::make_optional(Nan::To<nc_long_t>(local).FromJust());
+    return checked_numeric_cast<int64_t, nc_long_t>(local);
 }
 
 
 template<>
 boost::optional<int16_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {
-    if (!local->IsNumber()) {
-        return boost::none;
-    }
-    auto value { Nan::To<int32_t>(local).FromJust() };
-    if (value >= std::numeric_limits<int16_t>::max()) {
-        return boost::none;
-    }
-    if (value <= std::numeric_limits<int16_t>::min()) {
-        return boost::none;
-    }
-    return boost::make_optional(static_cast<int16_t>(value));
+    return checked_numeric_cast<int32_t, int16_t>(local);
 }
 
 template<>

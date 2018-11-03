@@ -36,7 +36,7 @@ class ODBCTransaction final : public Nan::ObjectWrap {
     }
 
  private:
-    friend class SafeUnwrap<ODBCTransaction>;
+    friend struct SafeUnwrap<ODBCTransaction>;
     static const char* js_class_name;
     static Nan::Persistent<v8::FunctionTemplate> js_constructor;
 
