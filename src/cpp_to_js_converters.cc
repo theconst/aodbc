@@ -104,8 +104,8 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
         convert_cpp_type_to_js(&time, t);
 
         std::time_t ts = std::mktime(&time);
-        nc_number_t millis = ts * millis_in_seconds;
-        nc_number_t total = millis + Fraction<T>::Get(t);
+        auto millis = static_cast<long int>(ts) * millis_in_seconds;
+        auto total = millis + Fraction<T>::Get(t);
 
         Nan::EscapableHandleScope scope {};
         auto result { Nan::New<v8::Date>(total).ToLocalChecked() };

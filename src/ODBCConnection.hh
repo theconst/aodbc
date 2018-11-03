@@ -6,7 +6,7 @@
 #include <exception>
 
 #include "nan.h"
-#include "nanodbc.h"
+#include "nanodbc/nanodbc.h"
 
 #include "nctypes.hh"
 #include "UVMonitor.hh"
@@ -37,7 +37,7 @@ class ODBCConnection final : public Nan::ObjectWrap {
     virtual ~ODBCConnection() = default;
 
  private:
-    friend class SafeUnwrap<ODBCConnection>;
+    friend struct SafeUnwrap<ODBCConnection>;
     static const char* js_class_name;
     static Nan::Persistent<v8::FunctionTemplate> js_constructor;
 

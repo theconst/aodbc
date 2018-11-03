@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "nanodbc.h"
+#include "nanodbc/nanodbc.h"
 
 #include "UVMonitor.hh"
 #include "nctypes.hh"

@@ -37,7 +37,7 @@ class ODBCStatement final : public Nan::ObjectWrap {
     virtual ~ODBCStatement() = default;
 
  private:
-    friend class SafeUnwrap<ODBCStatement>;
+    friend struct SafeUnwrap<ODBCStatement>;
     static const char* js_class_name;
     static Nan::Persistent<v8::FunctionTemplate> js_constructor;
 

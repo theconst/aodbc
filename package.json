@@ -4,6 +4,9 @@
   "description": "NC - javascript library for ODBC access to Intersystems Cache",
   "main": "src/js/main/index.js",
   "dependencies": {
+    "bindings": "^1.3.0",
+    "boost-lib": "^0.11.3",
+    "cmake-js": "^4.0.1",
     "nan": "^2.10.0"
   },
   "devDependencies": {
@@ -16,9 +19,10 @@
     "winston": "^3.1.0"
   },
   "scripts": {
-    "clean": "node-gyp clean",
-    "compile": "node-gyp rebuild --release",
-    "compile:debug": "node-gyp rebuild --debug",
+    "clean": "cmake-js clean",
+    "compile": "cmake-js compile --release",
+    "compile:debug": "cmake-js compile --debug",
+    "install": "cmake-js rebuild --release",
     "start": "node samples/nc-crud.js",
     "test": "mocha test/**spec.js --reporter spec --full-trace --timeout 5000",
     "test:unit": "mocha test/**unit.spec.js --reporter spec --full-trace --timeout 5000",
@@ -33,6 +37,5 @@
     "url": "git://github.com/TheConst/aodbc.git"
   },
   "author": "kko",
-  "license": "MIT",
-  "gypfile": true
+  "license": "MIT"
 }

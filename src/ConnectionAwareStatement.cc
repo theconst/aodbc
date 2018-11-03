@@ -13,32 +13,56 @@ namespace NC {
 class BindingVisitor final : public boost::static_visitor<> {
  private:
     nanodbc::statement* statement_ptr;
-    std::size_t position;
+    nc_short_t position;
 
  public:
     explicit BindingVisitor(
             nanodbc::statement* statement,
             std::size_t position) :
         statement_ptr(statement),
-        position(position) {
+        // ODBC driver will fire up sooner than the short limit is reached
+        position(static_cast<nc_short_t>(position)) {
     }
 
     BindingVisitor(BindingVisitor&&) = delete;
     BindingVisitor(const BindingVisitor&) = delete;
     virtual ~BindingVisitor() = default;
 
+    // use explicit parameters to avoid linkage surprises
+
     void operator()(const nc_null_t& v) const {
         statement_ptr->bind_null(position);
     }
 
     void operator()(const nc_string_t& str) const {
-        statement_ptr->bind(position, str.c_str());
+       statement_ptr->bind(position, str.c_str());
     }
-
-    template<typename T>
-    void operator()(const T& v) const {
+    
+    void operator()(const nc_long_t& v) const {
         statement_ptr->bind(position, &v);
     }
+
+    void operator()(const nc_number_t& v) const {
+        statement_ptr->bind(position, &v);
+    }
+
+    void operator()(const nc_date_t& v) const {
+        statement_ptr->bind(position, &v);
+    }
+    
+    void operator()(const nc_time_t& v) const {
+        statement_ptr->bind(position, &v);
+    }
+
+    void operator()(const nc_timestamp_t& v) const {
+        statement_ptr->bind(position, &v);
+    }
+    
+
+    void operator()(const nc_binary_t& v) const {
+        statement_ptr->bind(position, {v});
+    }
+   
 };
 
 ConnectionAwareStatement::ConnectionAwareStatement(

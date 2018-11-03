@@ -1,6 +1,6 @@
 'use strict'
 
-const nc = require("nc");
+const nc = require("bindings")("nc.node");
 const {promisifyAll} = require('bluebird');
 const squel = require("squel");
 
