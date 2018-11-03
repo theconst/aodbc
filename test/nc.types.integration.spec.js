@@ -37,6 +37,7 @@ describe('BIGINT spec', function() {
             // nanodbc uses snprintf, so we are safe
             // `INSERT INTO ${table}(id, val) VALUES ('ZMIN', -9223372036854775807)`,
             // only negative quadrillions are supported (no negative quintillionss)
+            // ZMINA (minimum actual) !== ZMIN
             `INSERT INTO ${table}(id, val) VALUES ('ZMINA', -999999999999999999)`,
             `INSERT INTO ${table}(id, val) VALUES ('ZZZZ', NULL)`,
         ]).map(v => connection.executePromise(v)).then(() => 
