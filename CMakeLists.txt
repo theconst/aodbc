@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 3.2)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-project(nc)
+project("cacheodbc")
+
+macro(fetch_submodule MODULE_NAME)
+    message("Fetching submodule: ${MODULE_NAME}")
+    execute_process(
+        COMMAND git submodule update --init -- ${MODULE_NAME}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+endmacro()
 
 ########## Windows flags ######
 
@@ -15,24 +22,16 @@ endif()
 ################################
 
 ###### Boost dependency ######
-
-# Include BoostLib module
-set(BOOST_VERSION 1.62.0)
-find_package(Boost "${BOOST_VERSION}")
-if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
-else()
-    message(FATAL_ERROR "Boost ${BOOST_VERSION} cannot be found")
-endif()
+message("Fetching boost dependencies")
+fetch_submodule(boost/variant)
+fetch_submodule(boost/optional)
+include_directories(boost)
 
 ################################
 
 ###### Nanodbc dependency ######
 
-message("Refreshing nanodbc submodule")
-execute_process(COMMAND git submodule update --init -- nanodbc
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-execute_process(COMMAND git submodule status)
+fetch_submodule(nanodbc)
 
 # Build as static lib, this will allow uniformity across platforms
 # Library binary is still below 1MB, which far than OK for js world
@@ -52,7 +51,7 @@ option(NC_FREE_STMT_ONLY "Call only SQLFreeStmt(SQL_CLOSE) before result fetch. 
 if (NC_FREE_STMT_ONLY)
     add_definitions(-DFREE_STMT_WORKAROUND_OFF)
 endif()
-message(STATUS "nc.js: Call SQLFreeStmt is - ${NC_FREE_STMT_ONLY}")
+message(STATUS "cache-odbc: Call SQLFreeStmt is - ${NC_FREE_STMT_ONLY}")
 
 ###### Build shared library ####
 

@@ -1,6 +1,6 @@
 /**
- * Entry point of the nc.js library
+ * Entry point of the cacheodbc.js library
  */
 'use strict'
 
-module.exports = require("bindings")("nc.node");
+module.exports = require("bindings")("cacheodbc.node");

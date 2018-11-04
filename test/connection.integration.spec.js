@@ -4,7 +4,7 @@ const config = require('./config');
 
 const expect = require('chai').expect;
 
-const nc = require("bindings")("nc.node");
+const nc = require("bindings")("cacheodbc.node");
 
 describe('ODBC Connection integration tests', function () {
     
@@ -21,7 +21,7 @@ describe('ODBC Connection integration tests', function () {
 
     it('should connect with dsn, username, password', function(done) {
         new nc.ODBCConnection().connect(
-                INTEGRATION_TEST_DSN.split("0")[1], '_SYSTEM', 'SYS', err => {
+                INTEGRATION_TEST_DSN.split("=")[1], '_SYSTEM', 'SYS', err => {
             expect(err).to.be.null;
             connection.isConnected((err, isConnected) => {
                 console.log(err);

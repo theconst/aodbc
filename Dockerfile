@@ -16,8 +16,8 @@ RUN npm i npm@latest -g
 RUN python -m pip install --upgrade pip
 RUN yes | pip install cmake 
 
-RUN mkdir -p /nc
-WORKDIR /nc
+RUN mkdir -p /cacheodbc
+WORKDIR /cacheodbc
 
 COPY ./scripts ./scripts
 RUN chmod +x ./scripts/odbc-install.sh && ./scripts/odbc-install.sh

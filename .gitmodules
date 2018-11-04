@@ -1,3 +1,9 @@
 [submodule "nanodbc"]
 	path = nanodbc
 	url = https://github.com/nanodbc/nanodbc
+[submodule "boost/variant"]
+	path = boost/variant
+	url = https://github.com/boostorg/variant.git
+[submodule "boost/optional"]
+	path = boost/optional
+	url = https://github.com/boostorg/optional.git

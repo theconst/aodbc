@@ -1,8 +1,7 @@
 {
-  "name": "nanodbc",
-  "version": "1.0.0",
-  "description": "NC - javascript library for ODBC access to Intersystems Cache",
-  "main": "src/js/main/index.js",
+  "name": "cacheodbc",
+  "version": "0.0.1",
+  "description": "Cache ODBC - javascript library for ODBC access to Intersystems Cache",
   "dependencies": {
     "bindings": "^1.3.0",
     "cmake-js": "^4.0.1",
@@ -20,20 +19,34 @@
     "clean": "cmake-js clean",
     "compile": "cmake-js compile --release",
     "compile:debug": "cmake-js compile --debug",
-    "install": "cmake-js rebuild --release",
-    "start": "node samples/nc-crud.js",
+    "postinstall": "cmake-js rebuild --release",
     "test": "mocha test/**spec.js --reporter spec --full-trace --timeout 5000",
     "test:unit": "mocha test/**unit.spec.js --reporter spec --full-trace --timeout 5000",
     "test:integration": "mocha test/**integration.spec.js --reporter spec --full-trace --timeout 5000",
     "test:integration:statement": "mocha test/*statement.integration.spec.js --reporter spec --full-trace --timeout 5000",
     "test:integration:types": "mocha test/*types.integration.spec.js --reporter spec --full-trace --timeout 5000",
-    "test:integration:transaction": "mocha test/*transaction.integration.spec.js --reporter spec --full-trace --timeout 5000",
-    "test:stress": "node test/nc.stress.test.js --max_old_space_size=100"
+    "test:integration:transaction": "mocha test/*transaction.integration.spec.js --reporter spec --full-trace --timeout 5000"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/TheConst/aodbc.git"
   },
-  "author": "kko",
-  "license": "MIT"
+  "keywords": [
+    "ODBC",
+    "Intersystems Cache"
+  ],
+  "author": "TheConst",
+  "license": "MIT",
+  "files": [
+    "src/**",
+    "index.js",
+    "CMakeLists.txt",
+    "package.json",
+    "README.MD",
+    "nanodbc/nanodbc/**",
+    "nanodbc/CMakeLists.txt",
+    "nanodbc/VERSION",
+    "boost/variant/include/**",
+    "boost/optional/include/**"
+  ]
 }

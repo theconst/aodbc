@@ -6,7 +6,7 @@ const expect = require('chai').expect;
 
 const { Promise } = require('bluebird');
 
-const nc = require('./nc.promisified');
+const nc = require('./promisified');
 
 const log = require('./logger');
 

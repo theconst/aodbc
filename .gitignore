@@ -1,7 +1,6 @@
 build/**
 lib/**
 node_modules/**
-package-lock.json
 nbproject/**
 .vscode
 reports/**

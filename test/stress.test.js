@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const nc = require('./nc.promisified');
+const nc = require('./promisified');
 const { Promise } = require('bluebird');
 const log = require('./logger');
 const uuid = require('uuid/v4');
