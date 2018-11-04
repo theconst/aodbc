@@ -5,7 +5,6 @@ const nc = require('./nc.promisified');
 
 const { Promise } = require('bluebird');
 const log = require('./logger');
-const uuid = require('uuid/v4');
 const config = require('./config');
 
 const table = 'Sample.StressTestTable';

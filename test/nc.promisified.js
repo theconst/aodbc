@@ -2,9 +2,6 @@
 
 const nc = require("bindings")("nc.node");
 const {promisifyAll} = require('bluebird');
-const squel = require("squel");
-
-squel.useFlavour('mysql');
 
 const promisifySettings = {
     suffix: 'Promise',
