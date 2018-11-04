@@ -37,7 +37,7 @@ execute_process(COMMAND git submodule update --init -- nanodbc
 execute_process(COMMAND git submodule status)
 
 # Build as static lib, this will allow uniformity across platforms
-# Executable is still below 1MB, which far than OK for js world
+# Library binary is still below 1MB, which far than OK for js world
 option(NANODBC_ENABLE_UNICODE OFF "Enable unicode for ODBC. This depends on ODBC driver you are working with")
 
 option(NANODBC_DISABLE_TESTS "Build tests for nanodbc" ON)
@@ -62,6 +62,6 @@ file(GLOB SOURCE_FILES "src/*.cc" "src/*.h")
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_JS_INC})
-target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB} nanodbc)
+target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB} PRIVATE nanodbc)
 
 ################################

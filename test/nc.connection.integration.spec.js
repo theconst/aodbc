@@ -20,7 +20,8 @@ describe('ODBC Connection integration tests', function () {
     });
 
     it('should connect with dsn, username, password', function(done) {
-        new nc.ODBCConnection().connect(INTEGRATION_TEST_DSN, '_SYSTEM', 'SYS', err => {
+        new nc.ODBCConnection().connect(
+                INTEGRATION_TEST_DSN.split("0")[1], '_SYSTEM', 'SYS', err => {
             expect(err).to.be.null;
             connection.isConnected((err, isConnected) => {
                 console.log(err);
