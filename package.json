@@ -5,7 +5,6 @@
   "main": "src/js/main/index.js",
   "dependencies": {
     "bindings": "^1.3.0",
-    "boost-lib": "^0.11.3",
     "cmake-js": "^4.0.1",
     "nan": "^2.10.0"
   },
