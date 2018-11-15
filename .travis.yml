@@ -1,7 +1,7 @@
 language: node_js
 before_install:
   # USE GCC instead of CLANG
-  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gcc; export CXX=/usr/bin/g++-6; fi'
+  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gcc; export CXX=/usr/local/bin/g++-6; fi'
 node_js:
   - "10"
 os: osx
