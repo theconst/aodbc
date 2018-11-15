@@ -1,0 +1,15 @@
+language: node_js
+before_install:
+  # USE GCC instead of CLANG
+  - 'if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gcc; export CXX=/usr/bin/g++-6; fi'
+node_js:
+  - "10"
+os: osx
+osx_image: xcode10.1
+addons:
+  homebrew:
+    packages:
+    - unixodbc
+    - cmake
+    - gcc@6
+script: echo 'Skipping tests'
