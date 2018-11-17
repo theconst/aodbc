@@ -48,6 +48,4 @@ deploy:
   file: build/Release/cacheodbc.node
   on:
     repo: theconst/aodbc
-    branches:
-      only:
-        - release
+    branch: release
