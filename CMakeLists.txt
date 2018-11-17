@@ -21,6 +21,13 @@ endif()
 
 ################################
 
+####### CMake policies #########
+
+# Enable BOOST_ROOT enviromental variable (CMP0074)
+cmake_policy(VERSION 3.12)
+
+################################
+
 ###### Boost dependency ######
 message("Finding boost dependencies")
 find_package(Boost 1.62 REQUIRED)
@@ -58,6 +65,6 @@ file(GLOB SOURCE_FILES "src/*.cc" "src/*.h")
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_JS_INC})
-target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB} PRIVATE nanodbc)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_JS_LIB} PRIVATE nanodbc)
 
 ################################

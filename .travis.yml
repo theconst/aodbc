@@ -2,6 +2,7 @@
 # Travis CI script for bindings
 # Tag any branch with macos-* for macos release
 # Tag any branch with linux-* for linux release
+# Tag any branch with windows-* for windows release
 #
 git:
   depth: 2
@@ -17,9 +18,13 @@ before_install:
     export CXX=g++-6
     export CC=gcc-6
   elif [[ "$TRAVIS_OS_NAME" == "windows" ]]; then
-    wget -q https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.zip
-    unzip boost_1_62_0.zip -d boost
-    export BOOST_ROOT=boost
+    wget -q https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.zip \
+      && echo "Downloaded archive"
+    unzip -q boost_1_62_0.zip -d boost \
+      && echo "Extracted archive"
+    BDIR="$(pwd)/boost"
+    export BOOST_ROOT="${BDIR}" \
+      && echo "Set boost root to ${BDIR}"
   fi
 node_js:
 - '10'
