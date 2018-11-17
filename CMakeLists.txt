@@ -22,12 +22,9 @@ endif()
 ################################
 
 ###### Boost dependency ######
-message("Fetching boost dependencies")
-fetch_submodule(boost/variant)
-fetch_submodule(boost/optional)
-
-include_directories(boost/optional/include)
-include_directories(boost/variant/include)
+message("Finding boost dependencies")
+find_package(Boost 1.62 REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
 
 ################################
 
