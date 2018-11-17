@@ -17,12 +17,13 @@ node_js:
 matrix:
   include:
       - os: linux
-        dist: trusty
+        dist: xenial
         addons:
           apt:
             sources:
             - ubuntu-toolchain-r-test
             packages:
+            - unixodbc
             - unixodbc-dev
             - cmake
             - gcc-6
