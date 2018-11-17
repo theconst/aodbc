@@ -1,17 +1,40 @@
+git:
+  depth: 2
+  # Travis fails to find directories during the build because of manual checkout
+  submodules: false
 language: node_js
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gcc; export CXX=/usr/local/bin/g++-6;
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    export CXX=/usr/local/bin/g++-6
+    export CC=/usr/local/bin/gcc-6
+  elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    export CXX=g++-6
+    export CC=gcc-6
   fi
 node_js:
 - '10'
-os: osx
-osx_image: xcode10.1
-addons:
-  homebrew:
-    packages:
-    - unixodbc
-    - cmake
-    - gcc@6
+matrix:
+  include:
+      - os: linux
+        dist: trusty
+        addons:
+          apt:
+            sources:
+            - ubuntu-toolchain-r-test
+            packages:
+            - unixodbc-dev
+            - cmake
+            - gcc-6
+            - g++-6
+      - os: osx
+        osx_image: xcode10.1
+        addons:
+          homebrew:
+            packages:
+            - unixodbc
+            - cmake
+            - gcc@6
 script: echo 'Skipping tests'
 deploy:
   provider: releases
