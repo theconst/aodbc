@@ -22,7 +22,9 @@ matrix:
           apt:
             sources:
             - ubuntu-toolchain-r-test
+            - sourceline: 'ppa:rexut/factory'
             packages:
+            - libboost1.62-dev
             - unixodbc
             - unixodbc-dev
             - cmake
@@ -36,6 +38,7 @@ matrix:
             - unixodbc
             - cmake
             - gcc@6
+            - boost@1.62
 script: echo 'Skipping tests'
 deploy:
   provider: releases
