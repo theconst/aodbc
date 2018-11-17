@@ -57,14 +57,18 @@ option(NC_FREE_STMT_ONLY "Call only SQLFreeStmt(SQL_CLOSE) before result fetch. 
 if (NC_FREE_STMT_ONLY)
     add_definitions(-DFREE_STMT_WORKAROUND_OFF)
 endif()
-message(STATUS "cache-odbc: Call SQLFreeStmt is - ${NC_FREE_STMT_ONLY}")
+message(STATUS "cache-odbc: Call SQLFreeStmt - ${NC_FREE_STMT_ONLY}")
 
 ###### Build shared library ####
 
+set(FULL_PROJECT_NAME "${PROJECT_NAME}-${CMAKE_SYSTEM_NAME}-${NODE_ARCH}-${NODE_RUNTIMEVERSION}")
+message("Set library name: ${FULL_PROJECT_NAME}")
+
 file(GLOB SOURCE_FILES "src/*.cc" "src/*.h")
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_JS_INC})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_JS_LIB} PRIVATE nanodbc)
+
+add_library(${FULL_PROJECT_NAME} SHARED ${SOURCE_FILES})
+set_target_properties(${FULL_PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
+target_include_directories(${FULL_PROJECT_NAME} PRIVATE ${CMAKE_JS_INC})
+target_link_libraries(${FULL_PROJECT_NAME} PUBLIC ${CMAKE_JS_LIB} PRIVATE nanodbc)
 
 ################################
