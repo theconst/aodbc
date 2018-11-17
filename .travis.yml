@@ -52,7 +52,9 @@ addons:
     - cmake
     - gcc@6
     - boost@1.62
-script: echo 'Skipping tests'
+script: |
+  npm run compile
+  echo 'Skipping tests'
 deploy:
   provider: releases
   file_glob: true

@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "Cache ODBC - javascript library for ODBC access to Intersystems Cache",
   "dependencies": {
-    "bindings": "^1.3.0",
-    "cmake-js": "^4.0.1",
-    "nan": "^2.10.0"
+    "bindings": "^1.3.0"
   },
   "devDependencies": {
     "bluebird": "^3.5.2",
@@ -13,13 +11,14 @@
     "console.table": "^0.10.0",
     "mocha": "*",
     "uuid": "^3.3.2",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "cmake-js": "^4.0.1",
+    "nan": "^2.10.0"
   },
   "scripts": {
     "clean": "cmake-js clean",
     "compile": "cmake-js compile --release",
     "compile:debug": "cmake-js compile --debug",
-    "postinstall": "cmake-js rebuild --release",
     "test": "mocha test/**spec.js --reporter spec --full-trace --timeout 5000",
     "test:unit": "mocha test/**unit.spec.js --reporter spec --full-trace --timeout 5000",
     "test:integration": "mocha test/**integration.spec.js --reporter spec --full-trace --timeout 5000",
