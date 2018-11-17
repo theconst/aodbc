@@ -97,5 +97,6 @@ matrix:
           tags: true
           all_branches: true
           condition: "$TRAVIS_TAG =~ ^windows-.*$"
+    - os: ""
       
 script: echo 'Skipping tests'
