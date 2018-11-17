@@ -25,7 +25,9 @@ endif()
 message("Fetching boost dependencies")
 fetch_submodule(boost/variant)
 fetch_submodule(boost/optional)
-include_directories(boost)
+
+include_directories(boost/optional/include)
+include_directories(boost/optional/variant)
 
 ################################
 
