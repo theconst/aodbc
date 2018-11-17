@@ -1,8 +1,6 @@
 # 
 # Travis CI script for bindings
-# Tag any branch with macos-* for macos release
-# Tag any branch with linux-* for linux release
-# Tag any branch with windows-* for windows release
+# Tag any branch with release-* for release
 #
 git:
   depth: 2
@@ -54,49 +52,16 @@ addons:
     - cmake
     - gcc@6
     - boost@1.62
-matrix:
-  include:
-    - os: linux
-      dist: xenial
-      deploy:
-        provider: releases
-        skip_cleanup: true
-        api_key:
-          secure: HtohRb7iVHWZJL2MoeyBXabbagqyrOWO24kcbX5qkUcjKckV4257xRAuG59TiLU1NadtCEg+vEIR4uHV0FnX7Z5wXTGsXeTebLcUHEv3n4n2GYOKAKbsDclpZiAb1aemQjbWRg7Cxu9OiEJ7i3nqT6SYKaZdeNvm758biMSB9uJHGOjn8RccvtH9cwIzbhkR1fIwRxv+XxPfQPK9z3XHRO9MOtWcGxSF3SuQ2DKVSd84oeJXob5lKQaapv1YradnMwij64QZNEftr2A4O3Ns0czW1TLzVpZEJr/+ulL9xeIY6dGFiQPSDjvunqsfsA1mkaQUnU1vI5JBXlIVk8/17dh/b6xwah2fhYwyBsv6kBEBknUcO9RRhlEEixSzoX874vw9ocQ2I+AxM6GXTe7hBPTfx4x+1pXY7cAl6ru/rn8XoeVH9rPAzTu/OqCWP+3lbSV8WZSbl2KpRHvWNlBm/UH2AtnIzZ6Lfd2Z7s3bRsuryRYhASZI5XY2JZesYGAWLWOBlu9nEVpcWp/DuNa8gJ901KbLNWd2jucdFxRbga5VEdrByK7rL66rePOrXEkqYCr60GrA9Zio1ijn2rnSKEdun1LtVOnmWREgQYmoeOrcK8MkRH0i77uW1xurRGWaIqaAO/TLMg7GChJLLOdNMc9xXzL9WxN9QE73zQ62iLI=
-        file: build/Release/cacheodbc.node
-        on:
-          repo: theconst/aodbc
-          tags: true
-          all_branches: true
-          condition: "$TRAVIS_TAG =~ ^linux-.*$"
-    - os: osx
-      osx_image: xcode10.1
-      deploy:
-        provider: releases
-        skip_cleanup: true
-        api_key:
-          secure: HtohRb7iVHWZJL2MoeyBXabbagqyrOWO24kcbX5qkUcjKckV4257xRAuG59TiLU1NadtCEg+vEIR4uHV0FnX7Z5wXTGsXeTebLcUHEv3n4n2GYOKAKbsDclpZiAb1aemQjbWRg7Cxu9OiEJ7i3nqT6SYKaZdeNvm758biMSB9uJHGOjn8RccvtH9cwIzbhkR1fIwRxv+XxPfQPK9z3XHRO9MOtWcGxSF3SuQ2DKVSd84oeJXob5lKQaapv1YradnMwij64QZNEftr2A4O3Ns0czW1TLzVpZEJr/+ulL9xeIY6dGFiQPSDjvunqsfsA1mkaQUnU1vI5JBXlIVk8/17dh/b6xwah2fhYwyBsv6kBEBknUcO9RRhlEEixSzoX874vw9ocQ2I+AxM6GXTe7hBPTfx4x+1pXY7cAl6ru/rn8XoeVH9rPAzTu/OqCWP+3lbSV8WZSbl2KpRHvWNlBm/UH2AtnIzZ6Lfd2Z7s3bRsuryRYhASZI5XY2JZesYGAWLWOBlu9nEVpcWp/DuNa8gJ901KbLNWd2jucdFxRbga5VEdrByK7rL66rePOrXEkqYCr60GrA9Zio1ijn2rnSKEdun1LtVOnmWREgQYmoeOrcK8MkRH0i77uW1xurRGWaIqaAO/TLMg7GChJLLOdNMc9xXzL9WxN9QE73zQ62iLI=
-        file: build/Release/cacheodbc.node
-        on:
-          repo: theconst/aodbc
-          tags: true
-          all_branches: true
-          condition: "$TRAVIS_TAG =~ ^macos-.*$"
-    - os: windows
-      cache:
-        directories: 
-          - boost
-      deploy:
-        provider: releases
-        skip_cleanup: true
-        api_key:
-          secure: HtohRb7iVHWZJL2MoeyBXabbagqyrOWO24kcbX5qkUcjKckV4257xRAuG59TiLU1NadtCEg+vEIR4uHV0FnX7Z5wXTGsXeTebLcUHEv3n4n2GYOKAKbsDclpZiAb1aemQjbWRg7Cxu9OiEJ7i3nqT6SYKaZdeNvm758biMSB9uJHGOjn8RccvtH9cwIzbhkR1fIwRxv+XxPfQPK9z3XHRO9MOtWcGxSF3SuQ2DKVSd84oeJXob5lKQaapv1YradnMwij64QZNEftr2A4O3Ns0czW1TLzVpZEJr/+ulL9xeIY6dGFiQPSDjvunqsfsA1mkaQUnU1vI5JBXlIVk8/17dh/b6xwah2fhYwyBsv6kBEBknUcO9RRhlEEixSzoX874vw9ocQ2I+AxM6GXTe7hBPTfx4x+1pXY7cAl6ru/rn8XoeVH9rPAzTu/OqCWP+3lbSV8WZSbl2KpRHvWNlBm/UH2AtnIzZ6Lfd2Z7s3bRsuryRYhASZI5XY2JZesYGAWLWOBlu9nEVpcWp/DuNa8gJ901KbLNWd2jucdFxRbga5VEdrByK7rL66rePOrXEkqYCr60GrA9Zio1ijn2rnSKEdun1LtVOnmWREgQYmoeOrcK8MkRH0i77uW1xurRGWaIqaAO/TLMg7GChJLLOdNMc9xXzL9WxN9QE73zQ62iLI=
-        file: build/Release/cacheodbc.node
-        on:
-          repo: theconst/aodbc
-          tags: true
-          all_branches: true
-          condition: "$TRAVIS_TAG =~ ^windows-.*$"
-    - os: ""
-      
 script: echo 'Skipping tests'
+deploy:
+  provider: releases
+  file_glob: true
+  skip_cleanup: true
+  api_key:
+    secure: HtohRb7iVHWZJL2MoeyBXabbagqyrOWO24kcbX5qkUcjKckV4257xRAuG59TiLU1NadtCEg+vEIR4uHV0FnX7Z5wXTGsXeTebLcUHEv3n4n2GYOKAKbsDclpZiAb1aemQjbWRg7Cxu9OiEJ7i3nqT6SYKaZdeNvm758biMSB9uJHGOjn8RccvtH9cwIzbhkR1fIwRxv+XxPfQPK9z3XHRO9MOtWcGxSF3SuQ2DKVSd84oeJXob5lKQaapv1YradnMwij64QZNEftr2A4O3Ns0czW1TLzVpZEJr/+ulL9xeIY6dGFiQPSDjvunqsfsA1mkaQUnU1vI5JBXlIVk8/17dh/b6xwah2fhYwyBsv6kBEBknUcO9RRhlEEixSzoX874vw9ocQ2I+AxM6GXTe7hBPTfx4x+1pXY7cAl6ru/rn8XoeVH9rPAzTu/OqCWP+3lbSV8WZSbl2KpRHvWNlBm/UH2AtnIzZ6Lfd2Z7s3bRsuryRYhASZI5XY2JZesYGAWLWOBlu9nEVpcWp/DuNa8gJ901KbLNWd2jucdFxRbga5VEdrByK7rL66rePOrXEkqYCr60GrA9Zio1ijn2rnSKEdun1LtVOnmWREgQYmoeOrcK8MkRH0i77uW1xurRGWaIqaAO/TLMg7GChJLLOdNMc9xXzL9WxN9QE73zQ62iLI=
+  file: build/Release/*
+  on:
+    repo: theconst/aodbc
+    tags: true
+    all_branches: true
+    condition: "$TRAVIS_TAG =~ ^release-.*$"
