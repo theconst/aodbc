@@ -27,7 +27,7 @@ fetch_submodule(boost/variant)
 fetch_submodule(boost/optional)
 
 include_directories(boost/optional/include)
-include_directories(boost/optional/variant)
+include_directories(boost/variant/include)
 
 ################################
 
