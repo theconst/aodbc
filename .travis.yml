@@ -76,6 +76,9 @@ matrix:
           all_branches: true
           condition: "$TRAVIS_TAG =~ ^macos-.*$"
       - os: windows
+        cache:
+          directories: 
+            - boost
         deploy:
           provider: releases
           skip_cleanup: true
