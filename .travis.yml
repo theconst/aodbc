@@ -34,22 +34,29 @@ os:
 - linux
 - windows
 - osx
+osx_image: xcode10.1
+dist: xenial
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - sourceline: 'ppa:rexut/factory'
+    packages:
+    - libboost1.62-dev
+    - unixodbc
+    - unixodbc-dev
+    - cmake
+    - gcc-6
+    - g++-6
+  homebrew:
+    packages:
+    - unixodbc
+    - cmake
+    - gcc@6
+    - boost@1.62
 matrix:
   include:
     - os: linux
-      dist: xenial
-      addons:
-        apt:
-          sources:
-          - ubuntu-toolchain-r-test
-          - sourceline: 'ppa:rexut/factory'
-          packages:
-          - libboost1.62-dev
-          - unixodbc
-          - unixodbc-dev
-          - cmake
-          - gcc-6
-          - g++-6
       deploy:
         provider: releases
         skip_cleanup: true
@@ -62,14 +69,6 @@ matrix:
           all_branches: true
           condition: "$TRAVIS_TAG =~ ^linux-.*$"
     - os: osx
-      osx_image: xcode10.1
-      addons:
-        homebrew:
-          packages:
-          - unixodbc
-          - cmake
-          - gcc@6
-          - boost@1.62
       deploy:
       provider: releases
       skip_cleanup: true
