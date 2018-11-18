@@ -1,6 +1,6 @@
 'use strict'
 
-const nc = require("bindings")("cacheodbc.node");
+const nc = require('../index');
 const {promisifyAll} = require('bluebird');
 
 const promisifySettings = {
