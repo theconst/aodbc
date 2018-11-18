@@ -1,6 +1,6 @@
 {
   "name": "cacheodbc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Cache ODBC - javascript library for ODBC access to Intersystems Cache",
   "dependencies": {
     "bindings": "^1.3.0"
