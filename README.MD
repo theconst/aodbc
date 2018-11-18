@@ -54,6 +54,18 @@ To launch the application in Docker container, follow the following steps:
 1. `docker exec -it <docker_image_id> /bin/bash`
 1. `npm t` will run the test for the library
 
+# Releasing
+
+- To trigger a release, commit to a branch with release-* tag.
+- Artifacts will be available in the corresponding git releases section
+
+# Packaging
+
+1. Download artifacts from release.
+1. Add them to build directory.
+1. Add new artifacts (if any to package.json)
+1. run npm publish
+
 # TODO List
 
 - [x] Add support for setting fetch size
@@ -67,4 +79,4 @@ To launch the application in Docker container, follow the following steps:
 - [x] Add support for transactions
 - [x] Add support for binary type
 - [x] Add support for Windows
-- [] Rename library to cache-odbc
+- [ ] Rename library to cache-odbc
