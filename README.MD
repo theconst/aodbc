@@ -1,4 +1,5 @@
 # Cache ODBC - javascript access to Intersystems Cache Database
+[![Build Status](https://travis-ci.org/theconst/aodbc.svg?branch=master)](https://travis-ci.org/theconst/aodbc)
 
 ## Description
 This library aims to provide a simple access to ODBC data sources for node.js.
