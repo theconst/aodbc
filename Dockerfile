@@ -6,6 +6,7 @@ RUN apt-get install -y \
     curl \
     python \
     python-pip \
+    libboost-all-dev \
     unixodbc-dev \
     wget
 
