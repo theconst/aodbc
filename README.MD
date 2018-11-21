@@ -16,7 +16,9 @@ Integration tests are written for Cache database samples.
 
 # Usage
 
-See test specs for a usage example.
+See test specs for a usage example for a raw connector interface.
+See https://github.com/theconst/odm-sample for an example web application.
+You may also find a comprehensive instruction for different OS configuration.
 
 ## Prerequisites
 
@@ -81,3 +83,4 @@ To launch the application in Docker container, follow the following steps:
 - [x] Add support for binary type
 - [x] Add support for Windows
 - [ ] Rename library to cache-odbc
+- [ ] Migrate to bintray to reduce binary package size
