@@ -41,7 +41,7 @@ fetch_submodule(nanodbc)
 
 # Build as static lib, this will allow uniformity across platforms
 # Library binary is still below 1MB, which far than OK for js world
-option(NANODBC_ENABLE_UNICODE OFF "Enable unicode for ODBC. This depends on ODBC driver you are working with")
+option(NANODBC_ENABLE_UNICODE ON "Enable unicode for ODBC. This depends on ODBC driver you are working with")
 
 option(NANODBC_DISABLE_TESTS "Build tests for nanodbc" ON)
 option(NANODBC_DISABLE_EXAMPLES "Build samples for nanodbc" ON)
