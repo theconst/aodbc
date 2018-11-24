@@ -6,6 +6,17 @@
 #include "nctypes.hh"
 
 namespace NC {
+    
+inline nc_variant_t handle_long_varchar(nanodbc::result* result, int col_no) {
+    switch (result->column_c_datatype(col_no)) {
+    case SQL_C_BINARY:
+        return result->get<nc_binary_t>(col_no);
+    case SQL_C_CHAR:
+    // use string if type is not binary
+    default:
+        return result->get<nc_string_t>(col_no);
+    }
+}
 
 inline nc_variant_t get_value_at(nanodbc::result* result, int col_no) {
     if (result->is_null(col_no)) {
@@ -32,8 +43,9 @@ inline nc_variant_t get_value_at(nanodbc::result* result, int col_no) {
         return result->get<nc_string_t>(col_no);
 
     case SQL_VARCHAR:
-    case SQL_LONGVARCHAR:
         return result->get<nc_string_t>(col_no);
+    case SQL_LONGVARCHAR:
+        return handle_long_varchar(result, col_no);
 
     case SQL_TYPE_DATE:
         return result->get<nc_date_t>(col_no);
