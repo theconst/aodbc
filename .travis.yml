@@ -25,9 +25,7 @@ before_install:
   fi
 language: node_js
 node_js:
-- '10'
-- '8'
-- '6'
+- '11'
 os:
 - linux
 - windows
