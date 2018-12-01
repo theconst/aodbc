@@ -46,14 +46,11 @@ inline nc_variant_t get_value_at(nanodbc::result* result, int col_no) {
     case SQL_WVARCHAR:
     case SQL_WLONGVARCHAR:
     case SQL_WCHAR:
-    case SQL_VARCHAR:
-    case SQL_LONGVARCHAR:
-        return result->get<nc_wide_string_t>(col_no);
-#else
+#endif
     case SQL_VARCHAR:
     case SQL_LONGVARCHAR:
         return result->get<nc_string_t>(col_no);
-#endif
+
     case SQL_BINARY:
     case SQL_VARBINARY:
     case SQL_LONGVARBINARY:

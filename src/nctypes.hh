@@ -27,9 +27,11 @@ typedef std::vector<uint8_t> nc_binary_t;
 
 typedef boost::blank nc_null_t;
 
+#ifdef NANODBC_ENABLE_UNICODE
 typedef nanodbc::string nc_string_t;
-
-typedef nanodbc::wide_string nc_wide_string_t;
+#else
+typedef nanodbc::wide_string nc_string_t;
+#endif
 
 typedef nanodbc::date nc_date_t;
 
