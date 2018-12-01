@@ -267,8 +267,13 @@ describe('ODBC Connection integration tests', function () {
         });
     });
 
-    afterEach(function () {
-     
+    afterEach(function (done) {
+        connection.disconnect(err => {
+            if (err) {
+                console.log('Error ' + e.message);
+            }
+            done();
+        })
     });
 });
 
