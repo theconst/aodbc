@@ -43,7 +43,7 @@ fetch_submodule(nanodbc)
 # Library binary is still below 1MB, which far than OK for js world
 if (MSVC)
     option(NANODBC_ENABLE_UNICODE ON "Enable unicode for ODBC. Enabled on windows by default")
-elseif()
+else()
     # TODO(kkovalchuk): modify build process to support iODBC
     option(NANODBC_ENABLE_UNICODE OFF "Enable unicode for ODBC. Disabled on Linux")
 endif()
