@@ -44,7 +44,7 @@ fetch_submodule(nanodbc)
 if (MSVC)
     option(NANODBC_ENABLE_UNICODE ON "Enable unicode for ODBC. Enabled on windows by default")
 elseif()
-    # TODO(kkovalchuk): modify nanodbc to support iODBC
+    # TODO(kkovalchuk): modify build process to support iODBC
     option(NANODBC_ENABLE_UNICODE OFF "Enable unicode for ODBC. Disabled on Linux")
 endif()
 

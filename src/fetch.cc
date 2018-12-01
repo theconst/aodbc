@@ -45,7 +45,13 @@ inline nc_variant_t get_value_at(nanodbc::result* result, int col_no) {
     case SQL_TYPE_TIMESTAMP:
     case SQL_TIMESTAMP:
         return result->get<nc_timestamp_t>(col_no);
-
+#ifdef NANODBC_ENABLE_UNICODE
+    case SQL_WCHAR:
+    case SQL_WVARCHAR:
+    case SQL_WLONGVARCHAR:
+    case SQL_WCHAR:
+        return result->get<nc_wide_string_t>(col_no);
+#endif
     case SQL_BINARY:
     case SQL_VARBINARY:
     case SQL_LONGVARBINARY:

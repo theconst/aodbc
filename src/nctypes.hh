@@ -29,6 +29,8 @@ typedef boost::blank nc_null_t;
 
 typedef nanodbc::string nc_string_t;
 
+typedef nanodbc::wide_string nc_wide_string_t;
+
 typedef nanodbc::date nc_date_t;
 
 typedef nanodbc::time nc_time_t;
