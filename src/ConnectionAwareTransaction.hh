@@ -71,4 +71,4 @@ class ConnectionAwareTransaction final {
 
 }  // namespace NC
 
-#endif /* CONNECTIONAWARESTATEMENT_HH */
+#endif /* CONNECTIONAWARETRANSACTION_HH */
