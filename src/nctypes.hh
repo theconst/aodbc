@@ -16,7 +16,7 @@
 //TODO(kko): remove this stub
 #ifndef NANODBC_ENABLE_UNICODE
 #include <type_traits>
-   static_assert(std::false_type, "Unicode should be enabled")
+   static_assert(std::false_type {}, "Unicode should be enabled");
 #endif
 
 namespace NC {

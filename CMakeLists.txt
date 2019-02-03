@@ -47,6 +47,8 @@ add_definitions(-DNANODBC_USE_IODBC_WIDE_STRINGS)
 
 option(NANODBC_DISABLE_TESTS "Build tests for nanodbc" ON)
 option(NANODBC_DISABLE_EXAMPLES "Build samples for nanodbc" ON)
+
+include_directories(nanodbc)
 add_subdirectory(nanodbc)
 
 ################################
@@ -55,6 +57,8 @@ add_subdirectory(nanodbc)
 
 # This is a workaround for the database driver http://www.intersystems.com/ru/our-products/cache/cache-overview/
 # Enabled by default
+option(NANODBC_ENABLE_UNICODE "Enable unicode for ODBC. This depends on ODBC driver you are working with" ON)
+add_definitions(-DNANODBC_USE_IODBC_WIDE_STRINGS)
 option(NC_FREE_STMT_ONLY "Call only SQLFreeStmt(SQL_CLOSE) before result fetch. Do not call SQLCloseCursor after result fetch")
 if (NC_FREE_STMT_ONLY)
     add_definitions(-DFREE_STMT_WORKAROUND_OFF)
