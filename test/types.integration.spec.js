@@ -283,10 +283,10 @@ describe(`should convert ${alias} datatype`, function() {
     
         it('should successfully convert values', function() {
             return Promise.all([
-                `INSERT INTO ${table}(name, info) VALUES ('Alice', 'First party')`,
+                `INSERT INTO ${table}(name, info) VALUES ('Alice', 'πρώτα')`,
                 `INSERT INTO ${table}(name, info) VALUES ('Bob', NULL)`,
                 `INSERT INTO ${table}(name, info) VALUES ('Mallory', 'Man in the')`,
-                `INSERT INTO ${table}(name, info) VALUES ('Eve', 'Eavesdropper')`,
+                `INSERT INTO ${table}(name, info) VALUES ('Eve', 'Шпион')`,
             ]
             .map(v => connection.executePromise(v)))
             .then(() => 
@@ -302,7 +302,7 @@ describe(`should convert ${alias} datatype`, function() {
                 expect(queryResult).to.deep.equal([
                     {
                         'name': 'Alice',
-                        'info': 'First party',
+                        'info': 'πρώτα',
                     },
                     {   
                         'name': 'Bob',
@@ -312,7 +312,7 @@ describe(`should convert ${alias} datatype`, function() {
                     },
                     {
                         'name': 'Eve',
-                        'info': 'Eavesdropper',
+                        'info': 'Шпион',
                     },
                     {
                         'name': 'Mallory',
