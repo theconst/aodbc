@@ -41,7 +41,9 @@ fetch_submodule(nanodbc)
 
 # Build as static lib, this will allow uniformity across platforms
 # Library binary is still below 1MB, which far than OK for js world
-option(NANODBC_ENABLE_UNICODE OFF "Enable unicode for ODBC. This depends on ODBC driver you are working with")
+
+option(NANODBC_ENABLE_UNICODE "Enable unicode for ODBC. This depends on ODBC driver you are working with" ON)
+add_definitions(-DNANODBC_USE_IODBC_WIDE_STRINGS)
 
 option(NANODBC_DISABLE_TESTS "Build tests for nanodbc" ON)
 option(NANODBC_DISABLE_EXAMPLES "Build samples for nanodbc" ON)
@@ -49,7 +51,7 @@ add_subdirectory(nanodbc)
 
 ################################
 
-######## ns.js options #########
+######## nc.js options #########
 
 # This is a workaround for the database driver http://www.intersystems.com/ru/our-products/cache/cache-overview/
 # Enabled by default
