@@ -46,7 +46,8 @@ inline boost::optional<DST> checked_numeric_cast(v8::Local<v8::Value> local) {
 }
 
 
-//TODO: specialize for happy case without Unicode
+#ifdef NANODBC_ENABLE_UNICODE
+
 template<>
 boost::optional<nc_string_t> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
@@ -63,6 +64,22 @@ boost::optional<nc_string_t> convert_js_type_to_cpp(
     result.emplace(cvt.from_bytes(*Nan::Utf8String(local)));
     return result;
 }
+
+#else
+
+template<>
+boost::optional<nc_string_t> convert_js_type_to_cpp(
+        v8::Local<v8::Value> local) {
+    // TODO(kko): remove code duplication
+    if (!local->IsString()) {
+        return boost::none;
+    }
+    boost::optional<nc_string_t> result {};
+    result.emplace(*Nan::Utf8String(local));
+    return result;
+}
+
+#endif
 
 template<>
 boost::optional<nc_long_t> convert_js_type_to_cpp(v8::Local<v8::Value> local) {

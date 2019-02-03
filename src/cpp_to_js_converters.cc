@@ -67,7 +67,9 @@ struct Fraction<nc_timestamp_t> {
     }
 };
 
-// no scope!
+//! no scope
+#ifdef NANODBC_ENABLE_UNICODE
+
 inline v8::Local<v8::Value> convert_to_v8_string(const nc_string_t& str) {
     using V = nc_string_t::value_type;
     using CVT = std::codecvt_utf8<V>;
@@ -75,6 +77,13 @@ inline v8::Local<v8::Value> convert_to_v8_string(const nc_string_t& str) {
     return Nan::New<v8::String>(cvt.to_bytes(str)).ToLocalChecked();
 }
 
+#else
+
+inline v8::Local<v8::Value> convert_to_v8_string(const nc_string_t& str) {
+    return Nan::New<v8::String>(str).ToLocalChecked();
+}
+
+#endif
 
 struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
 
