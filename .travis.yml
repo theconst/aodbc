@@ -41,14 +41,14 @@ addons:
     - sourceline: 'ppa:rexut/factory'
     packages:
     - libboost1.62-dev
-    - unixodbc
-    - unixodbc-dev
+    - libiodbc2
+    - libiodbc2-dev
     - cmake
     - gcc-6
     - g++-6
   homebrew:
     packages:
-    - unixodbc
+    - libiodbc
     - cmake
     - gcc@6
     - boost@1.62
