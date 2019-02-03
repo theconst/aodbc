@@ -3,6 +3,10 @@
 #include <cstdint>
 #include <ctime>
 
+// no need for migration until nanodbc migrates
+#include <codecvt>
+#include <locale>
+
 #include "nan.h"
 
 #include "js_keys.hh"
@@ -63,6 +67,15 @@ struct Fraction<nc_timestamp_t> {
     }
 };
 
+// no scope!
+inline v8::Local<v8::Value> convert_to_v8_string(const nc_string_t& str) {
+    using V = nc_string_t::value_type;
+    using CVT = std::codecvt_utf8<V>;
+    static thread_local std::wstring_convert<CVT, V> cvt {};
+    return Nan::New<v8::String>(cvt.to_bytes(str)).ToLocalChecked();
+}
+
+
 struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
 
     v8::Local<v8::Value> operator()(const nc_null_t& blank) const {
@@ -82,8 +95,7 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
 
     v8::Local<v8::Value> operator()(const nc_string_t& str) const {
         Nan::EscapableHandleScope scope {};
-        return scope.Escape(
-            Nan::New<v8::String>(str).ToLocalChecked());
+        return scope.Escape(convert_to_v8_string(str));
     }
 
     v8::Local<v8::Value> operator()(const nc_binary_t& binary) const {
@@ -118,7 +130,7 @@ struct SQLColumnVisitor : public boost::static_visitor<v8::Local<v8::Value>> {
 
 v8::Local<v8::Value> convert_cpp_type_to_js(const nc_string_t& arg) {
     Nan::EscapableHandleScope scope {};
-    return scope.Escape(Nan::New<v8::String>(arg).ToLocalChecked());
+    return scope.Escape(convert_to_v8_string(arg));
 }
 
 v8::Local<v8::Value> convert_cpp_type_to_js(const nc_result_t& sql_result) {
@@ -132,7 +144,7 @@ v8::Local<v8::Value> convert_cpp_type_to_js(const nc_result_t& sql_result) {
         for (const auto& column : row) {
             const nanodbc::string& col_name = column.first;
             Nan::Set(result_row,
-                Nan::New<v8::String>(col_name).ToLocalChecked(),
+                convert_to_v8_string(col_name),
                 column.second.apply_visitor(visitor));
         }
         js_result->Set(c++, result_row);

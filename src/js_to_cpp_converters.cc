@@ -4,6 +4,9 @@
 #include <limits>
 #include <type_traits>
 
+#include <codecvt>
+#include <locale>
+
 #include "js_keys.hh"
 
 namespace NC {
@@ -42,14 +45,22 @@ inline boost::optional<DST> checked_numeric_cast(v8::Local<v8::Value> local) {
     return boost::make_optional(static_cast<DST>(Nan::To<REPR>(local).FromJust()));
 }
 
+
+//TODO: specialize for happy case without Unicode
 template<>
 boost::optional<nc_string_t> convert_js_type_to_cpp(
         v8::Local<v8::Value> local) {
+    using V = nc_string_t::value_type;
+    using CVT = std::codecvt_utf8<V>;
+    // TODO: deprecated since c++ 17
+    // I will not migrate till nanodbc does so
+    static thread_local std::wstring_convert<CVT, V> cvt {};
+
     if (!local->IsString()) {
         return boost::none;
     }
     boost::optional<nc_string_t> result {};
-    result.emplace(*Nan::Utf8String(local));
+    result.emplace(cvt.from_bytes(*Nan::Utf8String(local)));
     return result;
 }
 
