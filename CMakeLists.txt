@@ -55,6 +55,8 @@ if (NANODBC_ENABLE_UNICODE)
             execute_process(COMMAND ${IODBC_CONFIG} --cflags
                 OUTPUT_VARIABLE ODBC_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
         endif()
+
+
         add_definitions(-DNANODBC_USE_IODBC_WIDE_STRINGS)
     endif()
     add_definitions(-DNANODBC_ENABLE_UNICODE)
@@ -88,8 +90,13 @@ message("Set library name: ${FULL_PROJECT_NAME}")
 file(GLOB SOURCE_FILES "src/*.cc" "src/*.h")
 
 add_library(${FULL_PROJECT_NAME} SHARED ${SOURCE_FILES})
-set_target_properties(${FULL_PROJECT_NAME} 
+
+if (ODBC_CFLAGS)
+    set_target_properties(${FULL_PROJECT_NAME} 
         PROPERTIES PREFIX ""  SUFFIX ".node" COMPILE_FLAGS ${ODBC_CFLAGS})
+else()
+    set_target_properties(${FULL_PROJECT_NAME} PROPERTIES PREFIX ""  SUFFIX ".node")
+endif()
 target_include_directories(${FULL_PROJECT_NAME} PRIVATE ${CMAKE_JS_INC})
 target_link_libraries(${FULL_PROJECT_NAME} PUBLIC ${CMAKE_JS_LIB} PRIVATE nanodbc)
 
