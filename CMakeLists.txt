@@ -47,9 +47,14 @@ option(NANODBC_ENABLE_UNICODE "Enable unicode. Unset this option if you're using
 if (NANODBC_ENABLE_UNICODE)
     # Set flags globally
     if (UNIX OR APPLE)
-        # TODO(kko): fail build on unixodbc
-        message(WARNING "Pleas check that your are linking agains iODBC")
-
+        find_program(IODBC_CONFIG iodbc-config
+            $ENV{ODBC_PATH}/bin /usr/bin /usr/local/bin ~/bin PATHS)
+        if (NOT IODBC_CONFIG)
+            message(FATAL_ERROR "Only iODBC driver is supported on UNIX-like systems")
+        else()
+            execute_process(COMMAND ${IODBC_CONFIG} --cflags
+                OUTPUT_VARIABLE ODBC_CFLAGS OUTPUT_STRIP_TRAILING_WHITESPACE)
+        endif()
         add_definitions(-DNANODBC_USE_IODBC_WIDE_STRINGS)
     endif()
     add_definitions(-DNANODBC_ENABLE_UNICODE)
@@ -83,7 +88,8 @@ message("Set library name: ${FULL_PROJECT_NAME}")
 file(GLOB SOURCE_FILES "src/*.cc" "src/*.h")
 
 add_library(${FULL_PROJECT_NAME} SHARED ${SOURCE_FILES})
-set_target_properties(${FULL_PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
+set_target_properties(${FULL_PROJECT_NAME} 
+        PROPERTIES PREFIX ""  SUFFIX ".node" COMPILE_FLAGS ${ODBC_CFLAGS})
 target_include_directories(${FULL_PROJECT_NAME} PRIVATE ${CMAKE_JS_INC})
 target_link_libraries(${FULL_PROJECT_NAME} PUBLIC ${CMAKE_JS_LIB} PRIVATE nanodbc)
 
