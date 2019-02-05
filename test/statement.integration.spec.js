@@ -125,7 +125,7 @@ describe('ODBC Statement integration tests', function () {
         });
     });
 
-    it('should execute no args prepared statement', function(done) {
+    it('should execute statement with argument', function(done) {
         statement.prepare(`
             Select ID, Name, Company->Name from Sample.Employee 
             Where Name < ? and Company->Name > ? 
