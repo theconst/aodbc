@@ -83,5 +83,6 @@ To launch the application in Docker container, follow the following steps:
 - [x] Add support for transactions
 - [x] Add support for binary type
 - [x] Add support for Windows
+- [x] Add support for Unicode
 - [ ] Rename library to cache-odbc
 - [ ] Migrate to bintray to reduce binary package size

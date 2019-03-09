@@ -30,7 +30,11 @@ inline nc_variant_t get_value_at(nanodbc::result* result, int col_no) {
     case SQL_DECIMAL:
     case SQL_BIGINT:
         return result->get<nc_string_t>(col_no);
-
+#ifdef NANODBC_ENABLE_UNICODE
+    case SQL_WCHAR:
+    case SQL_WVARCHAR:
+    case SQL_WLONGVARCHAR:
+#endif
     case SQL_VARCHAR:
     case SQL_LONGVARCHAR:
         return result->get<nc_string_t>(col_no);

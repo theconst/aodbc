@@ -233,8 +233,7 @@ describe('ODBC Connection integration tests', function () {
         }, done);
     });
     
-    // TODO: get uncomment
-    xit('should execute query 6', function (done) {
+    xit('should execute query 6', function (done) { // test takes too long
         testQuery({
             'query': 'Select * FROM Aviation.Event',
             'batchSize': 1000,

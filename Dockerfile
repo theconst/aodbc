@@ -7,7 +7,8 @@ RUN apt-get install -y \
     python \
     python-pip \
     libboost-all-dev \
-    unixodbc-dev \
+    libiodbc2 \
+    libiodbc2-dev \
     wget
 
 # You can also use 8.x
